@@ -6,14 +6,22 @@
 	}
 	require_once( plugin_dir_path( __FILE__ ) . 'header/plugin-header.php' );
 	$get_status = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-	$msg        = '';
+	$msg        = filter_input( INPUT_GET, 'msg', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-	if ( 'success' === $get_status ) {
-		$msg   = esc_html__( 'Import successfully', 'advanced-flat-rate-shipping-for-woocommerce' );
-	}
     $allowed_tooltip_html   = wp_kses_allowed_html( 'post' )['span'];
     if( !empty($msg) ) {
-        echo sprintf( '<div id="message" class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html( $msg ) ); 
+        if( "no_data_found" === $msg ) {
+            $msg = esc_html__( 'No data found for import/export.', 'advanced-flat-rate-shipping-for-woocommerce' );
+        } elseif( "import_success" === $msg ) {
+            $msg = esc_html__( 'Import successfully', 'advanced-flat-rate-shipping-for-woocommerce' );
+        }
+
+        // Print message
+        if ( 'success' === $get_status ) {
+            echo sprintf( '<div id="message" class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html( $msg ) ); 
+        } else {
+            echo sprintf( '<div id="message" class="notice notice-error is-dismissible"><p>%s</p></div>', esc_html( $msg ) ); 
+        } 
     } 
 ?>
 
@@ -76,6 +84,14 @@
 				<td>
 					<form method="post">
 						<div class="afrsm_main_container">
+                            <div class="afrsm_toggle_container export_settings_container">
+                                <span class="afrsm-type afrsm-json-type"><?php echo esc_html__( 'JSON', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
+                                <label class="switch">
+                                    <input type="checkbox" class="afrsm-ie-type" id="afrsm_export_type" name="afrsm_export_type" value="on" />
+                                    <div class="slider round"></div>
+                                </label>
+                                <span class="afrsm-type afrsm-csv-type"><?php echo esc_html__( 'CSV', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
+                            </div>
 							<p class="afrsm_button_container"><?php submit_button( esc_html__( 'Export', 'advanced-flat-rate-shipping-for-woocommerce' ), 'primary', 'submit', false ); ?>
                             <?php echo wp_kses( wc_help_tip( esc_html__( 'Export the shipping method settings for this site as a .json file. This allows you to easily import the configuration into another site. Please make sure simple product and variation products slugs must be unique.', 'advanced-flat-rate-shipping-for-woocommerce' ) ), array( 'span' => $allowed_tooltip_html ) ); ?></p>
 							<p class="afrsm_content_container">
@@ -93,10 +109,20 @@
 				<td>
 					<form method="post" enctype="multipart/form-data">
 						<div class="afrsm_main_container">
-							<p>
-								<input type="file" name="import_file"/>
-							</p>
-							<p class="afrsm_button_container">
+                            <div class="afrsm_toggle_container export_settings_container">
+                                <span class="afrsm-type afrsm-json-type"><?php echo esc_html__( 'JSON', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
+                                <label class="switch">
+                                    <input type="checkbox" class="afrsm-ie-type" id="afrsm_import_type" name="afrsm_import_type" value="on" />
+                                    <div class="slider round"></div>
+                                </label>
+                                <span class="afrsm-type afrsm-csv-type"><?php echo esc_html__( 'CSV', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
+                            </div>
+							<div class="afrsm-import-file">
+								<input type="file" name="import_file" id="import_file" data-placeholder="<?php echo esc_attr__( 'No file selected', 'advanced-flat-rate-shipping-for-woocommerce' ); ?>" />
+                                <span class='button'><?php echo esc_html__( 'Choose', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
+                                <span class='label' data-js-label></span>
+                            </div>
+                            <p class="afrsm_button_container">
 								<input type="hidden" name="afrsm_import_action" value="import_settings"/>
 								<?php wp_nonce_field( 'afrsm_import_action_nonce', 'afrsm_import_action_nonce' ); ?>
 								<?php

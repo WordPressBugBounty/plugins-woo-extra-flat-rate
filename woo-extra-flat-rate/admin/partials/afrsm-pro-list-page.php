@@ -102,7 +102,12 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 
 			$getnonce = wp_verify_nonce( $cust_nonce, 'del_' . $id );
 			if ( isset( $getnonce ) && 1 === $getnonce ) {
+
 				wp_delete_post( $id );
+
+                // After delete shipping method, update sorting order
+                afrsm()->sync_shipping_method_sorting_order( 'single_delete');
+
 				wp_safe_redirect( add_query_arg( array(
 					'page'    => 'afrsm-pro-list',
 					'message' => 'deleted'
@@ -125,6 +130,7 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 		 *
 		 */
 		public static function afrsm_sj_duplicate_method( $id ) {
+            global $afrsfwpa;
 			$cust_nonce = filter_input( INPUT_GET, 'cust_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 			$getnonce    = wp_verify_nonce( $cust_nonce, 'duplicate_' . $id );
@@ -136,6 +142,7 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 					$current_user    = wp_get_current_user();
 					$new_post_author = $current_user->ID;
 					if ( isset( $post ) && null !== $post ) {
+                        $latest_order = $afrsfwpa->afrsm_pro_sm_count_method();
 						$args           = array(
 							'comment_status' => $post->comment_status,
 							'ping_status'    => $post->ping_status,
@@ -149,7 +156,7 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 							'post_title'     => $post->post_title . '-duplicate',
 							'post_type'      => self::post_type,
 							'to_ping'        => $post->to_ping,
-							'menu_order'     => $post->menu_order
+							'menu_order'     => $latest_order + 1
 						);
 						$new_post_id    = wp_insert_post( $args );
 						$post_meta_data = get_post_meta( $post_id );
@@ -164,16 +171,6 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 								update_post_meta( $new_post_id, $meta_key, $meta_value );
 							}
 						}
-						$default_lang = self::$admin_object->afrsm_pro_get_default_langugae_with_sitpress();
-						$getSortOrder = get_option( 'sm_sortable_order_' . $default_lang );
-			
-						if ( ! empty( $getSortOrder ) ) {
-							foreach ( $getSortOrder as $getSortOrder_id ) {
-								settype( $getSortOrder_id, 'integer' );
-							}
-							array_unshift( $getSortOrder, $new_post_id );
-						}
-						update_option( 'sm_sortable_order_' . $default_lang, $getSortOrder );
 					}
 					$afrsm_add   = wp_create_nonce( 'edit_' . $new_post_id );
 					wp_safe_redirect( add_query_arg( array(
@@ -280,7 +277,6 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 								<a href="<?php echo esc_url( $link ); ?>" class="page-title-action dots-btn-with-brand-color"><?php echo esc_html__( 'Add New', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></a>
 								<?php
 							}
-							
 							$WC_Advanced_Flat_Rate_Shipping_Table->process_bulk_action();
 							$WC_Advanced_Flat_Rate_Shipping_Table->prepare_items();
 							$request_s = filter_input( INPUT_POST, 's', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -288,6 +284,17 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 								echo sprintf( '<span class="subtitle">' . esc_html__( 'Search results for &#8220;%s&#8221;', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</span>', esc_html( $request_s ) );
 							}
 							$WC_Advanced_Flat_Rate_Shipping_Table->search_box( esc_html__( 'Search', 'advanced-flat-rate-shipping-for-woocommerce' ), 'shipping-method' );
+                            $is_synced = get_option( 'afrsm_sync_new_sorting_order' );
+                            if( 'yes' !== $is_synced && $WC_Advanced_Flat_Rate_Shipping_Table->afrsm_count() > 1 ) {
+                                ?>
+                                <div class="afrsm-new-order-note">
+                                    <span>
+                                        <?php printf( esc_html__( '%s: We\'ve implemented a new sorting method for shipping rules. Before syncing, we recommend backing up your current shipping methods. Please note that if you have a large number of shipping methods, the sync process may take some time. After the sync is complete, verify that the sorting order is correct to ensure accuracy.', 'advanced-flat-rate-shipping-for-woocommerce' ), '<strong>'.esc_html__('Note', 'advanced-flat-rate-shipping-for-woocommerce').'</strong>' ); ?>
+                                    </span>
+                                    <a href="javascript:void(0);" class="afrsm-new-sorting button-primary"><?php esc_html_e( 'Sync sorting', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></a>
+                                </div>
+                                <?php
+                            }
 							$WC_Advanced_Flat_Rate_Shipping_Table->display();
                             ?>
 						</div>

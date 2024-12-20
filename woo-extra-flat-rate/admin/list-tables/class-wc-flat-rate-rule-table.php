@@ -127,10 +127,9 @@ if ( ! class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
 			$get_order   = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 			$get_status  = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
+            // We are use custom ordering for the shipping methods listing
 			$args = array(
 				'posts_per_page' => $per_page,
-				'order' 		 => 'ASC',
-				'orderby' 		 => 'menu_order',
 				'offset'         => ( $this->get_pagenum() - 1 ) * $per_page,
 			);
 
@@ -344,7 +343,7 @@ if ( ! class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
 							</strong>';
 				} else {
                 $method_name = '<strong>
-								<a href="' . wp_nonce_url( $editurl, 'edit_' . $item->ID, 'cust_nonce' ) . '" class="row-title" >' . esc_html( $shipping_title ) . '</a>
+								<a href="' . wp_nonce_url( $editurl, 'edit_' . $item->ID, 'cust_nonce' ) . '" class="row-title">' . esc_html( $shipping_title ) . '</a>
 							</strong>';
 				}
 
@@ -419,10 +418,13 @@ if ( ! class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
 			$duplicateurl         = $duplicate_method_url;
 
 			$actions              = array();
+            if( AFRSM_DEBUG ) {
+                $actions['ID']   = sprintf( '%d', intval($item->ID) );
+            }
 			$actions['edit']      = '<a href="' . wp_nonce_url( $editurl, 'edit_' . $item->ID, 'cust_nonce' ) . '">' . __( 'Edit', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</a>';
 			$actions['delete']    = '<a href="' . wp_nonce_url( $delurl, 'del_' . $item->ID, 'cust_nonce' ) . '">' . __( 'Delete', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</a>';
 			$actions['duplicate'] = '<a href="' . wp_nonce_url( $duplicateurl, 'duplicate_' . $item->ID, 'cust_nonce' ) . '">' . __( 'Duplicate', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</a>';
-
+            
 			return $this->row_actions( $actions );
 		}
 
@@ -570,8 +572,14 @@ if ( ! class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
 
 			if ( 'delete' === $action ) {
 				foreach ( $items as $id ) {
-					wp_delete_post( $id );
+					
+                    // Delete post
+                    wp_delete_post( $id );
 				}
+                
+                // After bulk deletion complete update sorting order
+                afrsm()->sync_shipping_method_sorting_order( 'bulk_delete');
+
 				self::$admin_object->afrsm_updated_message( 'deleted', '' );
 			} elseif ( 'enable' === $action ) {
 
@@ -609,16 +617,16 @@ if ( ! class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
 		 *
 		 */
 		public static function afrsm_find( $args = '' ) {
+            global $afrsfwpa;
 			$defaults = array(
-				'post_status'    => 'any',
-				'posts_per_page' => - 1,
-				'offset'         => 0,
-				'orderby'        => 'ID',
-				'order'          => 'ASC',
+				'post_status'       => 'any',
+				'posts_per_page'    => - 1,
+				'offset'            => 0,
+                'orderby'           => 'menu_order',
+                'order'             => 'DESC',
 			);
 
 			$args = wp_parse_args( $args, $defaults );
-
 			$args['post_type'] = self::post_type;
 
 			$wc_afrsm_query = new WP_Query( $args );

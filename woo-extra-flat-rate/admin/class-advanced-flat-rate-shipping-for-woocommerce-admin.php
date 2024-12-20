@@ -547,6 +547,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'tooltip_char_limit'             => 100,
                 'admin_email'                    => esc_attr( get_option( 'admin_email' ) ),
                 'pdate'                          => esc_attr( gmdate( "Y-m-d H:i:s" ) ),
+                'afrsm_sync_new_sorting_order'   => get_option( 'afrsm_sync_new_sorting_order' ),
             ) );
             //Wizard enqueue
             wp_enqueue_script(
@@ -728,12 +729,9 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      *
      */
     public function afrsm_set_screen_options( $status, $option, $value ) {
-        $dpad_screens = array('afrsm_rule_per_page');
+        // Max 100 shipping methods per page can be allowed as sorting need to work smoothly
         if ( 'afrsm_rule_per_page' === $option ) {
-            $value = ( !empty( $value ) && $value > 0 ? $value : get_option( 'afrsm_sm_count_per_page' ) );
-        }
-        if ( in_array( $option, $dpad_screens, true ) ) {
-            return $value;
+            return ( !empty( $value ) && $value > 0 && $value <= 100 ? $value : 100 );
         }
         return $status;
     }
@@ -3373,64 +3371,106 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      */
     public function afrsm_pro_sm_sort_order() {
         check_ajax_referer( 'afrsm_nonce', 'nonce' );
-        $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
         $post_type = self::afrsm_shipping_post_type;
-        $paged = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT );
+        $getPaged = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT );
         $get_smOrderArray = filter_input(
             INPUT_GET,
             'smOrderArray',
             FILTER_SANITIZE_NUMBER_INT,
             FILTER_REQUIRE_ARRAY
         );
-        $smOrderArray = ( !empty( $get_smOrderArray ) ? array_map( 'sanitize_text_field', wp_unslash( $get_smOrderArray ) ) : '' );
+        $paged = ( !empty( $getPaged ) ? $getPaged : 1 );
+        $smOrderArray = ( !empty( $get_smOrderArray ) ? array_map( 'intval', wp_unslash( $get_smOrderArray ) ) : array() );
         //If order array empty then no need to order
         if ( empty( $smOrderArray ) ) {
-            wp_die();
+            wp_send_json_error( esc_html__( 'No data found for sorting', 'advanced-flat-rate-shipping-for-woocommerce' ) );
         }
         //Get all shipping post ids
         $query_args = array(
             'post_type'      => $post_type,
             'post_status'    => array('publish', 'draft'),
             'posts_per_page' => -1,
-            'orderby'        => array(
-                'menu_order' => 'ASC',
-                'post_date'  => 'DESC',
-            ),
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
             'fields'         => 'ids',
         );
         $post_list = new WP_Query($query_args);
-        $results = $post_list->posts;
-        //Create the list of ID's
-        $objects_ids = array();
-        foreach ( $results as $result ) {
-            settype( $result, 'integer' );
-            $objects_ids[] = $result;
-        }
-        //Here we switch order
-        $objects_per_page = ( get_user_option( 'afrsm_rule_per_page' ) ? get_user_option( 'afrsm_rule_per_page' ) : get_option( 'afrsm_sm_count_per_page' ) );
+        $objects_ids = $post_list->posts;
+        //Every time reverse array because we need to show first with higher menu_order
+        $objects_ids = array_reverse( $objects_ids );
+        // Here we switch order
+        $objects_per_page = ( get_user_option( 'afrsm_rule_per_page' ) ? get_user_option( 'afrsm_rule_per_page' ) : get_option( 'posts_per_page' ) );
+        $objects_per_page = ( !empty( $objects_per_page ) ? $objects_per_page : 10 );
         $edit_start_at = $paged * $objects_per_page - $objects_per_page;
         $index = 0;
         for ($i = $edit_start_at; $i < $edit_start_at + $objects_per_page; $i++) {
             if ( !isset( $objects_ids[$i] ) ) {
                 break;
             }
-            $objects_ids[$i] = (int) $smOrderArray[$index];
+            $objects_ids[$i] = intval( $smOrderArray[$index] );
             $index++;
         }
-        //Update the menu_order within database
+        // Assign our menu_order from max to 0 to the array (Main line)
+        $objects_ids = array_combine( range( count( $objects_ids ) - 1, 0 ), array_values( $objects_ids ) );
+        // Update the menu_order within database
         foreach ( $objects_ids as $menu_order => $id ) {
-            $data = array(
-                'menu_order' => $menu_order,
-                'ID'         => $id,
+            $menu_order++;
+            // Save the sorting order with shipping id in menu_order
+            $sync_status = afrsm()->afrsm_update_shipping_sorting_order( $id, $menu_order );
+        }
+        wp_send_json_success( esc_html__( 'Shipping methods sorting has been updated.', 'advanced-flat-rate-shipping-for-woocommerce' ) );
+    }
+
+    public function afrsm_sm_new_sort_order_callback() {
+        check_ajax_referer( 'afrsm_nonce', 'nonce' );
+        $post_type = self::afrsm_shipping_post_type;
+        $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
+        $get_stored_sorting_ids = get_option( 'sm_sortable_order_' . $default_lang );
+        // Get exist sorting order and remove duplicates to get atual sorting order
+        $get_stored_sorting_ids = ( $get_stored_sorting_ids ? array_unique( array_map( 'intval', $get_stored_sorting_ids ) ) : array() );
+        $exist_sorting_count = intval( ( $get_stored_sorting_ids ? count( $get_stored_sorting_ids ) : 0 ) );
+        $shipping_method_count = intval( wp_count_posts( $post_type )->publish ) + intval( wp_count_posts( $post_type )->draft );
+        // after script complete which type sort has been done mention in log
+        $type = 'date';
+        if ( $exist_sorting_count === $shipping_method_count ) {
+            // We will sort the shipping methods based on the order in the database
+            // we want reverse order to show first with higher menu_order to show it first
+            $shipping_ids = array_reverse( $get_stored_sorting_ids );
+            // after script complete which type sort has been done mention in log
+            $type = 'stored';
+        } else {
+            // If sortingorder is not matched means that user not sorted the shipping methods we assume
+            // We will sort the shipping methods based on date created from latest to oldest
+            $query_args = array(
+                'post_type'      => $post_type,
+                'post_status'    => array('publish', 'draft'),
+                'posts_per_page' => -1,
+                'orderby'        => array(
+                    'post_date' => 'ASC',
+                ),
+                'fields'         => 'ids',
             );
-            wp_update_post( $data );
-            clean_post_cache( $id );
+            $post_list = new WP_Query($query_args);
+            $shipping_ids = $post_list->posts;
         }
-        //Update for our global variable
-        if ( isset( $objects_ids ) && !empty( $objects_ids ) ) {
-            update_option( 'sm_sortable_order_' . $default_lang, $objects_ids );
+        afrsm()->afrsm_log( '*** Sync Started ***', 'info' );
+        foreach ( $shipping_ids as $index => $shipping_id ) {
+            $index++;
+            // Save the sorting order with shipping id in menu_order
+            $sync_status = afrsm()->afrsm_update_shipping_sorting_order( $shipping_id, $index );
+            $sync_status = ( $sync_status ? 'success' : 'failed' );
+            // Prepare log for debug if any issue
+            afrsm()->afrsm_log( $shipping_id . ' - ' . $index . ' -> ' . $sync_status, 'info' );
         }
-        wp_die();
+        if ( $type === 'stored' ) {
+            afrsm()->afrsm_log( 'Already store sorting order sync has been completed', 'info' );
+        } else {
+            afrsm()->afrsm_log( 'Date-wise sorting order sync has been completed', 'info' );
+        }
+        afrsm()->afrsm_log( '*** Sync Ended ***', 'info' );
+        // Flag is set for not repeat this sync again
+        update_option( 'afrsm_sync_new_sorting_order', 'yes' );
+        wp_send_json_success( 'Sync completed', 200 );
     }
 
     /**
@@ -4330,16 +4370,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     update_post_meta( $method_id, 'sm_metabox_ap_total_cart_weight', $ap_total_cart_weight_arr );
                     update_post_meta( $method_id, 'sm_metabox_ap_total_cart_subtotal', $ap_total_cart_subtotal_arr );
                     update_post_meta( $method_id, 'ap_rule_status', $ap_rule_status );
-                    if ( 'edit' !== $action ) {
-                        $getSortOrder = get_option( 'sm_sortable_order_' . $default_lang );
-                        if ( !empty( $getSortOrder ) && !in_array( $method_id, $getSortOrder, true ) ) {
-                            foreach ( $getSortOrder as $getSortOrder_id ) {
-                                settype( $getSortOrder_id, 'integer' );
-                            }
-                            array_unshift( $getSortOrder, $method_id );
-                        }
-                        update_option( 'sm_sortable_order_' . $default_lang, $getSortOrder );
-                    }
                 }
             } else {
                 echo '<div class="updated error"><p>' . esc_html__( 'Error saving shipping method.', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</p></div>';
@@ -4969,35 +4999,28 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         $export_action = filter_input( INPUT_POST, 'afrsm_export_action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $import_action = filter_input( INPUT_POST, 'afrsm_import_action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
+        // Export Shipping Methods Module
         if ( !empty( $export_action ) || 'export_settings' === $export_action ) {
+            // Nonce verification
+            $afrsm_export_action_nonce = filter_input( INPUT_POST, 'afrsm_export_action_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+            if ( !wp_verify_nonce( $afrsm_export_action_nonce, 'afrsm_export_save_action_nonce' ) ) {
+                return;
+            }
+            $export_type = filter_input( INPUT_POST, 'afrsm_export_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+            $export_type = ( !empty( $export_type ) ? 'csv' : 'json' );
             $get_all_fees_args = array(
                 'post_type'      => self::afrsm_shipping_post_type,
                 'order'          => 'DESC',
                 'posts_per_page' => -1,
-                'orderby'        => 'ID',
+                'orderby'        => 'menu_order',
             );
             $get_all_fees_query = new WP_Query($get_all_fees_args);
             $get_all_fees = $get_all_fees_query->get_posts();
             $get_all_fees_count = $get_all_fees_query->found_posts;
-            $get_sort_order = get_option( 'sm_sortable_order_' . $default_lang );
-            $sort_order = array();
-            if ( isset( $get_sort_order ) && !empty( $get_sort_order ) ) {
-                foreach ( $get_sort_order as $sort ) {
-                    $sort_order[$sort] = array();
-                }
-            }
-            foreach ( $get_all_fees as $carrier_id => $carrier ) {
-                $carrier_name = $carrier->ID;
-                if ( array_key_exists( $carrier_name, $sort_order ) ) {
-                    $sort_order[$carrier_name][$carrier_id] = $get_all_fees[$carrier_id];
-                    unset($get_all_fees[$carrier_id]);
-                }
-            }
-            foreach ( $sort_order as $carriers ) {
-                $get_all_fees = array_merge( $get_all_fees, $carriers );
-            }
             $fees_data = array();
+            $csv_data = array();
             $main_data = array();
+            $header_count = 0;
             if ( $get_all_fees_count > 0 ) {
                 foreach ( $get_all_fees as $fees ) {
                     $request_post_id = $fees->ID;
@@ -5014,8 +5037,22 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     $sm_free_shipping_label = get_post_meta( $request_post_id, 'sm_free_shipping_label', true );
                     $sm_tooltip_type = get_post_meta( $request_post_id, 'sm_tooltip_type', true );
                     $sm_tooltip_desc = get_post_meta( $request_post_id, 'sm_tooltip_desc', true );
+                    $sm_select_log_in_user = get_post_meta( $request_post_id, 'sm_select_log_in_user', true );
+                    $sm_select_first_order_for_user = get_post_meta( $request_post_id, 'sm_select_first_order_for_user', true );
+                    $sm_select_selected_shipping = get_post_meta( $request_post_id, 'sm_select_selected_shipping', true );
                     $sm_is_taxable = get_post_meta( $request_post_id, 'sm_select_taxable', true );
                     $sm_select_shipping_provider = get_post_meta( $request_post_id, 'sm_select_shipping_provider', true );
+                    $is_allow_custom_weight_base = get_post_meta( $request_post_id, 'is_allow_custom_weight_base', true );
+                    $sm_custom_weight_base_cost = get_post_meta( $request_post_id, 'sm_custom_weight_base_cost', true );
+                    $sm_custom_weight_base_per_each = get_post_meta( $request_post_id, 'sm_custom_weight_base_per_each', true );
+                    $sm_custom_weight_base_over = get_post_meta( $request_post_id, 'sm_custom_weight_base_over', true );
+                    $is_allow_custom_qty_base = get_post_meta( $request_post_id, 'is_allow_custom_qty_base', true );
+                    $sm_custom_qty_base_cost = get_post_meta( $request_post_id, 'sm_custom_qty_base_cost', true );
+                    $sm_custom_qty_base_per_each = get_post_meta( $request_post_id, 'sm_custom_qty_base_per_each', true );
+                    $sm_custom_qty_base_over = get_post_meta( $request_post_id, 'sm_custom_qty_base_over', true );
+                    $sm_free_shipping_based_on_product = get_post_meta( $request_post_id, 'sm_free_shipping_based_on_product', true );
+                    $sm_free_shipping_exclude_product = get_post_meta( $request_post_id, 'sm_free_shipping_exclude_product', true );
+                    $is_free_shipping_exclude_prod = get_post_meta( $request_post_id, 'is_free_shipping_exclude_prod', true );
                     $sm_metabox = get_post_meta( $request_post_id, 'sm_metabox', true );
                     $sm_extra_cost = get_post_meta( $request_post_id, 'sm_extra_cost', true );
                     $sm_extra_cost_calc_type = get_post_meta( $request_post_id, 'sm_extra_cost_calculation_type', true );
@@ -5281,10 +5318,10 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             );
                         }
                     }
-                    $fees_data[$request_post_id] = array(
-                        'sm_title'                               => $sm_title,
-                        'fee_settings_unique_shipping_title'     => $fee_settings_unique_shipping_title,
+                    $fees_data[] = array(
                         'sm_cost'                                => $sm_cost,
+                        'fee_settings_unique_shipping_title'     => $fee_settings_unique_shipping_title,
+                        'sm_title'                               => $sm_title,
                         'sm_free_shipping_based_on'              => $sm_free_shipping_based_on,
                         'is_allow_free_shipping'                 => $is_allow_free_shipping,
                         'sm_free_shipping_cost'                  => $sm_free_shipping_cost,
@@ -5295,6 +5332,9 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         'sm_free_shipping_label'                 => $sm_free_shipping_label,
                         'sm_tooltip_type'                        => $sm_tooltip_type,
                         'sm_tooltip_desc'                        => $sm_tooltip_desc,
+                        'sm_select_log_in_user'                  => $sm_select_log_in_user,
+                        'sm_select_first_order_for_user'         => $sm_select_first_order_for_user,
+                        'sm_select_selected_shipping'            => $sm_select_selected_shipping,
                         'sm_start_date'                          => $sm_start_date,
                         'sm_end_date'                            => $sm_end_date,
                         'sm_start_time'                          => $sm_time_from,
@@ -5303,6 +5343,17 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         'sm_estimation_delivery'                 => $sm_estimation_delivery,
                         'sm_select_taxable'                      => $sm_is_taxable,
                         'sm_select_shipping_provider'            => $sm_select_shipping_provider,
+                        'is_allow_custom_weight_base'            => $is_allow_custom_weight_base,
+                        'sm_custom_weight_base_cost'             => $sm_custom_weight_base_cost,
+                        'sm_custom_weight_base_per_each'         => $sm_custom_weight_base_per_each,
+                        'sm_custom_weight_base_over'             => $sm_custom_weight_base_over,
+                        'is_allow_custom_qty_base'               => $is_allow_custom_qty_base,
+                        'sm_custom_qty_base_cost'                => $sm_custom_qty_base_cost,
+                        'sm_custom_qty_base_per_each'            => $sm_custom_qty_base_per_each,
+                        'sm_custom_qty_base_over'                => $sm_custom_qty_base_over,
+                        'sm_free_shipping_based_on_product'      => $sm_free_shipping_based_on_product,
+                        'sm_free_shipping_exclude_product'       => $sm_free_shipping_exclude_product,
+                        'is_free_shipping_exclude_prod'          => $is_free_shipping_exclude_prod,
                         'status'                                 => $sm_status,
                         'product_fees_metabox'                   => $sm_metabox_customize,
                         'sm_extra_cost'                          => $shipping_class,
@@ -5346,29 +5397,67 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         'cost_rule_match'                        => $cost_rule_match,
                     );
                 }
-                $get_sort_order = get_option( 'sm_sortable_order_' . $default_lang );
-                $main_data = array(
-                    'fees_data'      => $fees_data,
-                    'shipping_order' => $get_sort_order,
-                );
             }
-            $afrsm_export_action_nonce = filter_input( INPUT_POST, 'afrsm_export_action_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-            if ( !wp_verify_nonce( $afrsm_export_action_nonce, 'afrsm_export_save_action_nonce' ) ) {
-                return;
+            if ( empty( $fees_data ) ) {
+                wp_safe_redirect( add_query_arg( array(
+                    'page'   => 'afrsm-pro-import-export',
+                    'status' => 'error',
+                    'msg'    => 'no_data_found',
+                ), admin_url( 'admin.php' ) ) );
+                exit;
             }
-            ignore_user_abort( true );
-            nocache_headers();
-            header( 'Content-Type: application/json; charset=utf-8' );
-            header( 'Content-Disposition: attachment; filename=afrsm-settings-export-' . gmdate( 'm-d-Y' ) . '.json' );
-            header( "Expires: 0" );
-            echo wp_json_encode( $main_data );
-            exit;
+            if ( $export_type === 'json' ) {
+                ignore_user_abort( true );
+                nocache_headers();
+                header( 'Content-Type: application/json; charset=utf-8' );
+                header( 'Content-Disposition: attachment; filename=afrsm-settings-export-' . gmdate( 'm-d-Y' ) . '.json' );
+                header( "Expires: 0" );
+                echo wp_json_encode( $fees_data, JSON_PRETTY_PRINT );
+                exit;
+            } else {
+                if ( 'csv' === $export_type ) {
+                    // File name
+                    $file_name = 'afrsm-settings-export-' . gmdate( 'm-d-Y' ) . '.csv';
+                    //Header Data
+                    $csv_data[] = ( !empty( $fees_data ) ? array_keys( array_values( $fees_data )[0] ) : array() );
+                    //Prepare row data
+                    foreach ( $fees_data as $single_data ) {
+                        $sd = array();
+                        foreach ( $single_data as $sdata ) {
+                            $sd[] = ( is_array( $sdata ) ? serialize( $sdata ) : mb_convert_encoding( html_entity_decode( $sdata, ENT_QUOTES | ENT_HTML401, 'UTF-8' ), 'UTF-8', 'auto' ) );
+                            // phpcs:ignore
+                        }
+                        $csv_data[] = $sd;
+                    }
+                    // Set headers for download
+                    header( 'Content-Type: text/csv; charset=UTF-8' );
+                    header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
+                    // Output BOM for UTF-8
+                    // echo "\xEF\xBB\xBF";
+                    // Open the CSV file for writing
+                    $csv_file = fopen( 'php://output', 'w' );
+                    //phpcs:ignore
+                    // Write data to the CSV file
+                    foreach ( $csv_data as $row ) {
+                        fputcsv( $csv_file, $row );
+                        //phpcs:ignore
+                    }
+                    // Close the CSV file
+                    fclose( $csv_file );
+                    //phpcs:ignore
+                    exit;
+                }
+            }
         }
+        // Import Shipping Methods Module
         if ( !empty( $import_action ) || 'import_settings' === $import_action ) {
+            // Nonce verification
             $afrsm_import_action_nonce = filter_input( INPUT_POST, 'afrsm_import_action_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
             if ( !wp_verify_nonce( $afrsm_import_action_nonce, 'afrsm_import_action_nonce' ) ) {
                 return;
             }
+            $import_type = filter_input( INPUT_POST, 'afrsm_import_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+            $import_type = ( !empty( $import_type ) ? 'csv' : 'json' );
             $file_import_file_args = array(
                 'import_file' => array(
                     'filter' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
@@ -5376,330 +5465,420 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 ),
             );
             $attached_import_files__arr = filter_var_array( $_FILES, $file_import_file_args );
-            $attached_import_files__arr_explode = explode( '.', $attached_import_files__arr['import_file']['name'] );
-            $extension = end( $attached_import_files__arr_explode );
-            if ( $extension !== 'json' ) {
-                wp_die( esc_html__( 'Please upload a valid .json file', 'advanced-flat-rate-shipping-for-woocommerce' ) );
-            }
             $import_file = $attached_import_files__arr['import_file']['tmp_name'];
             if ( empty( $import_file ) ) {
-                wp_die( esc_html__( 'Please upload a file to import', 'advanced-flat-rate-shipping-for-woocommerce' ) );
+                wp_die( sprintf( esc_html__( 'Please upload a %s file to import', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( strtoupper( $import_type ) ) ) );
             }
-            WP_Filesystem();
-            global $wp_filesystem;
-            $file_data = $wp_filesystem->get_contents( $import_file );
-            if ( !empty( $file_data ) ) {
-                $file_data_decode = json_decode( $file_data, true );
-                $new_sorting_id = array();
-                if ( !empty( $file_data_decode['fees_data'] ) ) {
-                    foreach ( $file_data_decode['fees_data'] as $fees_val ) {
-                        $fee_post = array(
-                            'post_title'  => $fees_val['sm_title'],
-                            'post_status' => $fees_val['status'],
-                            'post_type'   => self::afrsm_shipping_post_type,
+            $attached_import_files__arr_explode = explode( '.', $attached_import_files__arr['import_file']['name'] );
+            $extension = end( $attached_import_files__arr_explode );
+            if ( $extension !== $import_type ) {
+                wp_die( sprintf( esc_html__( 'Please upload a valid %s file', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( strtoupper( $import_type ) ) ) );
+            }
+            $file_import_data = array();
+            if ( 'json' === $import_type ) {
+                WP_Filesystem();
+                global $wp_filesystem;
+                $file_data = $wp_filesystem->get_contents( $import_file );
+                $file_data_decode = array();
+                if ( !empty( $file_data ) ) {
+                    $file_data_decode = json_decode( $file_data, true );
+                }
+                $file_import_data = ( !empty( $file_data_decode ) ? $file_data_decode : array() );
+                $file_import_data = ( isset( $file_import_data['fees_data'] ) ? $file_import_data['fees_data'] : $file_import_data );
+            } elseif ( 'csv' === $import_type ) {
+                // Remove blank rows and filter data
+                $file_import_data = array_filter( $this->parse_file_csv( $import_file ) );
+                // Preserve header from data and remove it from it
+                $header = array_shift( $file_import_data );
+                // Combine header with data with unserialize data
+                $file_import_data = array_map( function ( $row ) use($header) {
+                    if ( !empty( array_filter( $row ) ) ) {
+                        $row = array_combine( $header, $row );
+                        foreach ( $row as $key => $value ) {
+                            if ( is_string( $value ) && is_array( @unserialize( $value ) ) ) {
+                                // phpcs:ignore
+                                $row[$key] = unserialize( $value );
+                                // phpcs:ignore
+                            }
+                        }
+                        return $row;
+                    }
+                }, $file_import_data );
+            }
+            global $wpdb;
+            $new_sorting_ids = [];
+            if ( !empty( $file_import_data ) ) {
+                global $afrsfwpa;
+                $index = $afrsfwpa->afrsm_pro_sm_count_method();
+                // resync before import
+                afrsm()->sync_shipping_method_sorting_order( 'sync_before_import' );
+                $language_code = apply_filters( 'wpml_current_language', NULL );
+                foreach ( $file_import_data as $fees_val ) {
+                    // if empty shipping value then continue
+                    if ( empty( $fees_val ) || empty( $fees_val['sm_title'] ) ) {
+                        continue;
+                    }
+                    $fee_post = array(
+                        'post_title'  => $fees_val['sm_title'],
+                        'post_status' => $fees_val['status'],
+                        'post_type'   => self::afrsm_shipping_post_type,
+                    );
+                    // Ensure WPML is active
+                    if ( function_exists( 'icl_object_id' ) ) {
+                        // Query to check if post exists in the current language
+                        $query = $wpdb->prepare(
+                            "\n                            SELECT p.ID FROM {$wpdb->posts} p\n                            JOIN {$wpdb->prefix}icl_translations t\n                            ON p.ID = t.element_id\n                            WHERE p.post_title = %s\n                            AND t.language_code = %s\n                            AND p.post_type = '%s'\n                            AND p.post_status IN ('publish', 'draft', 'pending')\n                            LIMIT 1\n                        ",
+                            $fees_val['sm_title'],
+                            $language_code,
+                            self::afrsm_shipping_post_type
                         );
-                        $fount_post = post_exists(
+                        // Fetch the result
+                        $fount_post = intval( $wpdb->get_var( $query ) );
+                        // phpcs:ignore
+                    } else {
+                        $fount_post = intval( post_exists(
                             $fees_val['sm_title'],
                             '',
                             '',
                             self::afrsm_shipping_post_type
-                        );
-                        if ( $fount_post > 0 && !empty( $fount_post ) ) {
-                            $fee_post['ID'] = $fount_post;
-                            $get_post_id = wp_update_post( $fee_post );
-                        } else {
-                            $get_post_id = wp_insert_post( $fee_post );
+                        ) );
+                    }
+                    if ( $fount_post > 0 && !empty( $fount_post ) ) {
+                        $fee_post['ID'] = $fount_post;
+                        $get_post_id = wp_update_post( $fee_post );
+                    } else {
+                        $get_post_id = wp_insert_post( $fee_post );
+                        if ( is_wp_error( $get_post_id ) ) {
+                            $afrsm_error = $get_post_id->get_error_message();
+                            afrsm()->afrsm_log( 'Import Error:' . $afrsm_error, 'error' );
                         }
-                        if ( '' !== $get_post_id && 0 !== $get_post_id ) {
-                            if ( $get_post_id > 0 ) {
-                                $new_sorting_id[] = $get_post_id;
-                                $sm_metabox_customize = array();
-                                if ( !empty( $fees_val['product_fees_metabox'] ) ) {
-                                    foreach ( $fees_val['product_fees_metabox'] as $key => $val ) {
-                                        if ( 'product' === $val['product_fees_conditions_condition'] || 'variableproduct' === $val['product_fees_conditions_condition'] || 'category' === $val['product_fees_conditions_condition'] || 'tag' === $val['product_fees_conditions_condition'] || 'zone' === $val['product_fees_conditions_condition'] ) {
-                                            $product_fees_conditions_values = $this->afrsm_pro_fetch_id( $val['product_fees_conditions_values'], $val['product_fees_conditions_condition'] );
-                                            $sm_metabox_customize[$key] = array(
-                                                'product_fees_conditions_condition' => $val['product_fees_conditions_condition'],
-                                                'product_fees_conditions_is'        => $val['product_fees_conditions_is'],
-                                                'product_fees_conditions_values'    => $product_fees_conditions_values,
-                                            );
-                                        } else {
-                                            $sm_metabox_customize[$key] = array(
-                                                'product_fees_conditions_condition' => $val['product_fees_conditions_condition'],
-                                                'product_fees_conditions_is'        => $val['product_fees_conditions_is'],
-                                                'product_fees_conditions_values'    => $val['product_fees_conditions_values'],
-                                            );
-                                        }
-                                    }
-                                }
-                                if ( !empty( $fees_val['sm_extra_cost'] ) ) {
-                                    foreach ( $fees_val['sm_extra_cost'] as $key => $val ) {
-                                        $shipping_class = $this->afrsm_pro_fetch_id( $fees_val['sm_extra_cost'], 'shipping_class' );
-                                    }
-                                } else {
-                                    $shipping_class = array();
-                                }
-                                $sm_metabox_product_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_product'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_product'] as $key => $val ) {
-                                        $ap_fees_products_values = $this->afrsm_pro_fetch_id( $val['ap_fees_products'], 'cpp' );
-                                        $sm_metabox_product_customize[$key] = array(
-                                            'ap_fees_products'         => $ap_fees_products_values,
-                                            'ap_fees_ap_prd_min_qty'   => $val['ap_fees_ap_prd_min_qty'],
-                                            'ap_fees_ap_prd_max_qty'   => $val['ap_fees_ap_prd_max_qty'],
-                                            'ap_fees_ap_price_product' => $val['ap_fees_ap_price_product'],
+                        // Set the language for this post
+                        do_action( 'wpml_set_element_language_details', array(
+                            'element_id'           => $get_post_id,
+                            'element_type'         => 'post_' . self::afrsm_shipping_post_type,
+                            'trid'                 => $get_post_id,
+                            'language_code'        => $language_code,
+                            'source_language_code' => null,
+                        ) );
+                        $new_sorting_ids[] = $get_post_id;
+                    }
+                    settype( $get_post_id, 'integer' );
+                    if ( '' !== $get_post_id && 0 !== $get_post_id ) {
+                        if ( $get_post_id > 0 ) {
+                            $sm_metabox_customize = array();
+                            if ( !empty( $fees_val['product_fees_metabox'] ) ) {
+                                foreach ( $fees_val['product_fees_metabox'] as $key => $val ) {
+                                    if ( 'product' === $val['product_fees_conditions_condition'] || 'variableproduct' === $val['product_fees_conditions_condition'] || 'category' === $val['product_fees_conditions_condition'] || 'tag' === $val['product_fees_conditions_condition'] || 'zone' === $val['product_fees_conditions_condition'] ) {
+                                        $product_fees_conditions_values = $this->afrsm_pro_fetch_id( $val['product_fees_conditions_values'], $val['product_fees_conditions_condition'] );
+                                        $sm_metabox_customize[$key] = array(
+                                            'product_fees_conditions_condition' => $val['product_fees_conditions_condition'],
+                                            'product_fees_conditions_is'        => $val['product_fees_conditions_is'],
+                                            'product_fees_conditions_values'    => $product_fees_conditions_values,
+                                        );
+                                    } else {
+                                        $sm_metabox_customize[$key] = array(
+                                            'product_fees_conditions_condition' => $val['product_fees_conditions_condition'],
+                                            'product_fees_conditions_is'        => $val['product_fees_conditions_is'],
+                                            'product_fees_conditions_values'    => $val['product_fees_conditions_values'],
                                         );
                                     }
                                 }
-                                $sm_metabox_ap_product_subtotal_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_product_subtotal'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_product_subtotal'] as $key => $val ) {
-                                        $ap_fees_products_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_product_subtotal'], 'cpp' );
-                                        $sm_metabox_ap_product_subtotal_customize[$key] = array(
-                                            'ap_fees_product_subtotal'                 => $ap_fees_products_subtotal_values,
-                                            'ap_fees_ap_product_subtotal_min_subtotal' => $val['ap_fees_ap_product_subtotal_min_subtotal'],
-                                            'ap_fees_ap_product_subtotal_max_subtotal' => $val['ap_fees_ap_product_subtotal_max_subtotal'],
-                                            'ap_fees_ap_price_product_subtotal'        => $val['ap_fees_ap_price_product_subtotal'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_product_weight_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_product_weight'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_product_weight'] as $key => $val ) {
-                                        $ap_fees_products_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_product_weight'], 'cpp' );
-                                        $sm_metabox_ap_product_weight_customize[$key] = array(
-                                            'ap_fees_product_weight'            => $ap_fees_products_weight_values,
-                                            'ap_fees_ap_product_weight_min_qty' => $val['ap_fees_ap_product_weight_min_qty'],
-                                            'ap_fees_ap_product_weight_max_qty' => $val['ap_fees_ap_product_weight_max_qty'],
-                                            'ap_fees_ap_price_product_weight'   => $val['ap_fees_ap_price_product_weight'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_category_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_category'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_category'] as $key => $val ) {
-                                        $ap_fees_category_values = $this->afrsm_pro_fetch_id( $val['ap_fees_categories'], 'cpc' );
-                                        $sm_metabox_ap_category_customize[$key] = array(
-                                            'ap_fees_categories'        => $ap_fees_category_values,
-                                            'ap_fees_ap_cat_min_qty'    => $val['ap_fees_ap_cat_min_qty'],
-                                            'ap_fees_ap_cat_max_qty'    => $val['ap_fees_ap_cat_max_qty'],
-                                            'ap_fees_ap_price_category' => $val['ap_fees_ap_price_category'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_category_subtotal_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_category_subtotal'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_category_subtotal'] as $key => $val ) {
-                                        $ap_fees_ap_category_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_category_subtotal'], 'cpc' );
-                                        $sm_metabox_ap_category_subtotal_customize[$key] = array(
-                                            'ap_fees_category_subtotal'                 => $ap_fees_ap_category_subtotal_values,
-                                            'ap_fees_ap_category_subtotal_min_subtotal' => $val['ap_fees_ap_category_subtotal_min_subtotal'],
-                                            'ap_fees_ap_category_subtotal_max_subtotal' => $val['ap_fees_ap_category_subtotal_max_subtotal'],
-                                            'ap_fees_ap_price_category_subtotal'        => $val['ap_fees_ap_price_category_subtotal'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_category_weight_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_category_weight'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_category_weight'] as $key => $val ) {
-                                        $ap_fees_ap_category_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_categories_weight'], 'cpc' );
-                                        $sm_metabox_ap_category_weight_customize[$key] = array(
-                                            'ap_fees_categories_weight'          => $ap_fees_ap_category_weight_values,
-                                            'ap_fees_ap_category_weight_min_qty' => $val['ap_fees_ap_category_weight_min_qty'],
-                                            'ap_fees_ap_category_weight_max_qty' => $val['ap_fees_ap_category_weight_max_qty'],
-                                            'ap_fees_ap_price_category_weight'   => $val['ap_fees_ap_price_category_weight'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_tag_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_tag'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_tag'] as $key => $val ) {
-                                        $ap_fees_tag_values = $this->afrsm_pro_fetch_id( $val['ap_fees_tags'], 'cpc' );
-                                        $sm_metabox_ap_tag_customize[$key] = array(
-                                            'ap_fees_tags'           => $ap_fees_tag_values,
-                                            'ap_fees_ap_tag_min_qty' => $val['ap_fees_ap_tag_min_qty'],
-                                            'ap_fees_ap_tag_max_qty' => $val['ap_fees_ap_tag_max_qty'],
-                                            'ap_fees_ap_price_tag'   => $val['ap_fees_ap_price_tag'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_tag_subtotal_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_tag_subtotal'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_tag_subtotal'] as $key => $val ) {
-                                        $ap_fees_ap_tag_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_tag_subtotal'], 'cpc' );
-                                        $sm_metabox_ap_tag_subtotal_customize[$key] = array(
-                                            'ap_fees_tag_subtotal'                 => $ap_fees_ap_tag_subtotal_values,
-                                            'ap_fees_ap_tag_subtotal_min_subtotal' => $val['ap_fees_ap_tag_subtotal_min_subtotal'],
-                                            'ap_fees_ap_tag_subtotal_max_subtotal' => $val['ap_fees_ap_tag_subtotal_max_subtotal'],
-                                            'ap_fees_ap_price_tag_subtotal'        => $val['ap_fees_ap_price_tag_subtotal'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_tag_weight_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_tag_weight'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_tag_weight'] as $key => $val ) {
-                                        $ap_fees_ap_tag_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_tag_weight'], 'cpc' );
-                                        $sm_metabox_ap_tag_weight_customize[$key] = array(
-                                            'ap_fees_tag_weight'            => $ap_fees_ap_tag_weight_values,
-                                            'ap_fees_ap_tag_weight_min_qty' => $val['ap_fees_ap_tag_weight_min_qty'],
-                                            'ap_fees_ap_tag_weight_max_qty' => $val['ap_fees_ap_tag_weight_max_qty'],
-                                            'ap_fees_ap_price_tag_weight'   => $val['ap_fees_ap_price_tag_weight'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_total_cart_qty_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_total_cart_qty'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_total_cart_qty'] as $key => $val ) {
-                                        $ap_fees_ap_total_cart_qty_values = $this->afrsm_pro_fetch_id( $val['ap_fees_total_cart_qty'], '' );
-                                        $sm_metabox_ap_total_cart_qty_customize[$key] = array(
-                                            'ap_fees_total_cart_qty'            => $ap_fees_ap_total_cart_qty_values,
-                                            'ap_fees_ap_total_cart_qty_min_qty' => $val['ap_fees_ap_total_cart_qty_min_qty'],
-                                            'ap_fees_ap_total_cart_qty_max_qty' => $val['ap_fees_ap_total_cart_qty_max_qty'],
-                                            'ap_fees_ap_price_total_cart_qty'   => $val['ap_fees_ap_price_total_cart_qty'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_total_cart_weight_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_total_cart_weight'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_total_cart_weight'] as $key => $val ) {
-                                        $ap_fees_ap_total_cart_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_total_cart_weight'], '' );
-                                        $sm_metabox_ap_total_cart_weight_customize[$key] = array(
-                                            'ap_fees_total_cart_weight'               => $ap_fees_ap_total_cart_weight_values,
-                                            'ap_fees_ap_total_cart_weight_min_weight' => $val['ap_fees_ap_total_cart_weight_min_weight'],
-                                            'ap_fees_ap_total_cart_weight_max_weight' => $val['ap_fees_ap_total_cart_weight_max_weight'],
-                                            'ap_fees_ap_price_total_cart_weight'      => $val['ap_fees_ap_price_total_cart_weight'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_total_cart_subtotal_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_total_cart_subtotal'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_total_cart_subtotal'] as $key => $val ) {
-                                        $ap_fees_ap_total_cart_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_total_cart_subtotal'], '' );
-                                        $sm_metabox_ap_total_cart_subtotal_customize[$key] = array(
-                                            'ap_fees_total_cart_subtotal'                 => $ap_fees_ap_total_cart_subtotal_values,
-                                            'ap_fees_ap_total_cart_subtotal_min_subtotal' => $val['ap_fees_ap_total_cart_subtotal_min_subtotal'],
-                                            'ap_fees_ap_total_cart_subtotal_max_subtotal' => $val['ap_fees_ap_total_cart_subtotal_max_subtotal'],
-                                            'ap_fees_ap_price_total_cart_subtotal'        => $val['ap_fees_ap_price_total_cart_subtotal'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_shipping_class_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_shipping_class'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_shipping_class'] as $key => $val ) {
-                                        $ap_fees_shipping_classes_values = $this->afrsm_pro_fetch_id( $val['ap_fees_shipping_classes'], 'shipping_class' );
-                                        $sm_metabox_ap_shipping_class_customize[$key] = array(
-                                            'ap_fees_shipping_classes'          => $ap_fees_shipping_classes_values,
-                                            'ap_fees_ap_shipping_class_min_qty' => $val['ap_fees_ap_shipping_class_min_qty'],
-                                            'ap_fees_ap_shipping_class_max_qty' => $val['ap_fees_ap_shipping_class_max_qty'],
-                                            'ap_fees_ap_price_shipping_class'   => $val['ap_fees_ap_price_shipping_class'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_shipping_class_weight_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_shipping_class_weight'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_shipping_class_weight'] as $key => $val ) {
-                                        $ap_fees_ap_shipping_class_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_shipping_class_weight'], 'cpsc' );
-                                        $sm_metabox_ap_shipping_class_weight_customize[$key] = array(
-                                            'ap_fees_shipping_class_weight'               => $ap_fees_ap_shipping_class_weight_values,
-                                            'ap_fees_ap_shipping_class_weight_min_weight' => $val['ap_fees_ap_shipping_class_weight_min_weight'],
-                                            'ap_fees_ap_shipping_class_weight_max_weight' => $val['ap_fees_ap_shipping_class_weight_max_weight'],
-                                            'ap_fees_ap_price_shipping_class_weight'      => $val['ap_fees_ap_price_shipping_class_weight'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_shipping_class_subtotal_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_shipping_class_subtotal'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_shipping_class_subtotal'] as $key => $val ) {
-                                        $ap_fees_ap_shipping_class_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_shipping_class_subtotals'], 'cpsc' );
-                                        $sm_metabox_ap_shipping_class_subtotal_customize[$key] = array(
-                                            'ap_fees_shipping_class_subtotals'                => $ap_fees_ap_shipping_class_subtotal_values,
-                                            'ap_fees_ap_shipping_class_subtotal_min_subtotal' => $val['ap_fees_ap_shipping_class_subtotal_min_subtotal'],
-                                            'ap_fees_ap_shipping_class_subtotal_max_subtotal' => $val['ap_fees_ap_shipping_class_subtotal_max_subtotal'],
-                                            'ap_fees_ap_price_shipping_class_subtotal'        => $val['ap_fees_ap_price_shipping_class_subtotal'],
-                                        );
-                                    }
-                                }
-                                $sm_metabox_ap_product_attribute_customize = array();
-                                if ( !empty( $fees_val['sm_metabox_ap_product_attribute'] ) ) {
-                                    foreach ( $fees_val['sm_metabox_ap_product_attribute'] as $key => $val ) {
-                                        $ap_fees_ap_product_attribute_values = $this->afrsm_pro_fetch_id( $val['ap_fees_product_attributes'], '' );
-                                        $sm_metabox_ap_product_attribute_customize[$key] = array(
-                                            'ap_fees_product_attributes'           => $ap_fees_ap_product_attribute_values,
-                                            'ap_fees_ap_product_attribute_min_qty' => $val['ap_fees_ap_product_attribute_min_qty'],
-                                            'ap_fees_ap_product_attribute_max_qty' => $val['ap_fees_ap_product_attribute_max_qty'],
-                                            'ap_fees_ap_price_product_attribute'   => $val['ap_fees_ap_price_product_attribute'],
-                                        );
-                                    }
-                                }
-                                update_post_meta( $get_post_id, 'fee_settings_unique_shipping_title', $fees_val['fee_settings_unique_shipping_title'] );
-                                update_post_meta( $get_post_id, 'sm_product_cost', $fees_val['sm_cost'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_based_on', $fees_val['sm_free_shipping_based_on'] );
-                                update_post_meta( $get_post_id, 'is_allow_free_shipping', $fees_val['is_allow_free_shipping'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_cost', $fees_val['sm_free_shipping_cost'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_cost_before_discount', $fees_val['sm_free_shipping_cost_before_discount'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice', $fees_val['sm_free_shipping_cost_left_notice'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice_msg', $fees_val['sm_free_shipping_cost_left_notice_msg'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_coupan_cost', $fees_val['sm_free_shipping_coupan_cost'] );
-                                update_post_meta( $get_post_id, 'sm_free_shipping_label', $fees_val['sm_free_shipping_label'] );
-                                update_post_meta( $get_post_id, 'sm_tooltip_type', $fees_val['sm_tooltip_type'] );
-                                update_post_meta( $get_post_id, 'sm_tooltip_desc', $fees_val['sm_tooltip_desc'] );
-                                update_post_meta( $get_post_id, 'sm_start_date', $fees_val['sm_start_date'] );
-                                update_post_meta( $get_post_id, 'sm_end_date', $fees_val['sm_end_date'] );
-                                update_post_meta( $get_post_id, 'sm_time_from', $fees_val['sm_start_time'] );
-                                update_post_meta( $get_post_id, 'sm_time_to', $fees_val['sm_end_time'] );
-                                update_post_meta( $get_post_id, 'sm_select_day_of_week', $fees_val['sm_select_day_of_week'] );
-                                update_post_meta( $get_post_id, 'sm_estimation_delivery', $fees_val['sm_estimation_delivery'] );
-                                update_post_meta( $get_post_id, 'sm_select_taxable', $fees_val['sm_select_taxable'] );
-                                update_post_meta( $get_post_id, 'sm_select_shipping_provider', $fees_val['sm_select_shipping_provider'] );
-                                update_post_meta( $get_post_id, 'sm_metabox', $sm_metabox_customize );
-                                update_post_meta( $get_post_id, 'sm_extra_cost', $shipping_class );
-                                update_post_meta( $get_post_id, 'sm_extra_cost_calculation_type', $fees_val['sm_extra_cost_calc_type'] );
-                                update_post_meta( $get_post_id, 'sm_fee_chk_qty_price', $fees_val['sm_fee_chk_qty_price'] );
-                                update_post_meta( $get_post_id, 'sm_fee_per_qty', $fees_val['sm_fee_per_qty'] );
-                                update_post_meta( $get_post_id, 'sm_extra_product_cost', $fees_val['sm_extra_product_cost'] );
-                                update_post_meta( $get_post_id, 'ap_rule_status', $fees_val['ap_rule_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_product_status', $fees_val['cost_on_product_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_product_weight_status', $fees_val['cost_on_product_weight_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_product_subtotal_status', $fees_val['cost_on_product_subtotal_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_category_status', $fees_val['cost_on_category_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_category_weight_status', $fees_val['cost_on_category_weight_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_category_subtotal_status', $fees_val['cost_on_category_subtotal_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_tag_status', $fees_val['cost_on_tag_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_tag_subtotal_status', $fees_val['cost_on_tag_subtotal_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_tag_weight_status', $fees_val['cost_on_tag_weight_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_total_cart_qty_status', $fees_val['cost_on_total_cart_qty_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_total_cart_weight_status', $fees_val['cost_on_total_cart_weight_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_shipping_class_status', $fees_val['cost_on_shipping_class_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_total_cart_subtotal_status', $fees_val['cost_on_total_cart_subtotal_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_shipping_class_weight_status', $fees_val['cost_on_shipping_class_weight_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_shipping_class_subtotal_status', $fees_val['cost_on_shipping_class_subtotal_status'] );
-                                update_post_meta( $get_post_id, 'cost_on_product_attribute_status', $fees_val['cost_on_product_attribute_status'] );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_product', $sm_metabox_product_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_product_subtotal', $sm_metabox_ap_product_subtotal_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_product_weight', $sm_metabox_ap_product_weight_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_category', $sm_metabox_ap_category_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_category_subtotal', $sm_metabox_ap_category_subtotal_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_category_weight', $sm_metabox_ap_category_weight_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_tag', $sm_metabox_ap_tag_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_tag_subtotal', $sm_metabox_ap_tag_subtotal_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_tag_weight', $sm_metabox_ap_tag_weight_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_qty', $sm_metabox_ap_total_cart_qty_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_weight', $sm_metabox_ap_total_cart_weight_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_subtotal', $sm_metabox_ap_total_cart_subtotal_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class', $sm_metabox_ap_shipping_class_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class_weight', $sm_metabox_ap_shipping_class_weight_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class_subtotal', $sm_metabox_ap_shipping_class_subtotal_customize );
-                                update_post_meta( $get_post_id, 'sm_metabox_ap_product_attribute', $sm_metabox_ap_product_attribute_customize );
-                                update_post_meta( $get_post_id, 'cost_rule_match', $fees_val['cost_rule_match'] );
                             }
+                            if ( !empty( $fees_val['sm_extra_cost'] ) ) {
+                                foreach ( $fees_val['sm_extra_cost'] as $key => $val ) {
+                                    $shipping_class = $this->afrsm_pro_fetch_id( $fees_val['sm_extra_cost'], 'shipping_class' );
+                                }
+                            } else {
+                                $shipping_class = array();
+                            }
+                            $sm_metabox_product_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_product'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_product'] as $key => $val ) {
+                                    $ap_fees_products_values = $this->afrsm_pro_fetch_id( $val['ap_fees_products'], 'cpp' );
+                                    $sm_metabox_product_customize[$key] = array(
+                                        'ap_fees_products'         => $ap_fees_products_values,
+                                        'ap_fees_ap_prd_min_qty'   => $val['ap_fees_ap_prd_min_qty'],
+                                        'ap_fees_ap_prd_max_qty'   => $val['ap_fees_ap_prd_max_qty'],
+                                        'ap_fees_ap_price_product' => $val['ap_fees_ap_price_product'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_product_subtotal_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_product_subtotal'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_product_subtotal'] as $key => $val ) {
+                                    $ap_fees_products_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_product_subtotal'], 'cpp' );
+                                    $sm_metabox_ap_product_subtotal_customize[$key] = array(
+                                        'ap_fees_product_subtotal'                 => $ap_fees_products_subtotal_values,
+                                        'ap_fees_ap_product_subtotal_min_subtotal' => $val['ap_fees_ap_product_subtotal_min_subtotal'],
+                                        'ap_fees_ap_product_subtotal_max_subtotal' => $val['ap_fees_ap_product_subtotal_max_subtotal'],
+                                        'ap_fees_ap_price_product_subtotal'        => $val['ap_fees_ap_price_product_subtotal'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_product_weight_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_product_weight'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_product_weight'] as $key => $val ) {
+                                    $ap_fees_products_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_product_weight'], 'cpp' );
+                                    $sm_metabox_ap_product_weight_customize[$key] = array(
+                                        'ap_fees_product_weight'            => $ap_fees_products_weight_values,
+                                        'ap_fees_ap_product_weight_min_qty' => $val['ap_fees_ap_product_weight_min_qty'],
+                                        'ap_fees_ap_product_weight_max_qty' => $val['ap_fees_ap_product_weight_max_qty'],
+                                        'ap_fees_ap_price_product_weight'   => $val['ap_fees_ap_price_product_weight'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_category_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_category'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_category'] as $key => $val ) {
+                                    $ap_fees_category_values = $this->afrsm_pro_fetch_id( $val['ap_fees_categories'], 'cpc' );
+                                    $sm_metabox_ap_category_customize[$key] = array(
+                                        'ap_fees_categories'        => $ap_fees_category_values,
+                                        'ap_fees_ap_cat_min_qty'    => $val['ap_fees_ap_cat_min_qty'],
+                                        'ap_fees_ap_cat_max_qty'    => $val['ap_fees_ap_cat_max_qty'],
+                                        'ap_fees_ap_price_category' => $val['ap_fees_ap_price_category'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_category_subtotal_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_category_subtotal'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_category_subtotal'] as $key => $val ) {
+                                    $ap_fees_ap_category_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_category_subtotal'], 'cpc' );
+                                    $sm_metabox_ap_category_subtotal_customize[$key] = array(
+                                        'ap_fees_category_subtotal'                 => $ap_fees_ap_category_subtotal_values,
+                                        'ap_fees_ap_category_subtotal_min_subtotal' => $val['ap_fees_ap_category_subtotal_min_subtotal'],
+                                        'ap_fees_ap_category_subtotal_max_subtotal' => $val['ap_fees_ap_category_subtotal_max_subtotal'],
+                                        'ap_fees_ap_price_category_subtotal'        => $val['ap_fees_ap_price_category_subtotal'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_category_weight_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_category_weight'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_category_weight'] as $key => $val ) {
+                                    $ap_fees_ap_category_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_categories_weight'], 'cpc' );
+                                    $sm_metabox_ap_category_weight_customize[$key] = array(
+                                        'ap_fees_categories_weight'          => $ap_fees_ap_category_weight_values,
+                                        'ap_fees_ap_category_weight_min_qty' => $val['ap_fees_ap_category_weight_min_qty'],
+                                        'ap_fees_ap_category_weight_max_qty' => $val['ap_fees_ap_category_weight_max_qty'],
+                                        'ap_fees_ap_price_category_weight'   => $val['ap_fees_ap_price_category_weight'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_tag_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_tag'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_tag'] as $key => $val ) {
+                                    $ap_fees_tag_values = $this->afrsm_pro_fetch_id( $val['ap_fees_tags'], 'cpc' );
+                                    $sm_metabox_ap_tag_customize[$key] = array(
+                                        'ap_fees_tags'           => $ap_fees_tag_values,
+                                        'ap_fees_ap_tag_min_qty' => $val['ap_fees_ap_tag_min_qty'],
+                                        'ap_fees_ap_tag_max_qty' => $val['ap_fees_ap_tag_max_qty'],
+                                        'ap_fees_ap_price_tag'   => $val['ap_fees_ap_price_tag'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_tag_subtotal_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_tag_subtotal'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_tag_subtotal'] as $key => $val ) {
+                                    $ap_fees_ap_tag_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_tag_subtotal'], 'cpc' );
+                                    $sm_metabox_ap_tag_subtotal_customize[$key] = array(
+                                        'ap_fees_tag_subtotal'                 => $ap_fees_ap_tag_subtotal_values,
+                                        'ap_fees_ap_tag_subtotal_min_subtotal' => $val['ap_fees_ap_tag_subtotal_min_subtotal'],
+                                        'ap_fees_ap_tag_subtotal_max_subtotal' => $val['ap_fees_ap_tag_subtotal_max_subtotal'],
+                                        'ap_fees_ap_price_tag_subtotal'        => $val['ap_fees_ap_price_tag_subtotal'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_tag_weight_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_tag_weight'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_tag_weight'] as $key => $val ) {
+                                    $ap_fees_ap_tag_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_tag_weight'], 'cpc' );
+                                    $sm_metabox_ap_tag_weight_customize[$key] = array(
+                                        'ap_fees_tag_weight'            => $ap_fees_ap_tag_weight_values,
+                                        'ap_fees_ap_tag_weight_min_qty' => $val['ap_fees_ap_tag_weight_min_qty'],
+                                        'ap_fees_ap_tag_weight_max_qty' => $val['ap_fees_ap_tag_weight_max_qty'],
+                                        'ap_fees_ap_price_tag_weight'   => $val['ap_fees_ap_price_tag_weight'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_total_cart_qty_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_total_cart_qty'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_total_cart_qty'] as $key => $val ) {
+                                    $ap_fees_ap_total_cart_qty_values = $this->afrsm_pro_fetch_id( $val['ap_fees_total_cart_qty'], '' );
+                                    $sm_metabox_ap_total_cart_qty_customize[$key] = array(
+                                        'ap_fees_total_cart_qty'            => $ap_fees_ap_total_cart_qty_values,
+                                        'ap_fees_ap_total_cart_qty_min_qty' => $val['ap_fees_ap_total_cart_qty_min_qty'],
+                                        'ap_fees_ap_total_cart_qty_max_qty' => $val['ap_fees_ap_total_cart_qty_max_qty'],
+                                        'ap_fees_ap_price_total_cart_qty'   => $val['ap_fees_ap_price_total_cart_qty'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_total_cart_weight_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_total_cart_weight'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_total_cart_weight'] as $key => $val ) {
+                                    $ap_fees_ap_total_cart_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_total_cart_weight'], '' );
+                                    $sm_metabox_ap_total_cart_weight_customize[$key] = array(
+                                        'ap_fees_total_cart_weight'               => $ap_fees_ap_total_cart_weight_values,
+                                        'ap_fees_ap_total_cart_weight_min_weight' => $val['ap_fees_ap_total_cart_weight_min_weight'],
+                                        'ap_fees_ap_total_cart_weight_max_weight' => $val['ap_fees_ap_total_cart_weight_max_weight'],
+                                        'ap_fees_ap_price_total_cart_weight'      => $val['ap_fees_ap_price_total_cart_weight'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_total_cart_subtotal_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_total_cart_subtotal'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_total_cart_subtotal'] as $key => $val ) {
+                                    $ap_fees_ap_total_cart_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_total_cart_subtotal'], '' );
+                                    $sm_metabox_ap_total_cart_subtotal_customize[$key] = array(
+                                        'ap_fees_total_cart_subtotal'                 => $ap_fees_ap_total_cart_subtotal_values,
+                                        'ap_fees_ap_total_cart_subtotal_min_subtotal' => $val['ap_fees_ap_total_cart_subtotal_min_subtotal'],
+                                        'ap_fees_ap_total_cart_subtotal_max_subtotal' => $val['ap_fees_ap_total_cart_subtotal_max_subtotal'],
+                                        'ap_fees_ap_price_total_cart_subtotal'        => $val['ap_fees_ap_price_total_cart_subtotal'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_shipping_class_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_shipping_class'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_shipping_class'] as $key => $val ) {
+                                    $ap_fees_shipping_classes_values = $this->afrsm_pro_fetch_id( $val['ap_fees_shipping_classes'], 'shipping_class' );
+                                    $sm_metabox_ap_shipping_class_customize[$key] = array(
+                                        'ap_fees_shipping_classes'          => $ap_fees_shipping_classes_values,
+                                        'ap_fees_ap_shipping_class_min_qty' => $val['ap_fees_ap_shipping_class_min_qty'],
+                                        'ap_fees_ap_shipping_class_max_qty' => $val['ap_fees_ap_shipping_class_max_qty'],
+                                        'ap_fees_ap_price_shipping_class'   => $val['ap_fees_ap_price_shipping_class'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_shipping_class_weight_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_shipping_class_weight'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_shipping_class_weight'] as $key => $val ) {
+                                    $ap_fees_ap_shipping_class_weight_values = $this->afrsm_pro_fetch_id( $val['ap_fees_shipping_class_weight'], 'cpsc' );
+                                    $sm_metabox_ap_shipping_class_weight_customize[$key] = array(
+                                        'ap_fees_shipping_class_weight'               => $ap_fees_ap_shipping_class_weight_values,
+                                        'ap_fees_ap_shipping_class_weight_min_weight' => $val['ap_fees_ap_shipping_class_weight_min_weight'],
+                                        'ap_fees_ap_shipping_class_weight_max_weight' => $val['ap_fees_ap_shipping_class_weight_max_weight'],
+                                        'ap_fees_ap_price_shipping_class_weight'      => $val['ap_fees_ap_price_shipping_class_weight'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_shipping_class_subtotal_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_shipping_class_subtotal'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_shipping_class_subtotal'] as $key => $val ) {
+                                    $ap_fees_ap_shipping_class_subtotal_values = $this->afrsm_pro_fetch_id( $val['ap_fees_shipping_class_subtotals'], 'cpsc' );
+                                    $sm_metabox_ap_shipping_class_subtotal_customize[$key] = array(
+                                        'ap_fees_shipping_class_subtotals'                => $ap_fees_ap_shipping_class_subtotal_values,
+                                        'ap_fees_ap_shipping_class_subtotal_min_subtotal' => $val['ap_fees_ap_shipping_class_subtotal_min_subtotal'],
+                                        'ap_fees_ap_shipping_class_subtotal_max_subtotal' => $val['ap_fees_ap_shipping_class_subtotal_max_subtotal'],
+                                        'ap_fees_ap_price_shipping_class_subtotal'        => $val['ap_fees_ap_price_shipping_class_subtotal'],
+                                    );
+                                }
+                            }
+                            $sm_metabox_ap_product_attribute_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_product_attribute'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_product_attribute'] as $key => $val ) {
+                                    $ap_fees_ap_product_attribute_values = $this->afrsm_pro_fetch_id( $val['ap_fees_product_attributes'], '' );
+                                    $sm_metabox_ap_product_attribute_customize[$key] = array(
+                                        'ap_fees_product_attributes'           => $ap_fees_ap_product_attribute_values,
+                                        'ap_fees_ap_product_attribute_min_qty' => $val['ap_fees_ap_product_attribute_min_qty'],
+                                        'ap_fees_ap_product_attribute_max_qty' => $val['ap_fees_ap_product_attribute_max_qty'],
+                                        'ap_fees_ap_price_product_attribute'   => $val['ap_fees_ap_price_product_attribute'],
+                                    );
+                                }
+                            }
+                            update_post_meta( $get_post_id, 'fee_settings_unique_shipping_title', $fees_val['fee_settings_unique_shipping_title'] );
+                            update_post_meta( $get_post_id, 'sm_product_cost', $fees_val['sm_cost'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_based_on', $fees_val['sm_free_shipping_based_on'] );
+                            update_post_meta( $get_post_id, 'is_allow_free_shipping', $fees_val['is_allow_free_shipping'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_cost', $fees_val['sm_free_shipping_cost'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_cost_before_discount', $fees_val['sm_free_shipping_cost_before_discount'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice', $fees_val['sm_free_shipping_cost_left_notice'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice_msg', $fees_val['sm_free_shipping_cost_left_notice_msg'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_coupan_cost', $fees_val['sm_free_shipping_coupan_cost'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_label', $fees_val['sm_free_shipping_label'] );
+                            update_post_meta( $get_post_id, 'sm_tooltip_type', $fees_val['sm_tooltip_type'] );
+                            update_post_meta( $get_post_id, 'sm_tooltip_desc', $fees_val['sm_tooltip_desc'] );
+                            update_post_meta( $get_post_id, 'sm_select_log_in_user', $fees_val['sm_select_log_in_user'] );
+                            update_post_meta( $get_post_id, 'sm_select_first_order_for_user', $fees_val['sm_select_first_order_for_user'] );
+                            update_post_meta( $get_post_id, 'sm_select_selected_shipping', $fees_val['sm_select_selected_shipping'] );
+                            update_post_meta( $get_post_id, 'sm_start_date', $fees_val['sm_start_date'] );
+                            update_post_meta( $get_post_id, 'sm_end_date', $fees_val['sm_end_date'] );
+                            update_post_meta( $get_post_id, 'sm_time_from', $fees_val['sm_start_time'] );
+                            update_post_meta( $get_post_id, 'sm_time_to', $fees_val['sm_end_time'] );
+                            update_post_meta( $get_post_id, 'sm_select_day_of_week', $fees_val['sm_select_day_of_week'] );
+                            update_post_meta( $get_post_id, 'sm_estimation_delivery', $fees_val['sm_estimation_delivery'] );
+                            update_post_meta( $get_post_id, 'sm_select_taxable', $fees_val['sm_select_taxable'] );
+                            update_post_meta( $get_post_id, 'sm_select_shipping_provider', $fees_val['sm_select_shipping_provider'] );
+                            update_post_meta( $get_post_id, 'is_allow_custom_weight_base', $fees_val['is_allow_custom_weight_base'] );
+                            update_post_meta( $get_post_id, 'sm_custom_weight_base_cost', $fees_val['sm_custom_weight_base_cost'] );
+                            update_post_meta( $get_post_id, 'sm_custom_weight_base_per_each', $fees_val['sm_custom_weight_base_per_each'] );
+                            update_post_meta( $get_post_id, 'sm_custom_weight_base_over', $fees_val['sm_custom_weight_base_over'] );
+                            update_post_meta( $get_post_id, 'is_allow_custom_qty_base', $fees_val['is_allow_custom_qty_base'] );
+                            update_post_meta( $get_post_id, 'sm_custom_qty_base_cost', $fees_val['sm_custom_qty_base_cost'] );
+                            update_post_meta( $get_post_id, 'sm_custom_qty_base_per_each', $fees_val['sm_custom_qty_base_per_each'] );
+                            update_post_meta( $get_post_id, 'sm_custom_qty_base_over', $fees_val['sm_custom_qty_base_over'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_based_on_product', $fees_val['sm_free_shipping_based_on_product'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_exclude_product', $fees_val['sm_free_shipping_exclude_product'] );
+                            update_post_meta( $get_post_id, 'is_free_shipping_exclude_prod', $fees_val['is_free_shipping_exclude_prod'] );
+                            update_post_meta( $get_post_id, 'sm_metabox', $sm_metabox_customize );
+                            update_post_meta( $get_post_id, 'sm_extra_cost', $shipping_class );
+                            update_post_meta( $get_post_id, 'sm_extra_cost_calculation_type', $fees_val['sm_extra_cost_calc_type'] );
+                            update_post_meta( $get_post_id, 'sm_fee_chk_qty_price', $fees_val['sm_fee_chk_qty_price'] );
+                            update_post_meta( $get_post_id, 'sm_fee_per_qty', $fees_val['sm_fee_per_qty'] );
+                            update_post_meta( $get_post_id, 'sm_extra_product_cost', $fees_val['sm_extra_product_cost'] );
+                            update_post_meta( $get_post_id, 'ap_rule_status', $fees_val['ap_rule_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_product_status', $fees_val['cost_on_product_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_product_weight_status', $fees_val['cost_on_product_weight_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_product_subtotal_status', $fees_val['cost_on_product_subtotal_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_category_status', $fees_val['cost_on_category_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_category_weight_status', $fees_val['cost_on_category_weight_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_category_subtotal_status', $fees_val['cost_on_category_subtotal_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_tag_status', $fees_val['cost_on_tag_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_tag_subtotal_status', $fees_val['cost_on_tag_subtotal_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_tag_weight_status', $fees_val['cost_on_tag_weight_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_total_cart_qty_status', $fees_val['cost_on_total_cart_qty_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_total_cart_weight_status', $fees_val['cost_on_total_cart_weight_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_shipping_class_status', $fees_val['cost_on_shipping_class_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_total_cart_subtotal_status', $fees_val['cost_on_total_cart_subtotal_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_shipping_class_weight_status', $fees_val['cost_on_shipping_class_weight_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_shipping_class_subtotal_status', $fees_val['cost_on_shipping_class_subtotal_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_product_attribute_status', $fees_val['cost_on_product_attribute_status'] );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_product', $sm_metabox_product_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_product_subtotal', $sm_metabox_ap_product_subtotal_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_product_weight', $sm_metabox_ap_product_weight_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_category', $sm_metabox_ap_category_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_category_subtotal', $sm_metabox_ap_category_subtotal_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_category_weight', $sm_metabox_ap_category_weight_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_tag', $sm_metabox_ap_tag_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_tag_subtotal', $sm_metabox_ap_tag_subtotal_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_tag_weight', $sm_metabox_ap_tag_weight_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_qty', $sm_metabox_ap_total_cart_qty_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_weight', $sm_metabox_ap_total_cart_weight_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_subtotal', $sm_metabox_ap_total_cart_subtotal_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class', $sm_metabox_ap_shipping_class_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class_weight', $sm_metabox_ap_shipping_class_weight_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class_subtotal', $sm_metabox_ap_shipping_class_subtotal_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_product_attribute', $sm_metabox_ap_product_attribute_customize );
+                            update_post_meta( $get_post_id, 'cost_rule_match', $fees_val['cost_rule_match'] );
                         }
                     }
-                    update_option( 'sm_sortable_order_' . $default_lang, $new_sorting_id );
                 }
+                if ( !empty( $new_sorting_ids ) ) {
+                    $new_sorting_ids = array_reverse( $new_sorting_ids );
+                    foreach ( $new_sorting_ids as $new_sorting_id ) {
+                        $index++;
+                        afrsm()->afrsm_update_shipping_sorting_order( $new_sorting_id, $index );
+                    }
+                }
+            } else {
+                wp_safe_redirect( add_query_arg( array(
+                    'page'   => 'afrsm-pro-import-export',
+                    'status' => 'error',
+                    'msg'    => 'no_data_found',
+                ), admin_url( 'admin.php' ) ) );
+                exit;
             }
             wp_safe_redirect( add_query_arg( array(
                 'page'   => 'afrsm-pro-import-export',
                 'status' => 'success',
+                'msg'    => 'import_success',
             ), admin_url( 'admin.php' ) ) );
             exit;
         }
@@ -5817,6 +5996,36 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             ), admin_url( 'admin.php' ) ) );
             exit;
         }
+    }
+
+    /**
+     * Parse a file with CSV data into an array.
+     *
+     * @since 4.4.0
+     *
+     * @param resource $file_handle file to process as a resource
+     * @return null|array array data or null on read error
+     */
+    private function parse_file_csv( $file_handle ) {
+        if ( is_readable( $file_handle ) ) {
+            $csv_data = array();
+            // get the data from file
+            $file_contents = fopen( $file_handle, 'r' );
+            // phpcs:ignore
+            // handle character encoding
+            $enc = mb_detect_encoding( $file_handle, 'UTF-8, ISO-8859-1', true );
+            if ( $enc ) {
+                setlocale( LC_ALL, 'en_US.' . $enc );
+            }
+            while ( !feof( $file_contents ) ) {
+                $row = fgetcsv( $file_contents );
+                $csv_data[] = $row;
+            }
+            fclose( $file_contents );
+            //phpcs:ignore
+            return $csv_data;
+        }
+        return null;
     }
 
     /**
@@ -6316,28 +6525,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             }
         }
         return $languages_links;
-    }
-
-    /**
-     * 
-     * This function will store method ID in sortable option when WPML create post in other language.
-     * 
-     */
-    public function afrsm_wpml_post_saveupdate_order( $post_id, $post, $update ) {
-        if ( $update ) {
-            return;
-        }
-        if ( $post->post_type === self::afrsm_shipping_post_type ) {
-            $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
-            $getSortOrder = get_option( 'sm_sortable_order_' . $default_lang );
-            if ( !empty( $getSortOrder ) && !in_array( $post_id, $getSortOrder, true ) ) {
-                foreach ( $getSortOrder as $getSortOrder_id ) {
-                    settype( $getSortOrder_id, 'integer' );
-                }
-                array_unshift( $getSortOrder, $post_id );
-            }
-            update_option( 'sm_sortable_order_' . $default_lang, $getSortOrder );
-        }
     }
 
     /**

@@ -206,6 +206,22 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
         }
     }
 
+    /**
+     * Enable and disable auto select shipping methods
+     *
+     * @param $default_method
+     * @param $available_methods
+     */
+    public function afrsm_disable_shipping_methods_autoselect( $default_method, $available_methods ) {
+        // Check if there is more than one shipping method
+        if ( count( $available_methods ) > 1 ) {
+            return false;
+            // Disable auto-select
+        }
+        // If there's only one shipping method, return the default method
+        return $default_method;
+    }
+
     public function afrsm_pro_wc_cart_shipping_method_label_callback( $label, $method ) {
         $get_method_id = '';
         $method_id = ( $method->get_id() ? $method->get_id() : '' );

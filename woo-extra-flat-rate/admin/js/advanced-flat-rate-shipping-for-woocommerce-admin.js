@@ -131,6 +131,7 @@
     });
 
     $(window).on('load', function () {
+
         jQuery('.multiselect2').select2();
 
         $('a[href="admin.php?page=afrsm-pro-list"]').parent().addClass('current');
@@ -1216,10 +1217,18 @@
         //     }
         // });
 
-        saveAllIdOrderWise('on_load');
+        // saveAllIdOrderWise('on_load');
 
         /*Start code for save all method as per sequence in list*/
         function saveAllIdOrderWise(position) {
+
+            $('.afrsm-main-table').block({
+                message: null,
+                overlayCSS: {
+                    background: 'rgb(255, 255, 255)',
+                    opacity: 0.6,
+                },
+            });
             var smOrderArray = [];
             // $('.afrsm_list tbody tr').each(function () {
             //     smOrderArray.push(this.id);
@@ -1228,20 +1237,69 @@
 				smOrderArray.push(jQuery(this).find('input').val());
 			});
             var paged = $('.current-page').val();
+            if( smOrderArray.length > 0 ){
+                $.ajax({
+                    type: 'GET',
+                    url: coditional_vars.ajaxurl,
+                    data: {
+                        'action': 'afrsm_pro_sm_sort_order',
+                        'nonce': coditional_vars.afrsm_ajax_nonce,
+                        'smOrderArray': smOrderArray,
+                        'paged': paged
+                    },
+                    success: function ( response ) {
+                        var div_wrap;
+                        if ( response.success && 'on_click' === jQuery.trim(position) ) {                        
+                            div_wrap = $('<div></div>').addClass('notice notice-success');
+                        } else {                        
+                            div_wrap = $('<div></div>').addClass('notice notice-error');
+                        }
+                        var p_text = $('<p></p>').text(response.data);
+                        div_wrap.append(p_text);
+                        $(div_wrap).insertAfter($('.wp-header-end'));
+                        
+                        jQuery('.afrsm-main-table').unblock();
+
+                        setTimeout( function(){
+                            div_wrap.remove();
+                        }, 5000 );
+                    }
+                });
+            }
+        }
+
+        $('.afrsm-new-sorting').click(function(){
+            applyNewSyncSortingOrder();
+        });
+
+        function applyNewSyncSortingOrder() {
+
+            // New sorting order sync for one time only on load
+            var is_sync_new_sorting_order = coditional_vars.afrsm_sync_new_sorting_order;
+            if( 'yes' === $.trim(is_sync_new_sorting_order) ){
+                return;
+            }
+            
             $.ajax({
                 type: 'GET',
                 url: coditional_vars.ajaxurl,
                 data: {
-                    'action': 'afrsm_pro_sm_sort_order',
-                    'nonce': coditional_vars.afrsm_ajax_nonce,
-                    'smOrderArray': smOrderArray,
-                    'paged': paged
+                    'action': 'afrsm_sm_new_sort_order',
+                    'nonce': coditional_vars.afrsm_ajax_nonce
                 },
-                success: function () {
-                    if ('on_click' === jQuery.trim(position)) {
-                        jQuery('.afrsm-main-table .loader-overlay').remove();
-                        // alert(coditional_vars.success_msg1);
-                        // location.reload();
+                beforeSend: function () {
+                    $('.afrsm-new-sorting').text('Syncing...');
+                    $('.afrsm-main-table').block({
+                        message: null,
+                        overlayCSS: {
+                            background: 'rgb(255, 255, 255)',
+                            opacity: 0.6,
+                        },
+                    });
+                },
+                success: function ( response ) {
+                    if( response.success ) {
+                        location.reload();
                     }
                 }
             });
@@ -1851,6 +1909,12 @@
 
     jQuery(document).ready(function() {
         
+        //Toggle button activate import-export type
+        toggleIEType();
+        $('.afrsm-ie-type').change(function () {
+            toggleIEType(this);
+        });
+
         /** tiptip js implementation */
 		$( '.woocommerce-help-tip' ).tipTip( {
 			'attribute': 'data-tip',
@@ -1923,6 +1987,26 @@
             });
         }
 	});
+
+    // Import Export Type Toggle
+    function toggleIEType(e){
+        if( 'undefined' === typeof e ){
+            $('.afrsm_toggle_container').each(function(){
+                $(this).find('.afrsm-type').removeClass('active');        
+                $(this).find('.afrsm-json-type').addClass('active');
+            });
+        } else {
+            let parent_node = $(e).parent().parent();
+            parent_node.find('.afrsm-type').removeClass('active');
+            if( $(e).prop('checked') ){
+                //CSV
+                parent_node.find('.afrsm-csv-type').addClass('active');
+            } else {
+                //JSON
+                parent_node.find('.afrsm-json-type').addClass('active');
+            }
+        }
+    }
 
     /** Dynamic Promotional Bar START */
     $(document).on('click', '.dpbpop-close', function () {

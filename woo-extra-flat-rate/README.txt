@@ -2,12 +2,12 @@
 Contributors: dots, jaydeep-rami, nishitlangaliya, chiragpatel, kakshak, jariwalasagar
 Donate link: https://www.thedotstore.com/
 Tags: Flat rate shipping,Table rate shipping,Conditional shipping,WooCommerce shipping,table rate, shipping
-Stable tag: 4.3.0
+Stable tag: 4.4.0
 Requires at least: 5.0
 Requires PHP: 7.2
-Tested up to: 6.5.5
+Tested up to: 6.7.1
 WC requires at least: 3.0
-WC tested up to: 9.0.2
+WC tested up to: 9.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -464,6 +464,14 @@ With strategic flat rate shipping options that match your business needs, the pl
 Automatic updates should work great for you.  As always, though, we recommend backing up your site prior to making any updates just to be sure nothing goes wrong.
 
 == Changelog ==
+= 4.4.0 - 20-12-2024 =
+* [New] Import/Export with CSV file
+* [Enhancement] Implement new sorting order for shipping method listing
+* [Enhancement] Minor bug fixes
+* [Enhancement] Freemius update to 2.10.1
+* [Enhancement] Compatible with WooCommerce 9.5.x
+* [Enhancement] Compatible with WordPress 6.7.x
+
 = 4.3.0 - 03-07-2024 =
 * [Bug Fix] Minor fixes related to the Category based condition
 * [Enhancement] Plugin UI enhancement

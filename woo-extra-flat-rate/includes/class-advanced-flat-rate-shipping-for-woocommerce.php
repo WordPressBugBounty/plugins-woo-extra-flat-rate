@@ -60,6 +60,9 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro {
      */
     protected $version;
 
+    /** @var \Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro single instance of this plugin */
+    protected static $instance;
+
     /**
      * Define the core functionality of the plugin.
      *
@@ -224,7 +227,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro {
         $this->loader->add_action( 'admin_init', $plugin_admin, 'afrsm_pro_welcome_shipping_method_screen_do_activation_redirect' );
         $this->loader->add_action( 'admin_head', $plugin_admin, 'afrsm_pro_remove_admin_submenus' );
         $this->loader->add_filter(
-            'set-screen-option',
+            'set_screen_option_afrsm_rule_per_page',
             $plugin_admin,
             'afrsm_set_screen_options',
             10,
@@ -282,13 +285,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro {
         $this->loader->add_action( 'wp_ajax_afrsm_plugin_setup_wizard_submit', $plugin_admin, 'afrsm_plugin_setup_wizard_submit' );
         $this->loader->add_action( 'admin_init', $plugin_admin, 'afrsm_send_wizard_data_after_plugin_activation' );
         //From 4.2.5 WPML changes hook
-        $this->loader->add_action(
-            'save_post',
-            $plugin_admin,
-            'afrsm_wpml_post_saveupdate_order',
-            10,
-            3
-        );
         $this->loader->add_filter(
             'wpml_link_to_translation',
             $plugin_admin,
@@ -311,6 +307,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro {
                 10
             );
         }
+        $this->loader->add_action( 'wp_ajax_afrsm_sm_new_sort_order', $plugin_admin, 'afrsm_sm_new_sort_order_callback' );
     }
 
     /**
@@ -333,7 +330,13 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro {
             3
         );
         if ( isset( $afrsm_force_customer_to_select_sm ) && 'on' === $afrsm_force_customer_to_select_sm ) {
-            add_filter( 'woocommerce_shipping_chosen_method', '__return_false', 99 );
+            $this->loader->add_filter(
+                'woocommerce_shipping_chosen_method',
+                $plugin_public,
+                'afrsm_disable_shipping_methods_autoselect',
+                99,
+                2
+            );
         } else {
             $this->loader->add_filter(
                 'woocommerce_shipping_chosen_method',
@@ -509,4 +512,123 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro {
         return $allowed_tags;
     }
 
+    /**
+     * Saves errors or messages to WooCommerce Log (woocommerce/logs/plugin-{plugin_slug}-{YEAR-MONTH-DAY}-{HASH}.txt)
+     *
+     * @since 1.0.0
+     * @param string $message error or message to save to log
+     * @param string $type type of error or message to save to log (default: 'error')
+     */
+    public function afrsm_log( $message, $type = 'error' ) {
+        if ( 'emergency' === $type ) {
+            wc_get_logger()->emergency( $message );
+        } elseif ( 'alert' === $type ) {
+            wc_get_logger()->alert( $message );
+        } elseif ( 'critical' === $type ) {
+            wc_get_logger()->critical( $message );
+        } elseif ( 'error' === $type ) {
+            wc_get_logger()->error( $message );
+        } elseif ( 'warning' === $type ) {
+            wc_get_logger()->warning( $message );
+        } elseif ( 'notice' === $type ) {
+            wc_get_logger()->notice( $message );
+        } elseif ( 'info' === $type ) {
+            wc_get_logger()->info( $message );
+        } elseif ( 'debug' === $type ) {
+            wc_get_logger()->debug( $message );
+        }
+    }
+
+    /**
+     * Update the sorting order of the shipping method
+     * 
+     * @param int $shipping_id The shipping method ID
+     * @param int $postition The new sorting order
+     * 
+     * @return bool
+     * 
+     * @since 1.0.0
+     */
+    public function afrsm_update_shipping_sorting_order( $shipping_id, $postition ) {
+        // Check if the user has the right permissions
+        if ( !current_user_can( 'manage_woocommerce' ) ) {
+            return false;
+        }
+        // Both values must be set
+        if ( empty( $shipping_id ) || empty( $postition ) ) {
+            return false;
+        }
+        // Only for the shipping method post type
+        if ( get_post_type( $shipping_id ) !== 'wc_afrsm' ) {
+            return false;
+        }
+        // Sanitize the values
+        $shipping_id = absint( $shipping_id );
+        $new_order = absint( $postition );
+        // Check if the post exists before updating
+        if ( get_post_status( $shipping_id ) ) {
+            wp_update_post( [
+                'ID'         => $shipping_id,
+                'menu_order' => $new_order,
+            ] );
+            $this->afrsm_log( $shipping_id . ' - ' . $new_order, 'info' );
+            return true;
+        }
+        return false;
+    }
+
+    public function sync_shipping_method_sorting_order( $message = 'sync' ) {
+        $query_args = array(
+            'post_type'      => 'wc_afrsm',
+            'post_status'    => array('publish', 'draft'),
+            'posts_per_page' => -1,
+            'orderby'        => array(
+                'menu_order' => 'ASC',
+            ),
+            'fields'         => 'ids',
+        );
+        $post_list = new WP_Query($query_args);
+        $shipping_ids = $post_list->posts;
+        foreach ( $shipping_ids as $index => $shipping_id ) {
+            $index++;
+            // Save the sorting order with shipping id in menu_order
+            $sync_status = $this->afrsm_update_shipping_sorting_order( $shipping_id, $index );
+            $sync_status = ( $sync_status ? 'success' : 'failed' );
+            // Prepare log for debug if any issue
+            if ( AFRSM_DEBUG ) {
+                $this->afrsm_log( $message . ' | ' . $shipping_id . ' - ' . $index . ' -> ' . $sync_status, 'info' );
+            }
+        }
+        $this->afrsm_log( $message . ' -> Done', 'info' );
+    }
+
+    /**
+     * Gets the main Advanced Flat Rate Shipping instance.
+     *
+     * Ensures only one instance loaded at one time.
+     *
+     * @see \afrsm()
+     *
+     * @since 1.0.0
+     *
+     * @return \Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro
+     */
+    public static function instance() {
+        if ( null === self::$instance ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+}
+
+/**
+ * Returns the One True Instance of Advanced Flat Rate Shipping class object.
+ *
+ * @since 1.0.0
+ *
+ * @return \Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro
+ */
+function afrsm() {
+    return \Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::instance();
 }

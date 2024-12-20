@@ -4,7 +4,7 @@
  * Plugin Name:         Advanced Flat Rate Shipping For WooCommerce
  * Plugin URI:          https://www.thedotstore.com/advanced-flat-rate-shipping-method-for-woocommerce
  * Description:         Using Advanced Flat Rate Shipping plugin, you can create multiple flat rate shipping methods. Using this plugin you can configure different parameters on which a particular Flat Rate Shipping method becomes available to the customers at the time of checkout.
- * Version:             4.3.0
+ * Version:             4.4.0
  * Author:              theDotstore
  * Author URI:          https://www.thedotstore.com/
  * License:             GPL-2.0+
@@ -15,8 +15,8 @@
  *
  *
  * WC requires at least: 3.0
- * WP tested up to:     6.5.5
- * WC tested up to:     9.0.2
+ * WP tested up to:     6.7.1
+ * WC tested up to:     9.5.1
  * Requires PHP:        7.2
  * Requires at least:   5.0
  */
@@ -81,7 +81,7 @@ if ( function_exists( 'afrsfw_fs' ) ) {
     }
 }
 if ( !defined( 'AFRSM_PRO_PLUGIN_VERSION' ) ) {
-    define( 'AFRSM_PRO_PLUGIN_VERSION', 'v4.3.0' );
+    define( 'AFRSM_PRO_PLUGIN_VERSION', 'v4.4.0' );
 }
 if ( !defined( 'AFRSM_PRO_PLUGIN_URL' ) ) {
     define( 'AFRSM_PRO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -115,6 +115,9 @@ if ( !defined( 'AFRSM_VERSION_LABEL' ) ) {
 }
 if ( !defined( 'AFRSM_STORE_URL' ) ) {
     define( 'AFRSM_STORE_URL', 'https://www.thedotstore.com/' );
+}
+if ( !defined( 'AFRSM_DEBUG' ) ) {
+    define( 'AFRSM_DEBUG', false );
 }
 /**
  * Hide freemius account tab
