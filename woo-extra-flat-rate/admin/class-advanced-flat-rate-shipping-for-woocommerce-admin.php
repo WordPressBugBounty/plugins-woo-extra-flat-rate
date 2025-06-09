@@ -91,15 +91,15 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      */
     public function afrsm_product_specific_action() {
         $list_cnd_comm = array(
-            'product'  => esc_html__( 'Cart contains product', 'advanced-flat-rate-shipping-for-woocommerce' ),
-            'category' => esc_html__( 'Cart contains category\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
-            'tag'      => esc_html__( 'Cart contains tag\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'product'         => esc_html__( 'Cart contains product', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'variableproduct' => esc_html__( 'Cart contains variable product', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'category'        => esc_html__( 'Cart contains category\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'tag'             => esc_html__( 'Cart contains tag\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
         );
         $list_cnd = array();
         $list_cnd = array(
-            'variableproduct_in_pro' => esc_html__( 'Cart contains variable product', 'advanced-flat-rate-shipping-for-woocommerce' ),
-            'sku_in_pro'             => esc_html__( 'Cart contains SKU\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
-            'product_qty_in_pro'     => esc_html__( 'Cart contains product\'s quantity', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'sku_in_pro'         => esc_html__( 'Cart contains SKU\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'product_qty_in_pro' => esc_html__( 'Cart contains product\'s quantity', 'advanced-flat-rate-shipping-for-woocommerce' ),
         );
         $loca_arr = array_merge( $list_cnd_comm, $list_cnd );
         return apply_filters( 'afrsm_product_specific_ft', $loca_arr );
@@ -434,6 +434,13 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 false
             );
             wp_enqueue_script(
+                $this->plugin_name . '-freemius_pro',
+                'https://checkout.freemius.com/js/v1/',
+                array('jquery'),
+                $this->version,
+                false
+            );
+            wp_enqueue_script(
                 $this->plugin_name . '-help-scout-beacon-js',
                 plugin_dir_url( __FILE__ ) . 'js/help-scout-beacon.js',
                 array('jquery'),
@@ -449,7 +456,9 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     'jquery-ui-dialog',
                     'jquery-ui-accordion',
                     'jquery-ui-sortable',
-                    'select2'
+                    'select2',
+                    'jquery-tiptip',
+                    'jquery-blockui'
                 ),
                 $this->version,
                 false
@@ -470,7 +479,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'postcode'                       => esc_html__( 'Postcode', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'zone'                           => esc_html__( 'Zone 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'cart_contains_product'          => esc_html__( 'Cart contains product', 'advanced-flat-rate-shipping-for-woocommerce' ),
-                'cart_contains_variable_product' => esc_html__( 'Cart contains variable product 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
+                'cart_contains_variable_product' => esc_html__( 'Cart contains variable product', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'cart_contains_category_product' => esc_html__( 'Cart contains category\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'cart_contains_tag_product'      => esc_html__( 'Cart contains tag\'s product', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'cart_contains_sku_product'      => esc_html__( 'Cart contains SKU\'s product 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
@@ -516,9 +525,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'order_history'                  => esc_html__( 'Order History', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'cart_specific'                  => esc_html__( 'Cart Specific', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'checkout_specific'              => esc_html__( 'Checkout Specific', 'advanced-flat-rate-shipping-for-woocommerce' ),
-                'success_msg1'                   => esc_html__( 'Shipping method order saved successfully', 'advanced-flat-rate-shipping-for-woocommerce' ),
-                'success_msg2'                   => esc_html__( 'Your settings successfully saved.', 'advanced-flat-rate-shipping-for-woocommerce' ),
-                'warning_msg1'                   => sprintf( __( '<p><b style="color: red;">Note: </b>If entered price is more than total shipping price than Message looks like: <b>Shipping Method Name: Curreny Symbole like($) -60.00 Price </b> and if shipping minus price is more than total price than it will set Total Price to Zero(0).</p>', 'advanced-flat-rate-shipping-for-woocommerce' ) ),
                 'note'                           => esc_html__( 'Note: ', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'click_here'                     => esc_html__( 'Click Here', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'current_url'                    => $current_url,
@@ -538,7 +544,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'min_max_subtotal_error'         => esc_html__( 'Max subtotal should greater then min subtotal', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'success_msg1'                   => esc_html__( 'Shipping method order saved successfully', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'success_msg2'                   => esc_html__( 'Your settings successfully saved.', 'advanced-flat-rate-shipping-for-woocommerce' ),
-                'warning_msg1'                   => sprintf( __( '<p><b style="color: red;">Note: </b>If entered price is more than total shipping price than Message looks like: <b>Shipping Method Name: Curreny Symbole like($) -60.00 Price </b> and if shipping minus price is more than total price than it will set Total Price to Zero(0).</p>', 'advanced-flat-rate-shipping-for-woocommerce' ) ),
+                'warning_msg1'                   => wp_kses_post( __( '<p><b style="color: red;">Note: </b>If entered price is more than total shipping price than Message looks like: <b>Shipping Method Name: Curreny Symbole like($) -60.00 Price </b> and if shipping minus price is more than total price than it will set Total Price to Zero(0).</p>', 'advanced-flat-rate-shipping-for-woocommerce' ) ),
                 'warning_msg2'                   => esc_html__( 'Please disable Advance Pricing Rule if you dont need because you have not created rule there.', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'warning_msg3'                   => esc_html__( 'You need to select product specific option in Shipping Method Rules for product based option', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'warning_msg4'                   => esc_html__( 'If you active Apply Per Quantity option then Advance Pricing Rule will be disable and not working.', 'advanced-flat-rate-shipping-for-woocommerce' ),
@@ -567,14 +573,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'ajaxurl'                 => admin_url( 'admin-ajax.php' ),
                 'setup_wizard_ajax_nonce' => wp_create_nonce( 'afrsfw_wizard_nonce' ),
             ) );
-            //Premium popup
-            wp_enqueue_script(
-                'freemius',
-                'https://checkout.freemius.com/checkout.min.js',
-                array('jquery'),
-                '3.3.5',
-                true
-            );
         }
     }
 
@@ -916,7 +914,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      * @uses     afrsm_pro_match_city_rules()
      * @uses     afrsm_pro_match_postcode_rules()
      * @uses     afrsm_pro_match_zone_rules()
-     * @uses     afrsm_pro_match_variable_products_rule__premium_only()
+     * @uses     afrsm_pro_match_variable_products_rule()
      * @uses     afrsm_pro_match_simple_products_rule()
      * @uses     afrsm_pro_match_category_rule()
      * @uses     afrsm_pro_match_tag_rule()
@@ -981,6 +979,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         if ( !empty( $get_condition_array ) || '' !== $get_condition_array || null !== $get_condition_array ) {
             $country_array = array();
             $product_array = array();
+            $variableproduct_array = array();
             $category_array = array();
             $tag_array = array();
             $user_array = array();
@@ -1012,6 +1011,9 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 }
                 if ( array_search( 'product', $value, true ) ) {
                     $product_array[$key] = $value;
+                }
+                if ( array_search( 'variableproduct', $value, true ) ) {
+                    $variableproduct_array[$key] = $value;
                 }
                 if ( array_search( 'category', $value, true ) ) {
                     $category_array[$key] = $value;
@@ -1061,6 +1063,15 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         $is_passed['has_fee_based_on_product'] = 'yes';
                     } else {
                         $is_passed['has_fee_based_on_product'] = 'no';
+                    }
+                }
+                //Check if is variable product exist
+                if ( is_array( $variableproduct_array ) && isset( $variableproduct_array ) && !empty( $variableproduct_array ) && !empty( $cart_product_ids_array ) ) {
+                    $variable_prd_passed = $this->afrsm_pro_match_variable_products_rule( $cart_array, $variableproduct_array, $general_rule_match );
+                    if ( 'yes' === $variable_prd_passed ) {
+                        $is_passed['has_fee_based_on_variable_prd'] = 'yes';
+                    } else {
+                        $is_passed['has_fee_based_on_variable_prd'] = 'no';
                     }
                 }
                 //Check if is category exist
@@ -1775,6 +1786,106 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             'has_fee_based_on_zone',
             $general_rule_match
         ), 'has_fee_based_on_zone', $general_rule_match );
+        return $main_is_passed;
+    }
+
+    /**
+     * Match variable products rules
+     *
+     * @param array  $cart_product_ids_array
+     * @param array  $variableproduct_array
+     * @param string $general_rule_match
+     *
+     * @return string $main_is_passed
+     * @since    3.4
+     *
+     * @uses     afrsm_pro_fee_array_column_admin()
+     *
+     */
+    public function afrsm_pro_match_variable_products_rule( $cart_array, $variableproduct_array, $general_rule_match ) {
+        global $sitepress;
+        $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
+        $is_passed = $cart_product_ids_array = array();
+        foreach ( $cart_array as $woo_cart_item ) {
+            $id = ( isset( $woo_cart_item['variation_id'] ) && !empty( $woo_cart_item['variation_id'] ) ? $woo_cart_item['variation_id'] : $woo_cart_item['product_id'] );
+            if ( !empty( $sitepress ) ) {
+                $id = apply_filters(
+                    'wpml_object_id',
+                    $id,
+                    'product',
+                    true,
+                    $default_lang
+                );
+            }
+            $_product = wc_get_product( $id );
+            //prepare data from non-bundle products
+            if ( $this->afrsm_check_non_bundle_product_conditions( $_product, $woo_cart_item ) ) {
+                $cart_product_ids_array[] = $id;
+            }
+            //Retrieve sub poduct ids of bundle product
+            $bundle_product_ids = $this->afrsm_get_product_ids_from_bundle_product( $woo_cart_item );
+            if ( !empty( $bundle_product_ids ) ) {
+                $cart_product_ids_array = array_merge( $cart_product_ids_array, $bundle_product_ids );
+            }
+        }
+        $cart_product_ids_array = array_unique( $this->afrsm_pro_array_flatten( $cart_product_ids_array ) );
+        foreach ( $variableproduct_array as $key => $product ) {
+            if ( 'is_equal_to' === $product['product_fees_conditions_is'] ) {
+                if ( !empty( $product['product_fees_conditions_values'] ) ) {
+                    foreach ( $product['product_fees_conditions_values'] as $product_id ) {
+                        settype( $product_id, 'integer' );
+                        if ( in_array( $product_id, $cart_product_ids_array, true ) ) {
+                            $is_passed[$key]['has_fee_based_on_product'] = 'yes';
+                            break;
+                        } else {
+                            $is_passed[$key]['has_fee_based_on_product'] = 'no';
+                        }
+                    }
+                }
+            }
+            if ( 'not_in' === $product['product_fees_conditions_is'] ) {
+                if ( !empty( $product['product_fees_conditions_values'] ) ) {
+                    foreach ( $product['product_fees_conditions_values'] as $product_id ) {
+                        settype( $product_id, 'integer' );
+                        if ( in_array( $product_id, $cart_product_ids_array, true ) ) {
+                            $is_passed[$key]['has_fee_based_on_product'] = 'no';
+                            break;
+                        } else {
+                            $is_passed[$key]['has_fee_based_on_product'] = 'yes';
+                        }
+                    }
+                }
+            }
+            if ( 'only_equal_to' === $product['product_fees_conditions_is'] ) {
+                if ( !empty( $product['product_fees_conditions_values'] ) ) {
+                    foreach ( $cart_product_ids_array as $product_id ) {
+                        settype( $product_id, 'integer' );
+                        $product['product_fees_conditions_values'] = array_map( 'intval', $product['product_fees_conditions_values'] );
+                        if ( in_array( $product_id, $product['product_fees_conditions_values'], true ) ) {
+                            $is_passed[$key]['has_fee_based_on_product'] = 'yes';
+                        } else {
+                            $is_passed[$key]['has_fee_based_on_product'] = 'no';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        /**
+         * Filter for matched all passed rules.
+         *
+         * @since  3.8
+         *
+         * @author jb
+         */
+        $main_is_passed = $this->afrsm_pro_check_all_passed_general_rule( apply_filters(
+            'afrsm_pro_match_variable_products_rule_ft',
+            $is_passed,
+            $cart_product_ids_array,
+            $variableproduct_array,
+            'has_fee_based_on_product',
+            $general_rule_match
+        ), 'has_fee_based_on_product', $general_rule_match );
         return $main_is_passed;
     }
 
@@ -3246,7 +3357,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      *
      * @param mixed $postcode
      *
-     * @return void
+     * @return string $numeric_postcode
      * @since  1.0.0
      *
      * Converts letters to numbers so we can do a simple range check on postcodes.
@@ -3298,18 +3409,21 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         $array = array();
         foreach ( $input as $value ) {
             if ( !isset( $value[$columnKey] ) ) {
-                wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', esc_attr( $columnKey ), 'advanced-flat-rate-shipping-for-woocommerce' ) ) );
+                /* translators: %d is the column key */
+                wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', 'array key error', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_attr( $columnKey ) ) );
                 return false;
             }
             if ( is_null( $indexKey ) ) {
                 $array[] = $value[$columnKey];
             } else {
                 if ( !isset( $value[$indexKey] ) ) {
-                    wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', esc_attr( $indexKey ), 'advanced-flat-rate-shipping-for-woocommerce' ) ) );
+                    /* translators: %d is the index key */
+                    wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', 'array key error', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_attr( $indexKey ) ) );
                     return false;
                 }
                 if ( !is_scalar( $value[$indexKey] ) ) {
-                    wp_die( sprintf( esc_html_x( 'Key %d does not contain scalar value', esc_attr( $indexKey ), 'advanced-flat-rate-shipping-for-woocommerce' ) ) );
+                    /* translators: %d is the index key */
+                    wp_die( sprintf( esc_html_x( 'Key %d does not contain scalar value', 'array key error', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_attr( $indexKey ) ) );
                     return false;
                 }
                 $array[$value[$indexKey]] = $value[$columnKey];
@@ -3481,14 +3595,9 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
     public function afrsm_pro_save_master_settings() {
         /* First, check nonce */
         check_ajax_referer( 'genaral_setting_nonce', 'nonce' );
-        $get_shipping_display_mode = filter_input( INPUT_GET, 'shipping_display_mode', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $get_chk_enable_logging = filter_input( INPUT_GET, 'chk_enable_logging', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $get_afrsm_force_customer_to_select_sm = filter_input( INPUT_GET, 'afrsm_force_customer_to_select_sm', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        $shipping_display_mode = ( !empty( $get_shipping_display_mode ) ? sanitize_text_field( wp_unslash( $get_shipping_display_mode ) ) : '' );
         $afrsm_force_customer_to_select_sm = ( !empty( $get_afrsm_force_customer_to_select_sm ) ? sanitize_text_field( wp_unslash( $get_afrsm_force_customer_to_select_sm ) ) : '' );
-        if ( isset( $shipping_display_mode ) && !empty( $shipping_display_mode ) ) {
-            update_option( 'md_woocommerce_shipping_method_format', $shipping_display_mode );
-        }
         if ( isset( $get_chk_enable_logging ) && !empty( $get_chk_enable_logging ) ) {
             update_option( 'chk_enable_logging', $get_chk_enable_logging );
         }
@@ -3510,7 +3619,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      * @uses  afrsm_pro_get_states_list()
      * @uses  afrsm_pro_get_zones_list()
      * @uses  afrsm_pro_get_product_list()
-     * @uses  afrsm_pro_get_varible_product_list__premium_only()
+     * @uses  afrsm_pro_get_varible_product_list()
      * @uses  afrsm_pro_get_category_list()
      * @uses  afrsm_pro_get_tag_list()
      * @uses  afrsm_pro_get_sku_list__premium_only()
@@ -3538,6 +3647,13 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             $html .= wp_json_encode( $this->afrsm_pro_get_zones_list( $count, [], true ) );
         } elseif ( 'product' === $condition ) {
             $html .= wp_json_encode( $this->afrsm_pro_get_product_list( $count, [], true ) );
+        } elseif ( 'variableproduct' === $condition ) {
+            $html .= wp_json_encode( $this->afrsm_pro_get_varible_product_list(
+                $count,
+                [],
+                '',
+                true
+            ) );
         } elseif ( 'category' === $condition ) {
             $html .= wp_json_encode( $this->afrsm_pro_get_category_list( $count, [], true ) );
         } elseif ( 'tag' === $condition ) {
@@ -3867,6 +3983,78 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
     }
 
     /**
+     * Get variable product list in Shipping Method Rules
+     *
+     * @param string $count
+     * @param array  $selected
+     *
+     * @return string $html
+     * @uses   WC_Product::is_type()
+     * @uses   get_available_variations()
+     *
+     * @since  1.0.0
+     *
+     * @uses   afrsm_pro_get_default_langugae_with_sitpress()
+     * @uses   wc_get_product()
+     */
+    public function afrsm_pro_get_varible_product_list(
+        $count = '',
+        $selected = array(),
+        $action = '',
+        $json = false
+    ) {
+        global $sitepress;
+        $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
+        $post_in = '';
+        if ( 'edit' === $action ) {
+            $post_in = $selected;
+            $get_varible_product_list_count = -1;
+        } else {
+            $post_in = '';
+            $get_varible_product_list_count = 10;
+        }
+        $get_all_products = new WP_Query(array(
+            'post_type'      => 'product_variation',
+            'post_status'    => 'publish',
+            'posts_per_page' => $get_varible_product_list_count,
+            'orderby'        => 'ID',
+            'order'          => 'ASC',
+            'post__in'       => $post_in,
+        ));
+        $html = '<select id="var-product-filter-' . esc_attr( $count ) . '" rel-id="' . esc_attr( $count ) . '" name="fees[product_fees_conditions_values][value_' . esc_attr( $count ) . '][]" class="afrsm_select product_fees_conditions_values multiselect2 product_fees_conditions_values_var_product" multiple="multiple">';
+        if ( !empty( $get_all_products->posts ) ) {
+            foreach ( $get_all_products->posts as $post ) {
+                $_product = wc_get_product( $post->ID );
+                if ( $_product instanceof WC_Product ) {
+                    if ( !$_product->is_virtual( 'yes' ) ) {
+                        if ( !empty( $sitepress ) ) {
+                            $new_product_id = apply_filters(
+                                'wpml_object_id',
+                                $post->ID,
+                                'product',
+                                true,
+                                $default_lang
+                            );
+                        } else {
+                            $new_product_id = $post->ID;
+                        }
+                        $selected = ( is_array( $selected ) ? array_map( 'intval', $selected ) : [] );
+                        $selectedVal = ( is_array( $selected ) && !empty( $selected ) && in_array( $new_product_id, $selected, true ) ? 'selected=selected' : '' );
+                        if ( '' !== $selectedVal ) {
+                            $html .= '<option value="' . esc_attr( $new_product_id ) . '" ' . esc_attr( $selectedVal ) . '>' . '#' . esc_html( $new_product_id ) . ' - ' . esc_html( get_the_title( $new_product_id ) ) . '</option>';
+                        }
+                    }
+                }
+            }
+        }
+        $html .= '</select>';
+        if ( $json ) {
+            return [];
+        }
+        return $html;
+    }
+
+    /**
      * Get category list in Shipping Method Rules
      *
      * @param string $count
@@ -4026,6 +4214,26 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
     }
 
     /**
+     * Filter posts where clause to search product title
+     * 
+     * @param string $where
+     * @param WP_Query $wp_query
+     * 
+     * @return string $where
+     * 
+     * @since 4.4.1
+     */
+    public function afrsm_posts_where( $where, $wp_query ) {
+        global $wpdb;
+        $search_term = $wp_query->get( 'search_pro_title' );
+        if ( !empty( $search_term ) ) {
+            $search_term_like = $wpdb->esc_like( $search_term );
+            $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( $search_term_like ) . '%\'';
+        }
+        return $where;
+    }
+
+    /**
      * Display product list based product specific option
      *
      * @return string $html
@@ -4044,16 +4252,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         $request_value = filter_input( INPUT_GET, 'value', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $post_value = ( isset( $request_value ) ? sanitize_text_field( $request_value ) : '' );
         $baselang_product_ids = array();
-        function afrsm_pro_posts_where(  $where, $wp_query  ) {
-            global $wpdb;
-            $search_term = $wp_query->get( 'search_pro_title' );
-            if ( !empty( $search_term ) ) {
-                $search_term_like = $wpdb->esc_like( $search_term );
-                $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( $search_term_like ) . '%\'';
-            }
-            return $where;
-        }
-
         $product_fees_conditions_count = filter_input( INPUT_GET, '_limit', FILTER_VALIDATE_INT );
         $product_fees_conditions_count = ( isset( $product_fees_conditions_count ) ? intval( $product_fees_conditions_count ) : 0 );
         $product_page = filter_input( INPUT_GET, '_page', FILTER_VALIDATE_INT );
@@ -4069,14 +4267,14 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         );
         add_filter(
             'posts_where',
-            'afrsm_pro_posts_where',
+            [$this, 'afrsm_posts_where'],
             10,
             2
         );
         $get_wp_query = new WP_Query($product_args);
         remove_filter(
             'posts_where',
-            'afrsm_pro_posts_where',
+            [$this, 'afrsm_posts_where'],
             10,
             2
         );
@@ -4110,6 +4308,90 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         }
         if ( $json ) {
             echo wp_json_encode( $filter_product_list );
+            wp_die();
+        }
+        echo wp_kses( $html, Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::afrsm_pro_allowed_html_tags() );
+        wp_die();
+    }
+
+    /**
+     * Display variable product list based product specific option
+     *
+     * @return string $html
+     * @uses   afrsm_pro_get_default_langugae_with_sitpress()
+     * @uses   wc_get_product()
+     * @uses   WC_Product::is_type()
+     * @uses   Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::afrsm_pro_allowed_html_tags()
+     *
+     * @since  1.0.0
+     *
+     */
+    public function afrsm_pro_product_fees_conditions_varible_values_product_ajax() {
+        check_ajax_referer( 'select_list_nonce', 'nonce' );
+        global $sitepress;
+        $default_lang = $this->afrsm_pro_get_default_langugae_with_sitpress();
+        $json = true;
+        $filter_variable_product_list = [];
+        $request_value = filter_input( INPUT_GET, 'value', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $post_value = ( isset( $request_value ) ? sanitize_text_field( $request_value ) : '' );
+        $baselang_product_ids = array();
+        $product_fees_conditions_varible_count = -1;
+        $product_args = array(
+            'post_type'        => 'product',
+            'posts_per_page'   => $product_fees_conditions_varible_count,
+            'search_pro_title' => $post_value,
+            'post_status'      => 'publish',
+            'orderby'          => 'title',
+            'order'            => 'ASC',
+        );
+        add_filter(
+            'posts_where',
+            [$this, 'afrsm_posts_where'],
+            10,
+            2
+        );
+        $get_all_products = new WP_Query($product_args);
+        remove_filter(
+            'posts_where',
+            [$this, 'afrsm_posts_where'],
+            10,
+            2
+        );
+        if ( !empty( $get_all_products ) ) {
+            foreach ( $get_all_products->posts as $get_all_product ) {
+                $_product = wc_get_product( $get_all_product->ID );
+                if ( $_product instanceof WC_Product ) {
+                    if ( !$_product->is_virtual( 'yes' ) ) {
+                        if ( $_product->is_type( 'variable' ) ) {
+                            $variations = $_product->get_available_variations();
+                            foreach ( $variations as $value ) {
+                                if ( !empty( $sitepress ) ) {
+                                    $defaultlang_product_id = apply_filters(
+                                        'wpml_object_id',
+                                        $value['variation_id'],
+                                        'product',
+                                        true,
+                                        $default_lang
+                                    );
+                                } else {
+                                    $defaultlang_product_id = $value['variation_id'];
+                                }
+                                $baselang_product_ids[] = $defaultlang_product_id;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $html = '';
+        if ( isset( $baselang_product_ids ) && !empty( $baselang_product_ids ) ) {
+            foreach ( $baselang_product_ids as $baselang_product_id ) {
+                $html .= '<option value="' . esc_attr( $baselang_product_id ) . '">' . '#' . esc_html( $baselang_product_id ) . ' - ' . esc_html( get_the_title( $baselang_product_id ) ) . '</option>';
+                $filter_variable_product_list[] = array($baselang_product_id, get_the_title( $baselang_product_id ));
+            }
+        }
+        if ( $json ) {
+            echo wp_json_encode( $filter_variable_product_list );
             wp_die();
         }
         echo wp_kses( $html, Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::afrsm_pro_allowed_html_tags() );
@@ -4170,7 +4452,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      *
      * @param array $post
      *
-     * @return bool false if post is empty otherwise it will redirect to shipping method list
+     * @return void
      * @since  1.0.0
      *
      * @uses   update_post_meta()
@@ -4220,7 +4502,14 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 FILTER_REQUIRE_ARRAY
             );
             $get_sm_extra_cost_calculation_type = filter_input( INPUT_POST, 'sm_extra_cost_calculation_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+            $get_sm_free_exclude_tax_from_amount = filter_input( INPUT_POST, 'sm_free_exclude_tax_from_amount', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
             $sm_product_cost = ( isset( $get_sm_product_cost ) ? sanitize_text_field( $get_sm_product_cost ) : '' );
+            $sm_product_cost = ( is_numeric( $sm_product_cost ) ? number_format(
+                $sm_product_cost,
+                get_option( 'woocommerce_price_num_decimals' ),
+                get_option( 'woocommerce_price_decimal_sep' ),
+                get_option( 'woocommerce_price_thousand_sep' )
+            ) : $sm_product_cost );
             $sm_free_shipping_based_on = ( isset( $get_sm_free_shipping_based_on ) ? sanitize_text_field( $get_sm_free_shipping_based_on ) : '' );
             $is_allow_free_shipping = ( isset( $get_is_allow_free_shipping ) ? sanitize_text_field( $get_is_allow_free_shipping ) : '' );
             $sm_free_shipping_cost = ( isset( $get_sm_free_shipping_cost ) ? sanitize_text_field( $get_sm_free_shipping_cost ) : '' );
@@ -4240,6 +4529,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             $cost_on_total_cart_subtotal_status = ( isset( $get_cost_on_total_cart_subtotal_status ) ? sanitize_text_field( $get_cost_on_total_cart_subtotal_status ) : 'off' );
             $get_ap_rule_status = filter_input( INPUT_POST, 'ap_rule_status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
             $ap_rule_status = ( isset( $get_ap_rule_status ) ? sanitize_text_field( $get_ap_rule_status ) : "off" );
+            $sm_free_exclude_tax_from_amount = ( isset( $get_sm_free_exclude_tax_from_amount ) ? sanitize_text_field( $get_sm_free_exclude_tax_from_amount ) : 'off' );
             $sm_free_shipping_label = 'Free Shipping';
             $shipping_method_count = self::afrsm_pro_sm_count_method();
             settype( $method_id, 'integer' );
@@ -4388,12 +4678,14 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      * Review message in footer
      *
      * @return string
+     * 
      * @since  1.0.0
      *
      */
     public function afrsm_pro_admin_footer_review() {
         $url = '';
         $url = esc_url( 'https://wordpress.org/plugins/woo-extra-flat-rate/#reviews' );
+        /* translators: %1$s is the link to the review page */
         $html = sprintf( wp_kses( __( '<strong>We need your support</strong> to keep updating and improving the plugin. Please <a href="%1$s" target="_blank">help us by leaving a good review</a> :) Thanks!', 'advanced-flat-rate-shipping-for-woocommerce' ), array(
             'strong' => array(),
             'a'      => array(
@@ -4401,7 +4693,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'target' => 'blank',
             ),
         ) ), esc_url( $url ) );
-        echo wp_kses_post( $html );
+        return wp_kses_post( $html );
     }
 
     /**
@@ -4421,9 +4713,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
         $get_current_shipping_id = filter_input( INPUT_GET, 'current_shipping_id', FILTER_SANITIZE_NUMBER_INT );
         $get_post_id = ( isset( $get_current_shipping_id ) ? absint( $get_current_shipping_id ) : '' );
         if ( empty( $get_post_id ) ) {
-            echo sprintf( wp_kses( __( '<strong>No post to duplicate has been supplied!</strong>', 'advanced-flat-rate-shipping-for-woocommerce' ), array(
-                'strong' => array(),
-            ) ) );
+            echo esc_html__( 'No post to duplicate has been supplied!', 'advanced-flat-rate-shipping-for-woocommerce' );
             wp_die();
         }
         /* End of if */
@@ -5025,11 +5315,18 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 foreach ( $get_all_fees as $fees ) {
                     $request_post_id = $fees->ID;
                     $sm_status = get_post_status( $request_post_id );
-                    $sm_title = __( get_the_title( $request_post_id ), 'advanced-flat-rate-shipping-for-woocommerce' );
+                    $sm_title = get_the_title( $request_post_id );
                     $sm_cost = get_post_meta( $request_post_id, 'sm_product_cost', true );
+                    $sm_cost = ( is_numeric( $sm_cost ) ? number_format(
+                        $sm_cost,
+                        get_option( 'woocommerce_price_num_decimals' ),
+                        get_option( 'woocommerce_price_decimal_sep' ),
+                        get_option( 'woocommerce_price_thousand_sep' )
+                    ) : $sm_cost );
                     $sm_free_shipping_based_on = get_post_meta( $request_post_id, 'sm_free_shipping_based_on', true );
                     $is_allow_free_shipping = get_post_meta( $request_post_id, 'is_allow_free_shipping', true );
                     $sm_free_shipping_cost = get_post_meta( $request_post_id, 'sm_free_shipping_cost', true );
+                    $sm_free_exclude_tax_from_amount = get_post_meta( $request_post_id, 'sm_free_exclude_tax_from_amount', true );
                     $sm_free_shipping_cost_before_discount = get_post_meta( $request_post_id, 'sm_free_shipping_cost_before_discount', true );
                     $sm_free_shipping_cost_left_notice = get_post_meta( $request_post_id, 'sm_free_shipping_cost_left_notice', true );
                     $sm_free_shipping_cost_left_notice_msg = get_post_meta( $request_post_id, 'sm_free_shipping_cost_left_notice_msg', true );
@@ -5325,6 +5622,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         'sm_free_shipping_based_on'              => $sm_free_shipping_based_on,
                         'is_allow_free_shipping'                 => $is_allow_free_shipping,
                         'sm_free_shipping_cost'                  => $sm_free_shipping_cost,
+                        'sm_free_exclude_tax_from_amount'        => $sm_free_exclude_tax_from_amount,
                         'sm_free_shipping_cost_before_discount'  => $sm_free_shipping_cost_before_discount,
                         'sm_free_shipping_cost_left_notice'      => $sm_free_shipping_cost_left_notice,
                         'sm_free_shipping_cost_left_notice_msg'  => $sm_free_shipping_cost_left_notice_msg,
@@ -5467,12 +5765,18 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             $attached_import_files__arr = filter_var_array( $_FILES, $file_import_file_args );
             $import_file = $attached_import_files__arr['import_file']['tmp_name'];
             if ( empty( $import_file ) ) {
-                wp_die( sprintf( esc_html__( 'Please upload a %s file to import', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( strtoupper( $import_type ) ) ) );
+                wp_die( 
+                    // translators: %s is the file type
+                    sprintf( esc_html__( 'Please upload a %s file to import', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( strtoupper( $import_type ) ) )
+                 );
             }
             $attached_import_files__arr_explode = explode( '.', $attached_import_files__arr['import_file']['name'] );
             $extension = end( $attached_import_files__arr_explode );
             if ( $extension !== $import_type ) {
-                wp_die( sprintf( esc_html__( 'Please upload a valid %s file', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( strtoupper( $import_type ) ) ) );
+                wp_die( 
+                    // translators: %s is the file type
+                    sprintf( esc_html__( 'Please upload a valid %s file', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( strtoupper( $import_type ) ) )
+                 );
             }
             $file_import_data = array();
             if ( 'json' === $import_type ) {
@@ -5527,7 +5831,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     if ( function_exists( 'icl_object_id' ) ) {
                         // Query to check if post exists in the current language
                         $query = $wpdb->prepare(
-                            "\n                            SELECT p.ID FROM {$wpdb->posts} p\n                            JOIN {$wpdb->prefix}icl_translations t\n                            ON p.ID = t.element_id\n                            WHERE p.post_title = %s\n                            AND t.language_code = %s\n                            AND p.post_type = '%s'\n                            AND p.post_status IN ('publish', 'draft', 'pending')\n                            LIMIT 1\n                        ",
+                            "\n                            SELECT p.ID FROM {$wpdb->posts} p\n                            JOIN {$wpdb->prefix}icl_translations t\n                            ON p.ID = t.element_id\n                            WHERE p.post_title = %s\n                            AND t.language_code = %s\n                            AND p.post_type = %s\n                            AND p.post_status IN ('publish', 'draft', 'pending')\n                            LIMIT 1\n                        ",
                             $fees_val['sm_title'],
                             $language_code,
                             self::afrsm_shipping_post_type
@@ -5547,6 +5851,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         $fee_post['ID'] = $fount_post;
                         $get_post_id = wp_update_post( $fee_post );
                     } else {
+                        /** @var int|WP_Error $get_post_id */
                         $get_post_id = wp_insert_post( $fee_post );
                         if ( is_wp_error( $get_post_id ) ) {
                             $afrsm_error = $get_post_id->get_error_message();
@@ -5788,6 +6093,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             update_post_meta( $get_post_id, 'sm_free_shipping_based_on', $fees_val['sm_free_shipping_based_on'] );
                             update_post_meta( $get_post_id, 'is_allow_free_shipping', $fees_val['is_allow_free_shipping'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost', $fees_val['sm_free_shipping_cost'] );
+                            update_post_meta( $get_post_id, 'sm_free_exclude_tax_from_amount', $fees_val['sm_free_exclude_tax_from_amount'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost_before_discount', $fees_val['sm_free_shipping_cost_before_discount'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice', $fees_val['sm_free_shipping_cost_left_notice'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice_msg', $fees_val['sm_free_shipping_cost_left_notice_msg'] );
@@ -5905,7 +6211,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             foreach ( $get_all_fees as $fees ) {
                 $request_post_id = $fees->ID;
                 $sm_status = get_post_status( $request_post_id );
-                $sm_title = __( get_the_title( $request_post_id ), 'advanced-flat-rate-shipping-for-woocommerce' );
+                $sm_title = get_the_title( $request_post_id );
                 $location_type = get_post_meta( $request_post_id, 'location_type', true );
                 $zone_type = get_post_meta( $request_post_id, 'zone_type', true );
                 $location_code = get_post_meta( $request_post_id, 'location_code', true );
@@ -6189,7 +6495,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     echo esc_url( $wpfp_menu['menu_url'] );
                     ?>">
 											<?php 
-                    esc_html_e( $wpfp_menu['menu_title'], 'advanced-flat-rate-shipping-for-woocommerce' );
+                    echo esc_html( $wpfp_menu['menu_title'] );
                     ?>
 										</a>
 										<?php 
@@ -6209,14 +6515,13 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             echo esc_url( $wpfp_sub_menu['menu_url'] );
                             ?>">
 															<?php 
-                            esc_html_e( $wpfp_sub_menu['menu_title'], 'advanced-flat-rate-shipping-for-woocommerce' );
+                            echo esc_html( $wpfp_sub_menu['menu_title'] );
                             ?>
 														</a>
 													</li>
 												<?php 
                         }
                         ?>
-													<li><a class="dotstore_plugin " href="http://ok">Upgrade</a></li>
 											</ul>
 										<?php 
                     }
@@ -6224,13 +6529,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
 									</li>
 									<?php 
                 }
-                ?>
-									<li><a class="dotstore_plugin " href="<?php 
-                echo esc_url( 'https://www.thedotstore.com/flat-rate-plugin-for-woocommerce-offer/?utm_source=plugindashboard&utm_medium=upgrade_link&utm_campaign=upgradetopro&utm_id=flatrate_upgrade_menu_link' );
-                ?>"><?php 
-                echo esc_html_e( 'Upgrade', 'advanced-flat-rate-shipping-for-woocommerce' );
-                ?></a></li>
-								<?php 
             }
         }
         ?>
@@ -6506,7 +6804,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 foreach ( $active_languages as $lang ) {
                     if ( $lang !== $current_language ) {
                         if ( isset( $_SERVER['QUERY_STRING'] ) ) {
-                            parse_str( sanitize_text_field( $_SERVER['QUERY_STRING'] ), $query_vars );
+                            parse_str( sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ), $query_vars );
                             unset($query_vars['lang'], $query_vars['admin_bar']);
                         } else {
                             $query_vars = array();

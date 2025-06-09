@@ -1,6 +1,8 @@
 (function ($) {
     'use strict';
-    jQuery('.multiselect2').select2();
+    jQuery('.multiselect2').select2({
+        closeOnSelect: false,
+    });
 
     function allowSpeicalCharacter(str) {
         return str.replace('&#8211;', '–').replace('&gt;', '>').replace('&lt;', '<').replace('&#197;', 'Å');
@@ -18,26 +20,68 @@
                             value: params.term,
                             action: 'afrsm_pro_product_fees_conditions_values_product_ajax',
                             nonce: coditional_vars.select_list_ajax_nonce,
+                            _page: params.page || 1,
+                            _limit: 3 // page size
                         };
                     },
                     processResults: function (data) {
-                        var options = [];
+                        var options = [], more = true;
                         if (data) {
                             $.each(data, function (index, text) {
-                                options.push({id: text[0], text: allowSpeicalCharacter(text[1])});
+                                options.push({ id: text[0], text: allowSpeicalCharacter(text[1]) });
                             });
-
+                        }
+                        if( 0 === data.length ){
+                            more = false;
                         }
                         return {
-                            results: options
+                            results: options,
+                            pagination: {
+                                more: more
+                            }
                         };
                     },
-                    cache: true
+                    cache: true,
                 },
-                minimumInputLength: 3
+                minimumInputLength: 3,
+                closeOnSelect: false,
             });
         });
     }
+
+    function varproductFilter () {
+		$('.product_fees_conditions_values_var_product').each(function () {
+			$('.product_fees_conditions_values_var_product').select2({
+				ajax: {
+					url: coditional_vars.ajaxurl,
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							value: params.term,
+							action: 'afrsm_pro_product_fees_conditions_varible_values_product_ajax',
+                            nonce: coditional_vars.select_list_ajax_nonce,
+						};
+					},
+					processResults: function (data) {
+						var options = [];
+						if (data) {
+							$.each(data, function (index, text) {
+								options.push({ id: text[0], text: allowSpeicalCharacter(text[1]) });
+							});
+							
+						}
+						return {
+							results: options
+						};
+					},
+					cache: true
+				},
+				minimumInputLength: 3,
+                closeOnSelect: false,
+			});
+		});
+	}
 
     function setAllAttributes(element, attributes) {
         Object.keys(attributes).forEach(function (key) {
@@ -132,7 +176,9 @@
 
     $(window).on('load', function () {
 
-        jQuery('.multiselect2').select2();
+        jQuery('.multiselect2').select2({
+            closeOnSelect: false,
+        });
 
         $('a[href="admin.php?page=afrsm-pro-list"]').parent().addClass('current');
         $('a[href="admin.php?page=afrsm-pro-list"]').addClass('current');
@@ -229,7 +275,9 @@
             td.appendChild(condition_key);
             // var conditions_values_index = jQuery('.product_fees_conditions_values_' + count).get(0);
             jQuery('.product_fees_conditions_values_' + count).trigger('change');
-            jQuery('.multiselect2').select2();
+            jQuery('.multiselect2').select2({
+                closeOnSelect: false,
+            });
             // td ends
 
             // td for delete button
@@ -276,12 +324,16 @@
         /** Script for Freemius upgrade popup */
         function upgradeToProFreemius( couponCode, isTrackOption ) {
             let handler;
-            handler = FS.Checkout.configure({
+            handler = new FS.Checkout({
                 plugin_id: '3379',
                 plan_id: '5472',
                 public_key:'pk_9edf804dccd14eabfd00ff503acaf',
                 image: 'https://www.thedotstore.com/wp-content/uploads/sites/1417/2023/09/Advanced-Flat-rate-shipping-Banner-3-new.png',
                 coupon: couponCode,
+                hide_coupon: true, // For security reasons, we recommend setting this to true. So no one can know the coupon code.
+                show_reviews: true,
+                show_refund_badge: true,
+                always_show_renewals_amount: true,
             });
 
             handler.open({
@@ -321,22 +373,6 @@
             });
         }
 
-        $(document).on('click', '.upgrade-to-pro-modal-main .upgrade-pro-afrsm', function(e){
-            e.preventDefault();
-            track_premium_popup_steps('upgrade_to_pro');
-
-            $('body').removeClass('afrsm-modal-visible');
-            let couponCode = $('.upgrade-to-pro-discount-code').val();
-            upgradeToProFreemius( couponCode, true );
-        });
-
-        $(document).on('click', '.upgrade-to-pro-modal-main .upgrade-now', function(e){
-            e.preventDefault();
-            $('body').removeClass('afrsm-modal-visible');
-            let couponCode = $('.upgrade-to-pro-discount-code').val();
-            upgradeToProFreemius( couponCode, false );
-        });
-
         $(document).on('click', '.dotstore-upgrade-dashboard .upgrade-now, .dots-header .dots-upgrade-btn', function(e){
             e.preventDefault();
             upgradeToProFreemius( '', false );
@@ -357,6 +393,29 @@
             $('body').removeClass('afrsm-modal-visible');
         });
 
+        $(document).on('click', '.getting-started-actions .upgrade-now', function(e){
+            e.preventDefault();
+            console.log('2');
+            $('body').removeClass('afrsm-modal-visible');
+            let couponCode = $('.getting-started-discount-code').val();
+            upgradeToProFreemius( couponCode, false );
+        });
+
+        $(document).on('click', '.upgrade-to-pro-modal-main .upgrade-pro-afrsm', function(e){
+            e.preventDefault();
+            track_premium_popup_steps('upgrade_to_pro');
+            $('body').removeClass('afrsm-modal-visible');
+            let couponCode = $('.upgrade-to-pro-discount-code').val();
+            upgradeToProFreemius( couponCode, true );
+        });
+
+        $(document).on('click', '.upgrade-to-pro-modal-main .upgrade-now', function(e){
+            e.preventDefault();
+            $('body').removeClass('afrsm-modal-visible');
+            let couponCode = $('.upgrade-to-pro-discount-code').val();
+            upgradeToProFreemius( couponCode, false );
+        });
+
         $('body').on('change', '.product_fees_conditions_condition', function (e) {
             var selectedOption = $(this).find(':selected');
             if( selectedOption.hasClass('afrsm-pro') ){
@@ -374,6 +433,7 @@
 
         // Premium option selected
         premiumSelectShowPopup( '#what_to_do_method', 'in_pro' );
+        premiumSelectShowPopup( '#sm_free_shipping_based_on', 'in_pro' );
 
         /* description toggle */
         $('span.advanced_flat_rate_shipping_for_woocommerce_tab_description').click(function (event) {
@@ -983,9 +1043,9 @@
                     'attributes': {'label': coditional_vars.product_specific},
                     'options': [
                         {'name': coditional_vars.cart_contains_product, 'attributes': {'value': 'product'}},
+                        {'name': coditional_vars.cart_contains_variable_product, 'attributes': { 'value': 'variableproduct' }},
                         {'name': coditional_vars.cart_contains_category_product, 'attributes': {'value': 'category'}},
                         {'name': coditional_vars.cart_contains_tag_product, 'attributes': {'value': 'tag'}},
-                        {'name': coditional_vars.cart_contains_variable_product, 'attributes': { 'value': 'variableproduct_in_pro', 'class':'afrsm-pro' }},
                         {'name': coditional_vars.cart_contains_sku_product, 'attributes': { 'value': 'sku_in_pro', 'class':'afrsm-pro' }},
 						{'name': coditional_vars.cart_contains_product_qty, 'attributes': { 'value': 'product_qty_in_pro', 'class':'afrsm-pro' }},
                     ]
@@ -1068,6 +1128,10 @@
                         condition_values_id = 'product-filter-' + count;
                         extra_class = 'product_fees_conditions_values_product';
                     }
+                    if (condition === 'variableproduct') {
+						condition_values_id = 'var-product-filter-' + count;
+						extra_class = 'product_fees_conditions_values_var_product';
+					}
 
                     if (isJson(response)) {
                         condition_values = document.createElement('select');
@@ -1137,8 +1201,11 @@
                     });
                     column.appendChild(input_node);
 
-                    jQuery('.multiselect2').select2();
+                    jQuery('.multiselect2').select2({
+                        closeOnSelect: false,
+                    });
                     productFilter();
+                    varproductFilter();
                     numberValidateForAdvanceRules();
                 }
             });
@@ -1164,6 +1231,7 @@
         }
 
         productFilter();
+        varproductFilter();
 
         function isJson(str) {
             try {
@@ -1341,7 +1409,8 @@
                 helper: fixHelperModified,
                 stop: function() {
                     saveAllIdOrderWise('on_click');
-                }
+                },
+                handle: '.column-drag'
             });
             $('.afrsm_list tbody').disableSelection();
         }
@@ -1366,7 +1435,6 @@
 
         //Save Master Settings
         $(document).on('click', '#save_master_settings', function () {
-            var shipping_display_mode = $('#shipping_display_mode').val();
             var afrsm_force_customer_to_select_sm = $('#afrsm_force_customer_to_select_sm:checked').val();
             
             var chk_enable_logging;
@@ -1388,7 +1456,6 @@
                 data: {
                     'action': 'afrsm_pro_save_master_settings',
                     'nonce': coditional_vars.genaral_setting_ajax_nonce,
-                    'shipping_display_mode': shipping_display_mode,
                     'chk_enable_logging': chk_enable_logging,
                     'afrsm_force_customer_to_select_sm': afrsm_force_customer_to_select_sm,
                 },
@@ -1575,7 +1642,9 @@
         $('body').on('change', 'input[name=zone_type]', function () {
             if ($(this).is(':checked')) {
                 setTimeout(function(){
-                    $('.chosen-select').select2();
+                    $('.chosen-select').select2({
+                        closeOnSelect: false,
+                    });
                 },5);
                 var value = $(this).val();
                 $('#add-zone input[type="radio"]').each(function () {
@@ -1812,9 +1881,12 @@
         /* Shipping Zone Section */
     });
     jQuery(window).on('load', function () {
-        jQuery('.multiselect2').select2();
+        jQuery('.multiselect2').select2({
+            closeOnSelect: false,
+        });
         jQuery( '.product_fees_conditions_values_country' ).select2({
-			placeholder: coditional_vars.select_country
+			placeholder: coditional_vars.select_country,
+            closeOnSelect: false,
 		});
         jQuery('#tbl-shipping-method tr').each(function() {
             var val = jQuery(this).find('.th_product_fees_conditions_condition select').val();
@@ -1823,7 +1895,8 @@
                 jQuery(this).find('.condition-value textarea').attr('placeholder', get_placehoder);
             } else {
                 $( '.product_fees_conditions_values_'+val ).select2({
-                    placeholder: get_placehoder
+                    placeholder: get_placehoder,
+                    closeOnSelect: false,
                 }); 
             }
         });
@@ -1833,7 +1906,9 @@
         }
 
         jQuery('.product_fees_conditions_values_product').each(function () {
-            jQuery('.product_fees_conditions_values_product').select2();
+            jQuery('.product_fees_conditions_values_product').select2({
+                closeOnSelect: false,
+            });
             jQuery('.product_fees_conditions_values_product').select2({
                 ajax: {
                     url: coditional_vars.ajaxurl,
@@ -1844,25 +1919,68 @@
                             value: params.term,
                             action: 'afrsm_pro_product_fees_conditions_values_product_ajax',
                             nonce: coditional_vars.select_list_ajax_nonce,
+                            _page: params.page || 1,
+                            _limit: 3 // page size
                         };
                     },
                     processResults: function (data) {
-                        var options = [];
+                        var options = [], more = true;
                         if (data) {
                             jQuery.each(data, function (index, text) {
-                                options.push({id: text[0], text: allowSpeicalCharacter(text[1])});
+                                options.push({ id: text[0], text: allowSpeicalCharacter(text[1]) });
                             });
-
+                        }
+                        if( 0 === data.length ){
+                            more = false;
                         }
                         return {
-                            results: options
+                            results: options,
+                            pagination: {
+                                more: more
+                            }
                         };
                     },
-                    cache: true
+                    cache: true,
                 },
-                minimumInputLength: 3
+                minimumInputLength: 3,
+                closeOnSelect: false,
             });
         });
+
+        jQuery('.product_fees_conditions_values_var_product').each(function () {
+			jQuery('.product_fees_conditions_values_var_product').select2({
+                closeOnSelect: false,
+            });
+			jQuery('.product_fees_conditions_values_var_product').select2({
+				ajax: {
+					url: coditional_vars.ajaxurl,
+					dataType: 'json',
+					delay: 250,
+					data: function (params) {
+						return {
+							value: params.term,
+							action: 'afrsm_pro_product_fees_conditions_varible_values_product_ajax',
+                            nonce: coditional_vars.select_list_ajax_nonce,
+						};
+					},
+					processResults: function (data) {
+						var options = [];
+						if (data) {
+							jQuery.each(data, function (index, text) {
+								options.push({ id: text[0], text: allowSpeicalCharacter(text[1]) });
+							});
+							
+						}
+						return {
+							results: options
+						};
+					},
+					cache: true
+				},
+				minimumInputLength: 3,
+                closeOnSelect: false,
+			});
+		});
 
         /*Start: Change shipping status form list section*/
         $(document).on('click', '#shipping_status_id', function () {
@@ -1950,7 +2068,8 @@
             if( !jQuery('#sm_select_day_of_week').data('select2') ) {
                 var placeholder = jQuery('#sm_select_day_of_week').attr('placeholder');
                 jQuery('#sm_select_day_of_week').select2({
-                    placeholder: placeholder
+                    placeholder: placeholder,
+                    closeOnSelect: false,
                 });
             }
         });

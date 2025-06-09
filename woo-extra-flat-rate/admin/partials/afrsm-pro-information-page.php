@@ -22,7 +22,7 @@
                 </tr>
                 <tr>
                     <td class="fr-1"><?php esc_html_e( 'Installed Version', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></td>
-                    <td class="fr-2"><?php echo esc_html( AFRSM_VERSION_LABEL ); ?> <?php echo esc_html_e( AFRSM_PRO_PLUGIN_VERSION, 'advanced-flat-rate-shipping-for-woocommerce' ); ?></td>
+                    <td class="fr-2"><?php echo esc_html( AFRSM_VERSION_LABEL ); ?> <?php echo esc_html( AFRSM_PRO_PLUGIN_VERSION ); ?></td>
                 </tr>
                 <tr>
                     <td class="fr-1"><?php esc_html_e( 'License & Terms of use', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></td>

@@ -46,19 +46,10 @@
 				update_option( 'chk_enable_logging', 'on' );
 				
 				$what_to_do_method                      = get_option( 'what_to_do_method' );
-				$shipping_method_format                 = get_option( 'md_woocommerce_shipping_method_format' );
 				$combine_default_shipping_with_forceall = get_option( 'combine_default_shipping_with_forceall' );
 				
 				if ( ! empty( $what_to_do_method ) ) {
 					update_option( 'what_to_do_method', $what_to_do_method );
-					
-					if ( 'allow_customer' === $what_to_do_method ) {
-						if ( ! empty( $shipping_method_format ) ) {
-							update_option( 'md_woocommerce_shipping_method_format', $shipping_method_format );
-						}
-					} else {
-						update_option( 'md_woocommerce_shipping_method_format', 'radio_button_mode' );
-					}
 				}
 				if ( ! empty( $combine_default_shipping_with_forceall ) ) {
 					update_option( 'combine_default_shipping_with_forceall', $combine_default_shipping_with_forceall );

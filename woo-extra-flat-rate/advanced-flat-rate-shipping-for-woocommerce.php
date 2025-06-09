@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Plugin Name:         Advanced Flat Rate Shipping For WooCommerce
+ * Plugin Name:         Flat Rate Shipping Method for WooCommerce
  * Plugin URI:          https://www.thedotstore.com/advanced-flat-rate-shipping-method-for-woocommerce
  * Description:         Using Advanced Flat Rate Shipping plugin, you can create multiple flat rate shipping methods. Using this plugin you can configure different parameters on which a particular Flat Rate Shipping method becomes available to the customers at the time of checkout.
- * Version:             4.4.0
+ * Version:             4.4.1
  * Author:              theDotstore
  * Author URI:          https://www.thedotstore.com/
- * License:             GPL-2.0+
- * License URI:         http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:             GPL-3.0+
+ * License URI:         http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:         advanced-flat-rate-shipping-for-woocommerce
  * Domain Path:         /languages
  * Requires Plugins:    woocommerce
  *
  *
  * WC requires at least: 3.0
- * WP tested up to:     6.7.1
- * WC tested up to:     9.5.1
+ * WP tested up to:     6.8.1
+ * WC tested up to:     9.8.5
  * Requires PHP:        7.2
  * Requires at least:   5.0
  */
@@ -38,6 +38,7 @@ if ( function_exists( 'afrsfw_fs' ) ) {
                 }
                 // Include Freemius SDK.
                 require_once dirname( __FILE__ ) . '/freemius/start.php';
+                // @phpstan-ignore-next-line
                 $afrsfw_fs = fs_dynamic_init( array(
                     'id'              => '3379',
                     'slug'            => 'advanced-flat-rate-shipping-for-woocommerce',
@@ -81,44 +82,12 @@ if ( function_exists( 'afrsfw_fs' ) ) {
     }
 }
 if ( !defined( 'AFRSM_PRO_PLUGIN_VERSION' ) ) {
-    define( 'AFRSM_PRO_PLUGIN_VERSION', 'v4.4.0' );
-}
-if ( !defined( 'AFRSM_PRO_PLUGIN_URL' ) ) {
-    define( 'AFRSM_PRO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-}
-if ( !defined( 'AFRSM_PLUGIN_DIR' ) ) {
-    define( 'AFRSM_PLUGIN_DIR', dirname( __FILE__ ) );
-}
-if ( !defined( 'AFRSM_PRO_PLUGIN_DIR_PATH' ) ) {
-    define( 'AFRSM_PRO_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
-}
-if ( !defined( 'AFRSM_PRO_SLUG' ) ) {
-    define( 'AFRSM_PRO_SLUG', 'advanced-flat-rate-shipping-for-woocommerce' );
+    define( 'AFRSM_PRO_PLUGIN_VERSION', 'v4.4.1' );
 }
 if ( !defined( 'AFRSM_PRO_PLUGIN_BASENAME' ) ) {
     define( 'AFRSM_PRO_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 }
-if ( !defined( 'AFRSM_PRO_PLUGIN_NAME' ) ) {
-    define( 'AFRSM_PRO_PLUGIN_NAME', 'Flat Rate Shipping' );
-}
-if ( !defined( 'AFRSM_PRO_TEXT_DOMAIN' ) ) {
-    define( 'AFRSM_PRO_TEXT_DOMAIN', 'advanced-flat-rate-shipping-for-woocommerce' );
-}
-if ( !defined( 'AFRSM_PRO_FEE_AMOUNT_NOTICE' ) ) {
-    define( 'AFRSM_PRO_FEE_AMOUNT_NOTICE', 'If entered shipping amount is less than cart subtotal it will reflect with minus sign (EX: $ -10.00) <b>OR</b> If entered shipping amount is more than cart subtotal then the total amount shown as zero (EX: Total: 0)' );
-}
-if ( !defined( 'AFRSM_PRO_PERTICULAR_FEE_AMOUNT_NOTICE' ) ) {
-    define( 'AFRSM_PRO_PERTICULAR_FEE_AMOUNT_NOTICE', 'You can turn off this button, if you do not need to apply this shipping amount.' );
-}
-if ( !defined( 'AFRSM_VERSION_LABEL' ) ) {
-    define( 'AFRSM_VERSION_LABEL', 'FREE' );
-}
-if ( !defined( 'AFRSM_STORE_URL' ) ) {
-    define( 'AFRSM_STORE_URL', 'https://www.thedotstore.com/' );
-}
-if ( !defined( 'AFRSM_DEBUG' ) ) {
-    define( 'AFRSM_DEBUG', false );
-}
+// Rest of constants are defined in constants.php
 /**
  * Hide freemius account tab
  *
@@ -332,6 +301,39 @@ if ( function_exists( 'activate_advanced_flat_rate_shipping_for_woocommerce_pro'
 
         afrsfw_fs()->add_action( 'connect/after', 'afrsm_load_plugin_setup_wizard_connect_after' );
     }
+    /**
+     * Plugin check Plugins filter for plugin specific checks.
+     */
+    // Filters the directories to ignore.
+    function afrsm_get_directories_to_ignore(  $default_ignore_directories  ) {
+        $default_ignore_directories[] = 'freemius';
+        $default_ignore_directories[] = 'dotstore-analytics';
+        return $default_ignore_directories;
+    }
+
+    add_filter( 'wp_plugin_check_ignore_directories', 'afrsm_get_directories_to_ignore' );
+    // Filters the directories to ignore.
+    function afrsm_get_files_to_ignore(  $default_ignore_directories  ) {
+        $default_ignore_directories[] = '.DS_Store';
+        return $default_ignore_directories;
+    }
+
+    add_filter( 'wp_plugin_check_ignore_files', 'afrsm_get_files_to_ignore' );
+    // Filters the available plugin check classes.
+    function afrsm_wp_plugin_check_checks(  $checks  ) {
+        if ( is_array( $checks ) && isset( $checks['i18n_usage'] ) ) {
+            unset($checks['i18n_usage']);
+        }
+        if ( is_array( $checks ) && isset( $checks['trademarks'] ) ) {
+            unset($checks['trademarks']);
+        }
+        if ( is_array( $checks ) && isset( $checks['image_functions'] ) ) {
+            unset($checks['image_functions']);
+        }
+        return $checks;
+    }
+
+    add_filter( 'wp_plugin_check_checks', 'afrsm_wp_plugin_check_checks' );
 }
 /**
  * Returns the main instance of AFRSMPA.

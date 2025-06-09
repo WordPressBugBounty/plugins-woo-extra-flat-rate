@@ -105,7 +105,7 @@
 			 *
 			 * @param int $zone_id
 			 *
-			 * @return bool false when nonce is not verified, $zone id, $zone_type is blank, Country also blank, Postcode field also blank, saving error when form submit
+			 * @return bool|void false when nonce is not verified, $zone id, $zone_type is blank, Country also blank, Postcode field also blank, saving error when form submit
 			 * @since    1.0.0
 			 *
 			 * @uses afrsm_pro_sz_count_zone()
@@ -114,7 +114,7 @@
 			private static function afrsm_pro_sz_save_zone( $zone_id = 0 ) {
 				if ( ! empty( $_POST['add_zone'] ) || ! empty( $_POST['edit_zone'] ) ) {
 					
-					if ( empty( $_POST['woocommerce_save_zone_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['woocommerce_save_zone_nonce'] ), 'woocommerce_save_zone' ) ) {
+					if ( empty( $_POST['woocommerce_save_zone_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['woocommerce_save_zone_nonce'] ) ), 'woocommerce_save_zone' ) ) {
 						echo '<div class="updated error"><p>' . esc_html__( 'Could not save zone. Please try again.', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</p></div>';
 						
 						return false;
@@ -140,16 +140,16 @@
 						if ( ! empty( $_POST[ $field ] ) ) {
 							if ( is_array( $_POST[ $field ] ) ) {
 								if('cities' === $field){
-									$data[ $field ] = array_map( 'sanitize_text_field', $_POST[ $field ] );
+									$data[ $field ] = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $field ] ) );
 								}else{
-									$data[ $field ] = array_map( 'sanitize_text_field', $_POST[ $field ] );
+									$data[ $field ] = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $field ] ) );
 								}
 							} else {
 								if('cities' === $field){
-                                    $citystr = sanitize_text_field( $_POST[ $field ] );
+                                    $citystr = sanitize_text_field( wp_unslash ( $_POST[ $field ] ) );
                                     $data[ $field ] = explode( ' ', $citystr );
 								}else{
-									$data[ $field ] = sanitize_text_field( $_POST[ $field ] );
+									$data[ $field ] = sanitize_text_field( wp_unslash( $_POST[ $field ] ) );
 								}
 							}
 						} else {
@@ -351,7 +351,8 @@
 				if ( ! class_exists( 'WC_Shipping_Zones_Table' ) ) {
 					require_once plugin_dir_path( dirname( __FILE__ ) ) . 'list-tables/class-wc-shipping-zones-table.php';
 				}
-				echo '<form method="post">';?>
+
+                echo '<form method="post">';?>
                 <h1><?php esc_html_e( 'Shipping Zones', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></h1>
                 <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'afrsm-wc-shipping-zones&add_zone' ), admin_url( 'admin.php' ) ) ); ?>" class="page-title-action dots-btn-with-brand-color">
 					<?php esc_html_e( 'Add Zone', 'advanced-flat-rate-shipping-for-woocommerce' ); ?>

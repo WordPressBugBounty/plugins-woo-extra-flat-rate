@@ -5,6 +5,7 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 require_once plugin_dir_path( __FILE__ ) . 'header/plugin-header.php';
+global $ds_analytics;
 $afrsm_admin_object = new Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin('', '');
 $afrsm_object = new Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro('', '');
 $get_action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -23,8 +24,14 @@ if ( isset( $get_action ) && 'edit' === $get_action ) {
     }
     $get_post_id = ( isset( $get_id ) ? sanitize_text_field( wp_unslash( $get_id ) ) : '' );
     $sm_status = get_post_status( $get_post_id );
-    $sm_title = __( get_the_title( $get_post_id ), 'advanced-flat-rate-shipping-for-woocommerce' );
+    $sm_title = get_the_title( $get_post_id );
     $sm_cost = get_post_meta( $get_post_id, 'sm_product_cost', true );
+    $sm_cost = ( is_numeric( $sm_cost ) ? number_format(
+        $sm_cost,
+        get_option( 'woocommerce_price_num_decimals' ),
+        get_option( 'woocommerce_price_decimal_sep' ),
+        get_option( 'woocommerce_price_thousand_sep' )
+    ) : $sm_cost );
     $is_allow_free_shipping = get_post_meta( $get_post_id, 'is_allow_free_shipping', true );
     $sm_free_shipping_based_on = get_post_meta( $get_post_id, 'sm_free_shipping_based_on', true );
     $sm_free_shipping_cost = get_post_meta( $get_post_id, 'sm_free_shipping_cost', true );
@@ -93,6 +100,7 @@ if ( isset( $get_action ) && 'edit' === $get_action ) {
     } else {
         $sm_metabox_ap_total_cart_subtotal = $sm_metabox_ap_total_cart_subtotal;
     }
+    $sm_free_exclude_tax_from_amount = get_post_meta( $get_post_id, 'sm_free_exclude_tax_from_amount', true );
 } else {
     $get_post_id = '';
     $sm_status = '';
@@ -122,6 +130,7 @@ if ( isset( $get_action ) && 'edit' === $get_action ) {
     $cost_on_total_cart_subtotal_rule_match = 'any';
     $sm_metabox_ap_total_cart_weight = array();
     $sm_metabox_ap_total_cart_subtotal = array();
+    $sm_free_exclude_tax_from_amount = 'off';
 }
 $sm_status = ( !empty( $sm_status ) && 'publish' === $sm_status || empty( $sm_status ) ? 'checked' : '' );
 $sm_title = ( !empty( $sm_title ) ? esc_attr( stripslashes( $sm_title ) ) : '' );
@@ -709,7 +718,25 @@ echo esc_attr( get_woocommerce_currency_symbol() );
 					<?php 
 do_action( 'afrsm_free_shipping_order_amount_after', $get_post_id );
 ?>
-
+                    <tr valign="top" class="free_shipping_section free_shipping_amt">
+                        <th class="titledesc" scope="row">
+                            <label for="sm_free_exclude_tax_from_amount">
+                                <?php 
+esc_html_e( 'Exclude tax', 'advanced-flat-rate-shipping-for-woocommerce' );
+?>
+                                <?php 
+echo wp_kses( wc_help_tip( esc_html__( 'Exclude tax calculation from subtotal', 'advanced-flat-rate-shipping-for-woocommerce' ) ), array(
+    'span' => $allowed_tooltip_html,
+) );
+?>
+                            </label>
+                        </th>
+                        <td class="forminp">
+                            <input type="checkbox" name="sm_free_exclude_tax_from_amount" id="sm_free_exclude_tax_from_amount" class="sm_free_exclude_tax_from_amount" value="on" <?php 
+checked( $sm_free_exclude_tax_from_amount, 'on' );
+?> />
+                        </td>
+                    </tr>
 					<?php 
 ?>
 					<?php 
@@ -868,7 +895,7 @@ esc_html_e( 'No', 'advanced-flat-rate-shipping-for-woocommerce' );
 					</tr>
 					<?php 
 do_action( 'afrsm_is_amount_taxable_field_after', $get_post_id );
-if ( is_plugin_active( 'woocommerce-germanized/woocommerce-germanized.php' ) ) {
+if ( is_plugin_active( 'woocommerce-germanized/woocommerce-germanized.php' ) && function_exists( 'wc_gzd_get_shipping_provider_select' ) ) {
     do_action( 'afrsm_shipping_provider_before', $get_post_id );
     ?>
 						<tr valign="top">
@@ -945,6 +972,7 @@ if ( !empty( $all_shipping_classes ) ) {
         echo esc_attr( $shipping_class->term_id );
         ?>">
                                             <?php 
+        // translators: %s is the shipping class name.
         echo sprintf( esc_html__( '"%s" shipping class cost', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( $shipping_class->name ) );
         ?>
                                         </label>
@@ -984,6 +1012,13 @@ if ( !empty( $all_shipping_classes ) ) {
     ?>>
                                             <?php 
     esc_html_e( 'Per order: Charge shipping for the most expensive shipping class', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?>
+                                        </option>
+                                        <option value="per_order_cheapest" <?php 
+    selected( $sm_extra_cost_calc_type, 'per_order_cheapest' );
+    ?>>
+                                            <?php 
+    esc_html_e( 'Per order: Charge shipping for the most cheapest shipping class', 'advanced-flat-rate-shipping-for-woocommerce' );
     ?>
                                         </option>
                                     </select>
@@ -1134,6 +1169,8 @@ if ( isset( $sm_metabox ) && !empty( $sm_metabox ) ) {
             $html .= $afrsm_admin_object->afrsm_pro_get_zones_list( $i, $condtion_value );
         } elseif ( 'product' === $fees_conditions ) {
             $html .= $afrsm_admin_object->afrsm_pro_get_product_list( $i, $condtion_value );
+        } elseif ( 'variableproduct' === $fees_conditions ) {
+            $html .= $afrsm_admin_object->afrsm_pro_get_varible_product_list( $i, $condtion_value, 'edit' );
         } elseif ( 'category' === $fees_conditions ) {
             $html .= $afrsm_admin_object->afrsm_pro_get_category_list( $i, $condtion_value );
         } elseif ( 'tag' === $fees_conditions ) {
@@ -1388,7 +1425,7 @@ echo esc_attr( $cost_on_total_cart_weight_status );
 													<div class="slider round"></div>
 												</label>
                                                 <?php 
-echo wp_kses( wc_help_tip( esc_html__( AFRSM_PRO_PERTICULAR_FEE_AMOUNT_NOTICE, 'advanced-flat-rate-shipping-for-woocommerce' ) ), array(
+echo wp_kses( wc_help_tip( esc_html( AFRSM_PRO_PERTICULAR_FEE_AMOUNT_NOTICE ) ), array(
     'span' => $allowed_tooltip_html,
 ) );
 ?>
@@ -1638,7 +1675,7 @@ echo esc_attr( $cost_on_total_cart_subtotal_status );
 													<div class="slider round"></div>
 												</label>
                                                 <?php 
-echo wp_kses( wc_help_tip( esc_html__( AFRSM_PRO_PERTICULAR_FEE_AMOUNT_NOTICE, 'advanced-flat-rate-shipping-for-woocommerce' ) ), array(
+echo wp_kses( wc_help_tip( esc_html( AFRSM_PRO_PERTICULAR_FEE_AMOUNT_NOTICE ) ), array(
     'span' => $allowed_tooltip_html,
 ) );
 ?>

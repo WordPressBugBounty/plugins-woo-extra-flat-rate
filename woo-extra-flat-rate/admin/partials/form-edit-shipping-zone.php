@@ -111,7 +111,15 @@ esc_attr_e( 'Choose countries&hellip;', 'advanced-flat-rate-shipping-for-woocomm
 ?>" class="chosen-select">
                                             <?php 
 foreach ( $countries as $key => $val ) {
-    echo '<option value="' . esc_attr( $key ) . '" ' . selected( in_array( $key, $country_code, true ) ) . '>' . esc_html( $val ) . '</option>';
+    ?>
+                                                <option value="<?php 
+    echo esc_attr( $key );
+    ?>" <?php 
+    selected( in_array( $key, $country_code, true ) );
+    ?> ><?php 
+    echo esc_html( $val );
+    ?></option>
+                                            <?php 
 }
 ?>
                                         </select>

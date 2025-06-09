@@ -1,15 +1,14 @@
 === Flat Rate Shipping Plugin For WooCommerce ===
 Contributors: dots, jaydeep-rami, nishitlangaliya, chiragpatel, kakshak, jariwalasagar
-Donate link: https://www.thedotstore.com/
-Tags: Flat rate shipping,Table rate shipping,Conditional shipping,WooCommerce shipping,table rate, shipping
-Stable tag: 4.4.0
+Tags: Flat rate shipping,Table rate shipping,Conditional shipping,WooCommerce shipping, shipping
 Requires at least: 5.0
+Tested up to: 6.8
+Stable tag: 4.4.1
 Requires PHP: 7.2
-Tested up to: 6.7.1
-WC requires at least: 3.0
-WC tested up to: 9.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
+WC requires at least: 3.0
+WC tested up to: 9.8.5
 
 Create flexible flat rate shipping methods with custom rules i.e. for specific products or countries where the products will be shipped to.
 
@@ -464,6 +463,20 @@ With strategic flat rate shipping options that match your business needs, the pl
 Automatic updates should work great for you.  As always, though, we recommend backing up your site prior to making any updates just to be sure nothing goes wrong.
 
 == Changelog ==
+= 4.4.1 - 09-06-2025 =
+* [Bug Fix] Removed submenu pages still accessible for some users, causing critical errors.
+* [Bug Fix] Free shipping calculation issue with Inclusive Tax option enabled.
+* [Bug Fix] Bug in product search functionality.
+* [New] Option to exclude tax amount from subtotal when free shipping is enabled.
+* [New] Variable product rule support added for more flexible shipping logic.
+* [Enhancement] Shipping zones and rules – improved performance and layout stability.
+* [Enhancement] Removed outdated front-end sorting code to improve performance and clarity.
+* [Enhancement] General UI optimization and compatibility improvements based on user feedback and reviews.
+* [Enhancement] Compatible with Admin Menu Editor by Janis Elsts
+* [Enhancement] Freemius update to 2.12.0
+* [Enhancement] Compatible with WooCommerce 9.8.x
+* [Enhancement] Compatible with WordPress 6.8.x
+
 = 4.4.0 - 20-12-2024 =
 * [New] Import/Export with CSV file
 * [Enhancement] Implement new sorting order for shipping method listing

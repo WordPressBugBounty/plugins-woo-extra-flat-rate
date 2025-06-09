@@ -5,7 +5,6 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 require_once plugin_dir_path( __FILE__ ) . 'header/plugin-header.php';
-$shipping_method_format = get_option( 'md_woocommerce_shipping_method_format' );
 $afrsm_force_customer_to_select_sm = get_option( 'afrsm_force_customer_to_select_sm' );
 ?>
 <div class="afrsm-section-left">
@@ -17,23 +16,50 @@ esc_html_e( 'General Settings', 'advanced-flat-rate-shipping-for-woocommerce' );
             <tbody>
                 <?php 
 ?>
+                        <tr class="mastersettings-raw">
+                            <td class="table-whattodo">
+                                <?php 
+esc_html_e( 'Show type of shipping method', 'advanced-flat-rate-shipping-for-woocommerce' );
+?>
+                                <span class="afrsm-pro-label"></span>
+                            </td>
+                            <td>
+                                <select id="what_to_do_method">
+                                    <option value=""><?php 
+esc_html_e( 'Allow customer to choose', 'advanced-flat-rate-shipping-for-woocommerce' );
+?></option>
+                                    <option value="in_pro"><?php 
+esc_html_e( 'Apply Highest 🔒', 'advanced-flat-rate-shipping-for-woocommerce' );
+?></option>
+                                    <option value="in_pro"><?php 
+esc_html_e( 'Apply Lowest 🔒', 'advanced-flat-rate-shipping-for-woocommerce' );
+?></option>
+                                    <option value="in_pro"><?php 
+esc_html_e( 'Force all shipping methods 🔒', 'advanced-flat-rate-shipping-for-woocommerce' );
+?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <?php 
+?>
                 <tr valign="top" id="display_mode">
                     <td class="table-whattodo"><?php 
 esc_html_e( 'Shipping Display Mode', 'advanced-flat-rate-shipping-for-woocommerce' );
 ?></td>
                     <td>
-                        <select name="shipping_display_mode" id="shipping_display_mode">
-                            <option value="radio_button_mode"<?php 
-echo ( isset( $shipping_method_format ) && 'radio_button_mode' === $shipping_method_format ? ' selected=selected' : '' );
-?>><?php 
-esc_html_e( 'Radio buttons', 'advanced-flat-rate-shipping-for-woocommerce' );
-?></option>
-                            <option value="dropdown_mode"<?php 
-echo ( isset( $shipping_method_format ) && 'dropdown_mode' === $shipping_method_format ? ' selected=selected' : '' );
-?>><?php 
-esc_html_e( 'Dropdown', 'advanced-flat-rate-shipping-for-woocommerce' );
-?></option>
-                        </select>
+                        <?php 
+$html = sprintf( 
+    // translators: 1: Bold "Note:" label. 2: The message about the new plugin.
+    '<p class="note"><b style="color: red;">%1$s</b>%2$s</p>',
+    esc_html__( 'Note: ', 'advanced-flat-rate-shipping-for-woocommerce' ),
+    sprintf( 
+        // translators: 1: Link to the "Shipping Method Display Style" plugin.
+        esc_html__( 'This feature is now part of our dedicated plugin %1$s for enhanced flexibility and control. Install it to continue using the option.', 'advanced-flat-rate-shipping-for-woocommerce' ),
+        '<a href="https://wordpress.org/plugins/woo-shipping-display-mode/" target="_blank">Shipping Method Display Style</a>'
+     )
+ );
+echo wp_kses_post( $html );
+?>
                     </td>
                 </tr>
                 <?php 

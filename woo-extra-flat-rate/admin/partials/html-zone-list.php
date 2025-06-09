@@ -25,7 +25,7 @@
                 </a>
             </div> -->
             <div class="wc-col-wrap">
-				<?php self::afrsm_pro_sz_list_shipping_zones(); ?>
+				<?php self::afrsm_pro_sz_list_shipping_zones(); // @phpstan-ignore-line ?>
             </div>
         </div>
     </div>

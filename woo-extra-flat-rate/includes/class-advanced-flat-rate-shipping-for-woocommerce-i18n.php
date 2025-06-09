@@ -51,6 +51,7 @@
 			load_textdomain( $this->domain, $path . '/' . $mofile );
 			$plugin_rel_path = apply_filters( 'advanced_flat_rate_shipping_for_woocommerce_translation_file_rel_path', dirname(dirname(plugin_basename(__FILE__))) . '/languages' );
 			load_plugin_textdomain( $this->domain, false, $plugin_rel_path );
+            
 		}
 		
 		/**

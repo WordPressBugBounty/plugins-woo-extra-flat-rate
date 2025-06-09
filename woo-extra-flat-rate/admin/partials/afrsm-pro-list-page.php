@@ -198,7 +198,7 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 		 *
 		 * @param int $method_id
 		 *
-		 * @return bool false when nonce is not verified, $zone id, $zone_type is blank, Country also blank, Postcode field also blank, saving error when form submit
+		 * @return bool|void false when nonce is not verified, $zone id, $zone_type is blank, Country also blank, Postcode field also blank, saving error when form submit
 		 *
 		 * @since    3.5
 		 *
@@ -254,11 +254,15 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'header/plugin-header.php' );
 			wp_nonce_field('sorting_conditional_fee_action','sorting_conditional_fee');
 			$WC_Advanced_Flat_Rate_Shipping_Table = new WC_Advanced_Flat_Rate_Shipping_Table();
+
+            // Count for remove nav bar
+            $all_count = wp_count_posts(self::post_type);
+            $all_count = intval( $all_count->publish + $all_count->draft );
 			?>
 			<div class="wrap">
 				<form method="post" enctype="multipart/form-data">
 					<div class="afrsm-section-left">
-						<div class="afrsm-main-table res-cl afrsm-add-rule-page">
+						<div class="afrsm-main-table res-cl afrsm-add-rule-page<?php echo $all_count < 1 ? " no-rules": "" ; ?>">
 							<h1><?php esc_html_e( 'Shipping Methods', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></h1>
 							<?php
 				            if ( !( afrsfw_fs()->is__premium_only() && afrsfw_fs()->can_use_premium_code() ) ) {
@@ -281,6 +285,7 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
 							$WC_Advanced_Flat_Rate_Shipping_Table->prepare_items();
 							$request_s = filter_input( INPUT_POST, 's', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 							if ( isset( $request_s ) && ! empty( $request_s ) ) {
+                                // translators: %s: is the search term
 								echo sprintf( '<span class="subtitle">' . esc_html__( 'Search results for &#8220;%s&#8221;', 'advanced-flat-rate-shipping-for-woocommerce' ) . '</span>', esc_html( $request_s ) );
 							}
 							$WC_Advanced_Flat_Rate_Shipping_Table->search_box( esc_html__( 'Search', 'advanced-flat-rate-shipping-for-woocommerce' ), 'shipping-method' );
@@ -289,7 +294,11 @@ if ( ! class_exists( 'AFRSM_Rule_Listing_Page' ) ) {
                                 ?>
                                 <div class="afrsm-new-order-note">
                                     <span>
-                                        <?php printf( esc_html__( '%s: We\'ve implemented a new sorting method for shipping rules. Before syncing, we recommend backing up your current shipping methods. Please note that if you have a large number of shipping methods, the sync process may take some time. After the sync is complete, verify that the sorting order is correct to ensure accuracy.', 'advanced-flat-rate-shipping-for-woocommerce' ), '<strong>'.esc_html__('Note', 'advanced-flat-rate-shipping-for-woocommerce').'</strong>' ); ?>
+                                        <?php printf( 
+                                            // translators: %s: is the note text
+                                            esc_html__( '%s: We\'ve implemented a new sorting method for shipping rules. Before syncing, we recommend backing up your current shipping methods. Please note that if you have a large number of shipping methods, the sync process may take some time. After the sync is complete, verify that the sorting order is correct to ensure accuracy.', 'advanced-flat-rate-shipping-for-woocommerce' ), 
+                                            '<strong>'.esc_html__('Note', 'advanced-flat-rate-shipping-for-woocommerce').'</strong>' 
+                                        ); ?>
                                     </span>
                                     <a href="javascript:void(0);" class="afrsm-new-sorting button-primary"><?php esc_html_e( 'Sync sorting', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></a>
                                 </div>

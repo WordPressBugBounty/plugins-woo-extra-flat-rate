@@ -925,7 +925,6 @@ table.shippingzones td {
 	vertical-align: top;
 	line-height: 1.4em;
 	overflow: hidden;
-	cursor: move;
 	padding: 7px
 }
 table.shippingzones tr:last-child td {
@@ -1806,6 +1805,12 @@ table.table-outer.form-table.shipping-methods-listing.tablesorter tr th.th_chk .
 }
 .afrsm-main-table table th#date{
     width: 8%;
+}
+.afrsm-main-table table th#drag{
+    width: 1%;
+}
+.afrsm-main-table table tbody .column-drag{
+    cursor: grab;
 }
 .active_list_wrap {
 	font-size: 15px;

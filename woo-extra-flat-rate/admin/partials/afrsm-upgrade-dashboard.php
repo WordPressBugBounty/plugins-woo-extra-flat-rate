@@ -221,7 +221,10 @@ $plugin_key_features = array(
 							if ( ! empty( $annual_plugin_price ) ) {
 								?>
 								<div class="monthly-price-wrap"><?php echo esc_html( '$' . $monthly_plugin_price ); ?><span class="seprater">/</span><span><?php esc_html_e( 'month', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span></div>
-								<div class="yearly-price-wrap"><?php echo sprintf( esc_html__( 'Pay $%s today. Renews in 12 months.', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( $annual_plugin_price ) ); ?></div>
+								<div class="yearly-price-wrap"><?php 
+                                    // translators: %s : the annual plugin price
+                                    echo sprintf( esc_html__( 'Pay $%s today. Renews in 12 months.', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_html( $annual_plugin_price ) ); 
+                                ?></div>
 								<?php	
 							}
 							?>
@@ -285,7 +288,8 @@ $plugin_key_features = array(
 							<p>
 							<?php 
 								echo sprintf(
-								    esc_html__('Yes! You can read our %s or submit a %s. We are very responsive and strive to do our best to help you.', 'advanced-flat-rate-shipping-for-woocommerce'),
+                                    // translators: %1$s: the link to the knowledge base, %2$s: is the link to the support ticket.
+								    esc_html__('Yes! You can read our %1$s or submit a  %2$s. We are very responsive and strive to do our best to help you.', 'advanced-flat-rate-shipping-for-woocommerce'),
 								    '<a href="' . esc_url('https://docs.thedotstore.com/collection/81-flat-rate-shipping') . '" target="_blank">' . esc_html__('knowledge base', 'advanced-flat-rate-shipping-for-woocommerce') . '</a>',
 								    '<a href="' . esc_url('https://www.thedotstore.com/support-ticket/') . '" target="_blank">' . esc_html__('support ticket', 'advanced-flat-rate-shipping-for-woocommerce') . '</a>',
 								);
@@ -318,6 +322,7 @@ $plugin_key_features = array(
 							<p>
 							<?php 
 								echo sprintf(
+                                    // translators: %s: the email address for support.
 								    esc_html__('No problem, we’re happy to help! Please reach out at %s.', 'advanced-flat-rate-shipping-for-woocommerce'),
 								    '<a href="' . esc_url('mailto:hello@thedotstore.com') . '" target="_blank">' . esc_html('hello@thedotstore.com') . '</a>',
 								);
@@ -337,4 +342,3 @@ $plugin_key_features = array(
 </div>
 </div>
 </div>
-<?php 

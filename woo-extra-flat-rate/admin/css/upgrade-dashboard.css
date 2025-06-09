@@ -1,9 +1,9 @@
 /* Free User Upgrade Dashboard CSS */
 .dots-header .dots_get_premium{position:relative;}
 .dots-header .dots_get_premium::before{content:"";width:16px;height:16px;background-image:url("../images/premium-upgrade-img/pro-feature-icon.svg");background-repeat:no-repeat;display:inline-block;vertical-align:middle;margin:-2px 6px 0 0;}
-.dotstore-upgrade-dashboard{padding:50px 40px;text-align:center;-webkit-box-shadow:0px 5px 20px rgb(0 0 0 / 5%);box-shadow:0px 5px 20px rgb(0 0 0 / 5%);background-color:#fff;border-radius:5px;margin-bottom:30px;}
+.dotstore-upgrade-dashboard{padding:50px 40px;text-align:center;-webkit-box-shadow:0px 5px 20px rgb(0 0 0 / 5%);box-shadow:0px 5px 20px rgb(0 0 0 / 5%);background-color:#fff;border-radius:5px;margin-bottom:30px;width:100%;max-width:1350px;margin:0 auto;}
 .dotstore-upgrade-dashboard,.dotstore-upgrade-dashboard *{-webkit-box-sizing:border-box;box-sizing:border-box;}
-.dots-settings-inner-main .dotstore-upgrade-dashboard h2{font-size:25px;font-weight:600;color:#000;line-height:28px;padding:0;margin-top:0;}
+#dotsstoremain .dots-settings-inner-main .dotstore-upgrade-dashboard h2{font-size:25px;font-weight:600;color:#000;line-height:28px;padding:0;margin-top:0;border:none;background-color:transparent;}
 .dotstore-upgrade-dashboard .premium-benefits-section p{font-size:18px;font-weight:400;color:#000;line-height:22px;margin:25px 0;}
 .dotstore-upgrade-dashboard .unlock-premium-features p span{position:relative;padding-right:20px;}
 .dotstore-upgrade-dashboard .unlock-premium-features p span::after{content:"";position:absolute;top:50%;right:0;display:inline-block;width:14px;height:13px;background-image:url("../images/pro-plugin-icon.svg");-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%);}
@@ -107,7 +107,7 @@
     .dotstore-upgrade-dashboard .feature-explanation-popup .feature-image,.dotstore-upgrade-dashboard .feature-explanation-popup .feature-content{width:100%;padding:0;margin:10px 0;}
     .dotstore-upgrade-dashboard .upgrade-to-premium-btn a svg{margin-left:8px;width:20px;height:18px;}
     .dotstore-upgrade-dashboard{padding:20px;}
-    .dots-settings-inner-main .dotstore-upgrade-dashboard h2{font-size:20px;line-height:30px;}
+    #dotsstoremain .dots-settings-inner-main .dotstore-upgrade-dashboard h2{font-size:20px;line-height:30px;}
     .dotstore-upgrade-dashboard .premium-plugin-details{margin:30px 0 0;}
     .dotstore-upgrade-dashboard .premium-key-fetures h3{margin:10px 0 0;font-size:18px;line-height:26px;}
     .dotstore-upgrade-dashboard .premium-key-fetures ul{margin:24px 0 0 8px;}

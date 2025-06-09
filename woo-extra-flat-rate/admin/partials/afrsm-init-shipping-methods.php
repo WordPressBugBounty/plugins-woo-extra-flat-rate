@@ -30,10 +30,8 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
         $shipping_method_title = ( !empty( $post_title ) ? $post_title : esc_html__( 'Advanced Flat Rate Shipping', 'advanced-flat-rate-shipping-for-woocommerce' ) );
         $this->id = $shipping_method_id;
         $this->title = __( 'Advanced Flat Rate Shipping', 'advanced-flat-rate-shipping-for-woocommerce' );
-        $this->method_title = __( $shipping_method_title, 'advanced-flat-rate-shipping-for-woocommerce' );
+        $this->method_title = esc_html( $shipping_method_title );
         $this->afrsm_shipping_init();
-        // Save settings
-        add_action( 'woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options') );
         self::$admin_object = new Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin('', '');
     }
 
@@ -76,7 +74,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
      *
      * @param array $package List containing all products for this method.
      *
-     * @return bool false if $matched_shipping_methods is false then it will return false
+     * @return bool|void false if $matched_shipping_methods is false then it will return false
      * @since 3.0.0
      *
      * @uses  get_default_language()
@@ -114,18 +112,6 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                 return;
             }
         }
-        $getSortOrder = get_option( 'sm_sortable_order_' . $default_lang );
-        $sort_order = array();
-        if ( !empty( $getSortOrder ) ) {
-            foreach ( $getSortOrder as $getSortOrder_id ) {
-                settype( $getSortOrder_id, 'integer' );
-                if ( in_array( $getSortOrder_id, $matched_shipping_methods, true ) ) {
-                    $sort_order[] = $getSortOrder_id;
-                }
-            }
-            unset($matched_shipping_methods);
-            $matched_shipping_methods = $sort_order;
-        }
         /**
          * match shipping methods
          */
@@ -147,7 +133,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                     $shipping_title = get_the_title( $shipping_method_id_val );
                     $shipping_rate = array(
                         'id'    => 'advanced_flat_rate_shipping' . ':' . $shipping_method_id_val,
-                        'label' => __( $shipping_title, 'advanced-flat-rate-shipping-for-woocommerce' ),
+                        'label' => esc_html( $shipping_title ),
                         'cost'  => 0,
                     );
                     $cart_based_qty = '0';
@@ -220,46 +206,6 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                         );
                         $shipping_rate['cost'] = $this->afrsm_shipping_evaluate_cost( $cost, $cost_args );
                     }
-                    // Add shipping class costs
-                    $found_shipping_classes = $this->afrsm_shipping_find_shipping_classes( $package );
-                    $highest_class_cost = 0;
-                    if ( !empty( $found_shipping_classes ) ) {
-                        foreach ( $found_shipping_classes as $shipping_class => $products ) {
-                            $shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
-                            $shipping_extra_id = '';
-                            if ( false !== $shipping_class_term ) {
-                                if ( !empty( $sitepress ) ) {
-                                    $shipping_extra_id = apply_filters(
-                                        'wpml_object_id',
-                                        $shipping_class_term->term_id,
-                                        'product_shipping_class',
-                                        true,
-                                        $default_lang
-                                    );
-                                } else {
-                                    $shipping_extra_id = $shipping_class_term->term_id;
-                                }
-                            }
-                            $sm_extra_cost = get_post_meta( $shipping_method_id_val, 'sm_extra_cost', true );
-                            $class_cost_string = ( isset( $sm_extra_cost[$shipping_extra_id] ) && !empty( $sm_extra_cost[$shipping_extra_id] ) ? $sm_extra_cost[$shipping_extra_id] : '' );
-                            if ( '' === $class_cost_string ) {
-                                continue;
-                            }
-                            $has_costs = true;
-                            $class_cost = $this->afrsm_shipping_evaluate_cost( $class_cost_string, array(
-                                'qty'  => array_sum( wp_list_pluck( $products, 'quantity' ) ),
-                                'cost' => array_sum( wp_list_pluck( $products, 'line_total' ) ),
-                            ) );
-                            if ( 'per_class' === $sm_extra_cost_calculation_type ) {
-                                $shipping_rate['cost'] += $class_cost;
-                            } else {
-                                $highest_class_cost = ( $class_cost > $highest_class_cost ? $class_cost : $highest_class_cost );
-                            }
-                        }
-                        if ( 'per_order' === $sm_extra_cost_calculation_type && $highest_class_cost ) {
-                            $shipping_rate['cost'] += $highest_class_cost;
-                        }
-                    }
                     // apply for tax
                     if ( 'no' === $sm_taxable ) {
                         $shipping_rate['taxes'] = false;
@@ -311,10 +257,17 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                         $free_shipping_based_on_product = get_post_meta( $shipping_method_id_val, 'sm_free_shipping_based_on_product', true );
                         $sm_free_shipping_exclude_product = get_post_meta( $shipping_method_id_val, 'sm_free_shipping_exclude_product', true );
                         $is_free_shipping_exclude_prod = get_post_meta( $shipping_method_id_val, 'is_free_shipping_exclude_prod', true );
-                        $total_cart_value = WC()->cart->subtotal_ex_tax;
+                        //This subtoal price is always comes with tax calculated (price with tax)
+                        $total_cart_value = floatval( WC()->cart->subtotal );
                         $total_discount_value = $admin_object->afrsm_pro_remove_currency_symbol( WC()->cart->get_total_discount() );
                         if ( "min_order_amt" === $free_shipping_based_on ) {
                             $final_total_cart_value = $total_cart_value - $total_discount_value;
+                            // Due to subtotal comes with tax always here we will remove that tax if customer choose to exclude tax from subtotal calculation
+                            $is_free_exclude_tax_from_amount = get_post_meta( $shipping_method_id_val, 'sm_free_exclude_tax_from_amount', true );
+                            if ( "on" === $is_free_exclude_tax_from_amount ) {
+                                $cart_subtotal_tax = WC()->cart->get_totals()['subtotal_tax'];
+                                $final_total_cart_value = $final_total_cart_value - $cart_subtotal_tax;
+                            }
                             if ( "on" === $is_free_shipping_exclude_prod ) {
                                 $exlude_product_subtotal = $this->afrsm_cart_exclude_product_subtotal( $sm_free_shipping_exclude_product );
                                 if ( $exlude_product_subtotal <= $final_total_cart_value ) {
@@ -600,7 +553,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
      * @param array  $woo_cart_array
      * @param string $cost_on_total_cart_weight_rule_match
      *
-     * @return array $main_is_passed
+     * @return array|void $main_is_passed
      * @since 3.4
      *
      * @uses  WC_Cart::get_cart_contents_total()
@@ -648,7 +601,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
      * @param array  $woo_cart_array
      * @param string $cost_on_total_cart_subtotal_rule_match
      *
-     * @return array $main_is_passed
+     * @return array|void $main_is_passed
      * @since 3.4
      *
      * @uses  WC_Cart::get_cart_contents_total()
@@ -740,6 +693,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                         $language_information = apply_filters( 'wpml_post_language_details', null, $sm_post_id );
                     } else {
                         $language_information = wpml_get_language_information( $sm_post_id );
+                        // @phpstan-ignore-line
                     }
                     $post_id_language_code = $language_information['language_code'];
                 } else {
@@ -755,7 +709,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
             }
         }
         // reset custom query
-        wp_reset_query();
+        wp_reset_postdata();
         update_option( 'matched_method', $matched_methods );
         return $matched_methods;
     }
@@ -897,18 +851,21 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
         $array = array();
         foreach ( $input as $value ) {
             if ( !isset( $value[$columnKey] ) ) {
-                wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', esc_attr( $columnKey ), 'advanced-flat-rate-shipping-for-woocommerce' ) ) );
+                // translators: %d: is the column key that does not exist in the array.
+                wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', 'array key error', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_attr( $columnKey ) ) );
                 return false;
             }
             if ( is_null( $indexKey ) ) {
                 $array[] = $value[$columnKey];
             } else {
                 if ( !isset( $value[$indexKey] ) ) {
-                    wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', esc_attr( $indexKey ), 'advanced-flat-rate-shipping-for-woocommerce' ) ) );
+                    // translators: %d: is the index key that does not exist in the array.
+                    wp_die( sprintf( esc_html_x( 'Key %d does not exist in array', 'array key error', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_attr( $indexKey ) ) );
                     return false;
                 }
                 if ( !is_scalar( $value[$indexKey] ) ) {
-                    wp_die( sprintf( esc_html_x( 'Key %d does not contain scalar value', esc_attr( $indexKey ), 'advanced-flat-rate-shipping-for-woocommerce' ) ) );
+                    // translators: %d: is the index key that does not contain scalar value.
+                    wp_die( sprintf( esc_html_x( 'Key %d does not contain scalar value', 'array key error', 'advanced-flat-rate-shipping-for-woocommerce' ), esc_attr( $indexKey ) ) );
                     return false;
                 }
                 $array[$value[$indexKey]] = $value[$columnKey];

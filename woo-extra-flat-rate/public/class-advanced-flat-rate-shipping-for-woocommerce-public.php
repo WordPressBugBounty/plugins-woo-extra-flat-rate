@@ -177,7 +177,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
      * @param $method
      * @param $available_methods
      *
-     * @return array
+     * @return array|void
      * @since  3.6
      */
     public function afrsm_set_default_shipping_method( $method, $available_methods ) {
@@ -231,20 +231,17 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
         }
         $sm_estimation_delivery = get_post_meta( $get_method_id, 'sm_estimation_delivery', true );
         $sm_estimation_delivery = ( isset( $sm_estimation_delivery ) && !empty( $sm_estimation_delivery ) ? ' (' . $sm_estimation_delivery . ') ' : '' );
-        if ( "forceall" === $method_id ) {
-            $forceall_label = ( get_option( 'forceall_label' ) ? get_option( 'forceall_label' ) : esc_html__( 'Combine Shipping', 'advanced-flat-rate-shipping-for-woocommerce' ) );
-            $method->set_label( $forceall_label );
-            return $label;
-        } else {
+        if ( "forceall" !== $method_id ) {
             return $label . "<span>" . $sm_estimation_delivery . "</span>";
         }
+        return $label;
     }
 
     public function afrsm_add_tooltip_and_subtitle_callback( $method ) {
         $tool_tip_html = '';
         $final_shipping_label = '';
         $get_method_id = '';
-        if ( "forceall" === $method->id && is_checkout() ) {
+        if ( "forceall" === $method->id ) {
             $new_lin_force_all_lable = '';
             $forceall_label = ( get_option( 'forceall_label' ) ? get_option( 'forceall_label' ) : esc_html__( 'Combine Shipping', 'advanced-flat-rate-shipping-for-woocommerce' ) );
             $get_param_cart = $this->afrsm_pro_forceall_label_for_cart__premium_only(
@@ -253,9 +250,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
                 $method,
                 $forceall_label
             );
-            if ( is_plugin_active( 'checkout-for-woocommerce/checkout-for-woocommerce.php' ) ) {
-                $tool_tip_html = $get_param_cart['tool_tip_html'];
-            }
+            $tool_tip_html = $get_param_cart['tool_tip_html'];
         } else {
             if ( false !== strpos( $method->id, 'advanced_flat_rate_shipping:' ) ) {
                 $method_id_explode = explode( ':', $method->id );
@@ -275,6 +270,20 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
             }
         }
         echo wp_kses( $tool_tip_html, Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::afrsm_pro_allowed_html_tags() );
+    }
+
+    public function force_shipping_recalculation( $cart ) {
+        if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
+            return;
+        }
+        if ( !is_checkout() && !is_cart() ) {
+            return;
+        }
+        // Check if the cart is empty
+        if ( WC()->cart->is_empty() ) {
+            return;
+        }
+        $cart->calculate_shipping();
     }
 
 }
