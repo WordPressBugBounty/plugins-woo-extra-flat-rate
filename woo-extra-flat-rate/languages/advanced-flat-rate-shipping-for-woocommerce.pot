@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Flat Rate Shipping Method for WooCommerce 4.4.1\n"
+"Project-Id-Version: Flat Rate Shipping Method for WooCommerce 4.4.2\n"
 "Report-Msgid-Bugs-To: https://www.multidots.com/contact/\n"
-"POT-Creation-Date: 2025-06-09 06:57:30+00:00\n"
+"POT-Creation-Date: 2025-06-16 11:32:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -214,9 +214,9 @@ msgstr ""
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:257
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:266
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:561
-#: admin/partials/afrsm-pro-add-new-page.php:4585
-#: admin/partials/afrsm-pro-add-new-page.php:4771
-#: admin/partials/afrsm-pro-add-new-page.php:4958
+#: admin/partials/afrsm-pro-add-new-page.php:4598
+#: admin/partials/afrsm-pro-add-new-page.php:4784
+#: admin/partials/afrsm-pro-add-new-page.php:4971
 msgid "Shipping Class"
 msgstr ""
 
@@ -274,95 +274,95 @@ msgid "Greater than ( > )"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:384
-#: admin/partials/afrsm-pro-add-new-page.php:2331
+#: admin/partials/afrsm-pro-add-new-page.php:2344
 msgid "Cost on Product"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:385
-#: admin/partials/afrsm-pro-add-new-page.php:2503
-#: admin/partials/afrsm-pro-add-new-page.php:2511
+#: admin/partials/afrsm-pro-add-new-page.php:2516
+#: admin/partials/afrsm-pro-add-new-page.php:2524
 msgid "Cost on Product Subtotal"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:386
-#: admin/partials/afrsm-pro-add-new-page.php:2689
-#: admin/partials/afrsm-pro-add-new-page.php:2695
+#: admin/partials/afrsm-pro-add-new-page.php:2702
+#: admin/partials/afrsm-pro-add-new-page.php:2708
 msgid "Cost on Product Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:387
-#: admin/partials/afrsm-pro-add-new-page.php:2866
-#: admin/partials/afrsm-pro-add-new-page.php:2876
+#: admin/partials/afrsm-pro-add-new-page.php:2879
+#: admin/partials/afrsm-pro-add-new-page.php:2889
 msgid "Cost on Category"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:388
-#: admin/partials/afrsm-pro-add-new-page.php:3050
-#: admin/partials/afrsm-pro-add-new-page.php:3058
+#: admin/partials/afrsm-pro-add-new-page.php:3063
+#: admin/partials/afrsm-pro-add-new-page.php:3071
 msgid "Cost on Category Subtotal"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:389
-#: admin/partials/afrsm-pro-add-new-page.php:3237
-#: admin/partials/afrsm-pro-add-new-page.php:3248
+#: admin/partials/afrsm-pro-add-new-page.php:3250
+#: admin/partials/afrsm-pro-add-new-page.php:3261
 msgid "Cost on Category Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:390
-#: admin/partials/afrsm-pro-add-new-page.php:3422
-#: admin/partials/afrsm-pro-add-new-page.php:3432
+#: admin/partials/afrsm-pro-add-new-page.php:3435
+#: admin/partials/afrsm-pro-add-new-page.php:3445
 msgid "Cost on Tag"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:391
-#: admin/partials/afrsm-pro-add-new-page.php:3604
-#: admin/partials/afrsm-pro-add-new-page.php:3614
+#: admin/partials/afrsm-pro-add-new-page.php:3617
+#: admin/partials/afrsm-pro-add-new-page.php:3627
 msgid "Cost on Tag Subtotal"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:392
-#: admin/partials/afrsm-pro-add-new-page.php:3786
-#: admin/partials/afrsm-pro-add-new-page.php:3797
+#: admin/partials/afrsm-pro-add-new-page.php:3799
+#: admin/partials/afrsm-pro-add-new-page.php:3810
 msgid "Cost on Tag Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:393
-#: admin/partials/afrsm-pro-add-new-page.php:3971
-#: admin/partials/afrsm-pro-add-new-page.php:3979
+#: admin/partials/afrsm-pro-add-new-page.php:3984
+#: admin/partials/afrsm-pro-add-new-page.php:3992
 msgid "Cost on Total Cart Qty"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:394
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:403
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:423
-#: admin/partials/afrsm-pro-add-new-page.php:4162
-#: admin/partials/afrsm-pro-add-new-page.php:4170
+#: admin/partials/afrsm-pro-add-new-page.php:4175
+#: admin/partials/afrsm-pro-add-new-page.php:4183
 msgid "Cost on Total Cart Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:395
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:404
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:424
-#: admin/partials/afrsm-pro-add-new-page.php:4342
-#: admin/partials/afrsm-pro-add-new-page.php:4350
+#: admin/partials/afrsm-pro-add-new-page.php:4355
+#: admin/partials/afrsm-pro-add-new-page.php:4363
 msgid "Cost on Total Cart Subtotal"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:396
-#: admin/partials/afrsm-pro-add-new-page.php:4532
-#: admin/partials/afrsm-pro-add-new-page.php:4542
+#: admin/partials/afrsm-pro-add-new-page.php:4545
+#: admin/partials/afrsm-pro-add-new-page.php:4555
 msgid "Cost on Shipping Class"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:397
-#: admin/partials/afrsm-pro-add-new-page.php:4727
+#: admin/partials/afrsm-pro-add-new-page.php:4740
 msgid "Cost on Shipping Class Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:398
-#: admin/partials/afrsm-pro-add-new-page.php:4717
-#: admin/partials/afrsm-pro-add-new-page.php:4904
-#: admin/partials/afrsm-pro-add-new-page.php:4914
+#: admin/partials/afrsm-pro-add-new-page.php:4730
+#: admin/partials/afrsm-pro-add-new-page.php:4917
+#: admin/partials/afrsm-pro-add-new-page.php:4927
 msgid "Cost on Shipping Class Subtotal"
 msgstr ""
 
@@ -588,36 +588,36 @@ msgid "Clone"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:592
-#: admin/partials/afrsm-pro-add-new-page.php:4066
+#: admin/partials/afrsm-pro-add-new-page.php:4079
 msgid "Cart Qty"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:593
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:725
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:827
-#: admin/partials/afrsm-pro-add-new-page.php:4257
+#: admin/partials/afrsm-pro-add-new-page.php:4270
 msgid "Cart Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:594
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:726
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:828
-#: admin/partials/afrsm-pro-add-new-page.php:4775
+#: admin/partials/afrsm-pro-add-new-page.php:4788
 msgid "Min Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:595
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:727
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:829
-#: admin/partials/afrsm-pro-add-new-page.php:4222
-#: admin/partials/afrsm-pro-add-new-page.php:4779
+#: admin/partials/afrsm-pro-add-new-page.php:4235
+#: admin/partials/afrsm-pro-add-new-page.php:4792
 msgid "Max Weight"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:596
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:728
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:830
-#: admin/partials/afrsm-pro-add-new-page.php:4439
+#: admin/partials/afrsm-pro-add-new-page.php:4452
 msgid "Cart Subtotal"
 msgstr ""
 
@@ -630,9 +630,9 @@ msgstr ""
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:598
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:730
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:832
-#: admin/partials/afrsm-pro-add-new-page.php:2563
-#: admin/partials/afrsm-pro-add-new-page.php:3109
-#: admin/partials/afrsm-pro-add-new-page.php:4403
+#: admin/partials/afrsm-pro-add-new-page.php:2576
+#: admin/partials/afrsm-pro-add-new-page.php:3122
+#: admin/partials/afrsm-pro-add-new-page.php:4416
 msgid "Max Subtotal"
 msgstr ""
 
@@ -765,31 +765,31 @@ msgstr ""
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:821
 #: admin/partials/afrsm-general-setting-page.php:84
 #: admin/partials/afrsm-general-setting-page.php:170
-#: admin/partials/afrsm-pro-add-new-page.php:1962
-#: admin/partials/afrsm-pro-add-new-page.php:1977
-#: admin/partials/afrsm-pro-add-new-page.php:1989
-#: admin/partials/afrsm-pro-add-new-page.php:2001
-#: admin/partials/afrsm-pro-add-new-page.php:2017
-#: admin/partials/afrsm-pro-add-new-page.php:2034
-#: admin/partials/afrsm-pro-add-new-page.php:2043
-#: admin/partials/afrsm-pro-add-new-page.php:2064
-#: admin/partials/afrsm-pro-add-new-page.php:2080
-#: admin/partials/afrsm-pro-add-new-page.php:2458
-#: admin/partials/afrsm-pro-add-new-page.php:2643
-#: admin/partials/afrsm-pro-add-new-page.php:2820
-#: admin/partials/afrsm-pro-add-new-page.php:3004
-#: admin/partials/afrsm-pro-add-new-page.php:3190
-#: admin/partials/afrsm-pro-add-new-page.php:3375
-#: admin/partials/afrsm-pro-add-new-page.php:3560
-#: admin/partials/afrsm-pro-add-new-page.php:3742
-#: admin/partials/afrsm-pro-add-new-page.php:3924
-#: admin/partials/afrsm-pro-add-new-page.php:4101
-#: admin/partials/afrsm-pro-add-new-page.php:4290
-#: admin/partials/afrsm-pro-add-new-page.php:4476
-#: admin/partials/afrsm-pro-add-new-page.php:4671
-#: admin/partials/afrsm-pro-add-new-page.php:4857
-#: admin/partials/afrsm-pro-add-new-page.php:5044
-#: admin/partials/afrsm-pro-add-new-page.php:5226
+#: admin/partials/afrsm-pro-add-new-page.php:1975
+#: admin/partials/afrsm-pro-add-new-page.php:1990
+#: admin/partials/afrsm-pro-add-new-page.php:2002
+#: admin/partials/afrsm-pro-add-new-page.php:2014
+#: admin/partials/afrsm-pro-add-new-page.php:2030
+#: admin/partials/afrsm-pro-add-new-page.php:2047
+#: admin/partials/afrsm-pro-add-new-page.php:2056
+#: admin/partials/afrsm-pro-add-new-page.php:2077
+#: admin/partials/afrsm-pro-add-new-page.php:2093
+#: admin/partials/afrsm-pro-add-new-page.php:2471
+#: admin/partials/afrsm-pro-add-new-page.php:2656
+#: admin/partials/afrsm-pro-add-new-page.php:2833
+#: admin/partials/afrsm-pro-add-new-page.php:3017
+#: admin/partials/afrsm-pro-add-new-page.php:3203
+#: admin/partials/afrsm-pro-add-new-page.php:3388
+#: admin/partials/afrsm-pro-add-new-page.php:3573
+#: admin/partials/afrsm-pro-add-new-page.php:3755
+#: admin/partials/afrsm-pro-add-new-page.php:3937
+#: admin/partials/afrsm-pro-add-new-page.php:4114
+#: admin/partials/afrsm-pro-add-new-page.php:4303
+#: admin/partials/afrsm-pro-add-new-page.php:4489
+#: admin/partials/afrsm-pro-add-new-page.php:4684
+#: admin/partials/afrsm-pro-add-new-page.php:4870
+#: admin/partials/afrsm-pro-add-new-page.php:5057
+#: admin/partials/afrsm-pro-add-new-page.php:5239
 #. translators: 1: Bold "Note:" label. 2: The message about the new plugin.
 msgid "Note: "
 msgstr ""
@@ -797,15 +797,15 @@ msgstr ""
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:621
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:720
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:822
-#: admin/partials/afrsm-pro-add-new-page.php:1965
-#: admin/partials/afrsm-pro-add-new-page.php:1983
-#: admin/partials/afrsm-pro-add-new-page.php:1995
-#: admin/partials/afrsm-pro-add-new-page.php:2007
+#: admin/partials/afrsm-pro-add-new-page.php:1978
+#: admin/partials/afrsm-pro-add-new-page.php:1996
+#: admin/partials/afrsm-pro-add-new-page.php:2008
 #: admin/partials/afrsm-pro-add-new-page.php:2020
-#: admin/partials/afrsm-pro-add-new-page.php:2037
-#: admin/partials/afrsm-pro-add-new-page.php:2046
-#: admin/partials/afrsm-pro-add-new-page.php:2070
+#: admin/partials/afrsm-pro-add-new-page.php:2033
+#: admin/partials/afrsm-pro-add-new-page.php:2050
+#: admin/partials/afrsm-pro-add-new-page.php:2059
 #: admin/partials/afrsm-pro-add-new-page.php:2083
+#: admin/partials/afrsm-pro-add-new-page.php:2096
 msgid "Click Here"
 msgstr ""
 
@@ -840,15 +840,15 @@ msgid ""
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:631
-#: admin/partials/afrsm-pro-add-new-page.php:2018
-#: admin/partials/afrsm-pro-add-new-page.php:2044
+#: admin/partials/afrsm-pro-add-new-page.php:2031
+#: admin/partials/afrsm-pro-add-new-page.php:2057
 msgid ""
 "This rule will only work if you have selected any one Product Specific "
 "option. "
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:632
-#: admin/partials/afrsm-pro-add-new-page.php:2035
+#: admin/partials/afrsm-pro-add-new-page.php:2048
 msgid ""
 "After discount. In this case, subtotal amount is $25 – $10(Discount price) "
 "= $15, without discount $25 "
@@ -859,7 +859,7 @@ msgid "This rule will work for all payment method in WooCommerce setting "
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:639
-#: admin/partials/afrsm-pro-add-new-page.php:1963
+#: admin/partials/afrsm-pro-add-new-page.php:1976
 msgid "Make sure enter each city name in one line."
 msgstr ""
 
@@ -929,13 +929,13 @@ msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:705
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:807
-#: admin/partials/afrsm-pro-add-new-page.php:3241
+#: admin/partials/afrsm-pro-add-new-page.php:3254
 msgid "Select Category"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:706
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:808
-#: admin/partials/afrsm-pro-add-new-page.php:3790
+#: admin/partials/afrsm-pro-add-new-page.php:3803
 msgid "Select Tag"
 msgstr ""
 
@@ -1437,7 +1437,7 @@ msgstr ""
 msgid "Advanced Flat Rate Shipping"
 msgstr ""
 
-#: admin/partials/afrsm-init-shipping-methods.php:736
+#: admin/partials/afrsm-init-shipping-methods.php:756
 msgid "Forceall"
 msgstr ""
 
@@ -2168,91 +2168,96 @@ msgstr ""
 msgid "Per order: Charge shipping for the most expensive shipping class"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1838
+#: admin/partials/afrsm-pro-add-new-page.php:1841
 msgid "Per order: Charge shipping for the most cheapest shipping class"
 msgstr ""
 
+#: admin/partials/afrsm-pro-add-new-page.php:1845
 #: admin/partials/afrsm-pro-add-new-page.php:1849
+msgid "Per order: Charge shipping for the most cheapest shipping class 🔒"
+msgstr ""
+
+#: admin/partials/afrsm-pro-add-new-page.php:1862
 msgid "Shipping Method Rules"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1851
-#: admin/partials/afrsm-pro-add-new-page.php:2341
-#: admin/partials/afrsm-pro-add-new-page.php:2521
-#: admin/partials/afrsm-pro-add-new-page.php:2705
-#: admin/partials/afrsm-pro-add-new-page.php:2886
-#: admin/partials/afrsm-pro-add-new-page.php:3068
-#: admin/partials/afrsm-pro-add-new-page.php:3258
-#: admin/partials/afrsm-pro-add-new-page.php:3442
-#: admin/partials/afrsm-pro-add-new-page.php:3624
-#: admin/partials/afrsm-pro-add-new-page.php:3807
-#: admin/partials/afrsm-pro-add-new-page.php:3989
-#: admin/partials/afrsm-pro-add-new-page.php:4180
-#: admin/partials/afrsm-pro-add-new-page.php:4360
-#: admin/partials/afrsm-pro-add-new-page.php:4552
-#: admin/partials/afrsm-pro-add-new-page.php:4737
-#: admin/partials/afrsm-pro-add-new-page.php:4924
-#: admin/partials/afrsm-pro-add-new-page.php:5111
-msgid "+ Add Rule"
-msgstr ""
-
-#: admin/partials/afrsm-pro-add-new-page.php:1860
-#: admin/partials/afrsm-pro-add-new-page.php:2353
+#: admin/partials/afrsm-pro-add-new-page.php:1864
+#: admin/partials/afrsm-pro-add-new-page.php:2354
 #: admin/partials/afrsm-pro-add-new-page.php:2534
 #: admin/partials/afrsm-pro-add-new-page.php:2718
-#: admin/partials/afrsm-pro-add-new-page.php:2898
+#: admin/partials/afrsm-pro-add-new-page.php:2899
 #: admin/partials/afrsm-pro-add-new-page.php:3081
 #: admin/partials/afrsm-pro-add-new-page.php:3271
-#: admin/partials/afrsm-pro-add-new-page.php:3454
-#: admin/partials/afrsm-pro-add-new-page.php:3636
+#: admin/partials/afrsm-pro-add-new-page.php:3455
+#: admin/partials/afrsm-pro-add-new-page.php:3637
 #: admin/partials/afrsm-pro-add-new-page.php:3820
 #: admin/partials/afrsm-pro-add-new-page.php:4002
 #: admin/partials/afrsm-pro-add-new-page.php:4193
 #: admin/partials/afrsm-pro-add-new-page.php:4373
-#: admin/partials/afrsm-pro-add-new-page.php:4564
+#: admin/partials/afrsm-pro-add-new-page.php:4565
 #: admin/partials/afrsm-pro-add-new-page.php:4750
 #: admin/partials/afrsm-pro-add-new-page.php:4937
-#: admin/partials/afrsm-pro-add-new-page.php:5122
+#: admin/partials/afrsm-pro-add-new-page.php:5124
+msgid "+ Add Rule"
+msgstr ""
+
+#: admin/partials/afrsm-pro-add-new-page.php:1873
+#: admin/partials/afrsm-pro-add-new-page.php:2366
+#: admin/partials/afrsm-pro-add-new-page.php:2547
+#: admin/partials/afrsm-pro-add-new-page.php:2731
+#: admin/partials/afrsm-pro-add-new-page.php:2911
+#: admin/partials/afrsm-pro-add-new-page.php:3094
+#: admin/partials/afrsm-pro-add-new-page.php:3284
+#: admin/partials/afrsm-pro-add-new-page.php:3467
+#: admin/partials/afrsm-pro-add-new-page.php:3649
+#: admin/partials/afrsm-pro-add-new-page.php:3833
+#: admin/partials/afrsm-pro-add-new-page.php:4015
+#: admin/partials/afrsm-pro-add-new-page.php:4206
+#: admin/partials/afrsm-pro-add-new-page.php:4386
+#: admin/partials/afrsm-pro-add-new-page.php:4577
+#: admin/partials/afrsm-pro-add-new-page.php:4763
+#: admin/partials/afrsm-pro-add-new-page.php:4950
+#: admin/partials/afrsm-pro-add-new-page.php:5135
 msgid "below"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1864
-#: admin/partials/afrsm-pro-add-new-page.php:2357
-#: admin/partials/afrsm-pro-add-new-page.php:2539
-#: admin/partials/afrsm-pro-add-new-page.php:2723
-#: admin/partials/afrsm-pro-add-new-page.php:2902
-#: admin/partials/afrsm-pro-add-new-page.php:3085
-#: admin/partials/afrsm-pro-add-new-page.php:3276
-#: admin/partials/afrsm-pro-add-new-page.php:3458
-#: admin/partials/afrsm-pro-add-new-page.php:3640
-#: admin/partials/afrsm-pro-add-new-page.php:3825
-#: admin/partials/afrsm-pro-add-new-page.php:4007
-#: admin/partials/afrsm-pro-add-new-page.php:4198
-#: admin/partials/afrsm-pro-add-new-page.php:4378
-#: admin/partials/afrsm-pro-add-new-page.php:4569
-#: admin/partials/afrsm-pro-add-new-page.php:4755
-#: admin/partials/afrsm-pro-add-new-page.php:4942
-#: admin/partials/afrsm-pro-add-new-page.php:5125
+#: admin/partials/afrsm-pro-add-new-page.php:1877
+#: admin/partials/afrsm-pro-add-new-page.php:2370
+#: admin/partials/afrsm-pro-add-new-page.php:2552
+#: admin/partials/afrsm-pro-add-new-page.php:2736
+#: admin/partials/afrsm-pro-add-new-page.php:2915
+#: admin/partials/afrsm-pro-add-new-page.php:3098
+#: admin/partials/afrsm-pro-add-new-page.php:3289
+#: admin/partials/afrsm-pro-add-new-page.php:3471
+#: admin/partials/afrsm-pro-add-new-page.php:3653
+#: admin/partials/afrsm-pro-add-new-page.php:3838
+#: admin/partials/afrsm-pro-add-new-page.php:4020
+#: admin/partials/afrsm-pro-add-new-page.php:4211
+#: admin/partials/afrsm-pro-add-new-page.php:4391
+#: admin/partials/afrsm-pro-add-new-page.php:4582
+#: admin/partials/afrsm-pro-add-new-page.php:4768
+#: admin/partials/afrsm-pro-add-new-page.php:4955
+#: admin/partials/afrsm-pro-add-new-page.php:5138
 msgid "Any One"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1865
-#: admin/partials/afrsm-pro-add-new-page.php:2358
-#: admin/partials/afrsm-pro-add-new-page.php:2540
-#: admin/partials/afrsm-pro-add-new-page.php:2724
-#: admin/partials/afrsm-pro-add-new-page.php:2903
-#: admin/partials/afrsm-pro-add-new-page.php:3086
-#: admin/partials/afrsm-pro-add-new-page.php:3277
-#: admin/partials/afrsm-pro-add-new-page.php:3459
-#: admin/partials/afrsm-pro-add-new-page.php:3641
-#: admin/partials/afrsm-pro-add-new-page.php:3826
-#: admin/partials/afrsm-pro-add-new-page.php:4008
-#: admin/partials/afrsm-pro-add-new-page.php:4199
-#: admin/partials/afrsm-pro-add-new-page.php:4379
-#: admin/partials/afrsm-pro-add-new-page.php:4570
-#: admin/partials/afrsm-pro-add-new-page.php:4756
-#: admin/partials/afrsm-pro-add-new-page.php:4943
-#: admin/partials/afrsm-pro-add-new-page.php:5126
+#: admin/partials/afrsm-pro-add-new-page.php:1878
+#: admin/partials/afrsm-pro-add-new-page.php:2371
+#: admin/partials/afrsm-pro-add-new-page.php:2553
+#: admin/partials/afrsm-pro-add-new-page.php:2737
+#: admin/partials/afrsm-pro-add-new-page.php:2916
+#: admin/partials/afrsm-pro-add-new-page.php:3099
+#: admin/partials/afrsm-pro-add-new-page.php:3290
+#: admin/partials/afrsm-pro-add-new-page.php:3472
+#: admin/partials/afrsm-pro-add-new-page.php:3654
+#: admin/partials/afrsm-pro-add-new-page.php:3839
+#: admin/partials/afrsm-pro-add-new-page.php:4021
+#: admin/partials/afrsm-pro-add-new-page.php:4212
+#: admin/partials/afrsm-pro-add-new-page.php:4392
+#: admin/partials/afrsm-pro-add-new-page.php:4583
+#: admin/partials/afrsm-pro-add-new-page.php:4769
+#: admin/partials/afrsm-pro-add-new-page.php:4956
+#: admin/partials/afrsm-pro-add-new-page.php:5139
 #: admin/partials/form-add-shipping-zone.php:45
 #: admin/partials/form-add-shipping-zone.php:77
 #: admin/partials/form-edit-shipping-zone.php:112
@@ -2260,27 +2265,27 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1868
-#: admin/partials/afrsm-pro-add-new-page.php:2361
-#: admin/partials/afrsm-pro-add-new-page.php:2543
-#: admin/partials/afrsm-pro-add-new-page.php:2727
-#: admin/partials/afrsm-pro-add-new-page.php:2906
-#: admin/partials/afrsm-pro-add-new-page.php:3089
-#: admin/partials/afrsm-pro-add-new-page.php:3280
-#: admin/partials/afrsm-pro-add-new-page.php:3462
-#: admin/partials/afrsm-pro-add-new-page.php:3644
-#: admin/partials/afrsm-pro-add-new-page.php:3829
-#: admin/partials/afrsm-pro-add-new-page.php:4011
-#: admin/partials/afrsm-pro-add-new-page.php:4202
-#: admin/partials/afrsm-pro-add-new-page.php:4382
-#: admin/partials/afrsm-pro-add-new-page.php:4573
-#: admin/partials/afrsm-pro-add-new-page.php:4759
-#: admin/partials/afrsm-pro-add-new-page.php:4946
-#: admin/partials/afrsm-pro-add-new-page.php:5129
+#: admin/partials/afrsm-pro-add-new-page.php:1881
+#: admin/partials/afrsm-pro-add-new-page.php:2374
+#: admin/partials/afrsm-pro-add-new-page.php:2556
+#: admin/partials/afrsm-pro-add-new-page.php:2740
+#: admin/partials/afrsm-pro-add-new-page.php:2919
+#: admin/partials/afrsm-pro-add-new-page.php:3102
+#: admin/partials/afrsm-pro-add-new-page.php:3293
+#: admin/partials/afrsm-pro-add-new-page.php:3475
+#: admin/partials/afrsm-pro-add-new-page.php:3657
+#: admin/partials/afrsm-pro-add-new-page.php:3842
+#: admin/partials/afrsm-pro-add-new-page.php:4024
+#: admin/partials/afrsm-pro-add-new-page.php:4215
+#: admin/partials/afrsm-pro-add-new-page.php:4395
+#: admin/partials/afrsm-pro-add-new-page.php:4586
+#: admin/partials/afrsm-pro-add-new-page.php:4772
+#: admin/partials/afrsm-pro-add-new-page.php:4959
+#: admin/partials/afrsm-pro-add-new-page.php:5142
 msgid "rule match"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1875
+#: admin/partials/afrsm-pro-add-new-page.php:1888
 msgid ""
 "Add different conditional rules to display this shipping method to your "
 "customer. <a "
@@ -2288,8 +2293,8 @@ msgid ""
 "conditions\" target=\"_blank\">View Documentation</a>"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:1978
-#: admin/partials/afrsm-pro-add-new-page.php:1990
+#: admin/partials/afrsm-pro-add-new-page.php:1991
+#: admin/partials/afrsm-pro-add-new-page.php:2003
 msgid ""
 "Please make sure that when you add rules in\n"
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAdvanced Pricing > Cost per Product "
@@ -2299,7 +2304,7 @@ msgid ""
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tour documentation at "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2002
+#: admin/partials/afrsm-pro-add-new-page.php:2015
 msgid ""
 "Please make sure that when you add rules in\n"
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAdvanced Pricing > Cost per Category "
@@ -2309,7 +2314,7 @@ msgid ""
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tour documentation at "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2065
+#: admin/partials/afrsm-pro-add-new-page.php:2078
 msgid ""
 "Please make sure that when you add rules in\n"
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAdvanced Pricing > Cost per weight "
@@ -2319,448 +2324,448 @@ msgid ""
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tour documentation at "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2081
+#: admin/partials/afrsm-pro-add-new-page.php:2094
 msgid "This rule will work for Force All Shipping Method in master setting "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2257
+#: admin/partials/afrsm-pro-add-new-page.php:2270
 msgid "Advanced Shipping Price Rules"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2262
+#: admin/partials/afrsm-pro-add-new-page.php:2275
 msgid ""
 "If enabled this Advanced Pricing button only than below all rule's will go "
 "for apply to shipping method."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2366
-#: admin/partials/afrsm-pro-add-new-page.php:2548
-#: admin/partials/afrsm-pro-add-new-page.php:2732
-#: admin/partials/afrsm-pro-add-new-page.php:2911
-#: admin/partials/afrsm-pro-add-new-page.php:3094
-#: admin/partials/afrsm-pro-add-new-page.php:3285
-#: admin/partials/afrsm-pro-add-new-page.php:3467
-#: admin/partials/afrsm-pro-add-new-page.php:3649
-#: admin/partials/afrsm-pro-add-new-page.php:3834
-#: admin/partials/afrsm-pro-add-new-page.php:4016
-#: admin/partials/afrsm-pro-add-new-page.php:4207
-#: admin/partials/afrsm-pro-add-new-page.php:4387
-#: admin/partials/afrsm-pro-add-new-page.php:4578
-#: admin/partials/afrsm-pro-add-new-page.php:4764
-#: admin/partials/afrsm-pro-add-new-page.php:4951
-#: admin/partials/afrsm-pro-add-new-page.php:5134
+#: admin/partials/afrsm-pro-add-new-page.php:2379
+#: admin/partials/afrsm-pro-add-new-page.php:2561
+#: admin/partials/afrsm-pro-add-new-page.php:2745
+#: admin/partials/afrsm-pro-add-new-page.php:2924
+#: admin/partials/afrsm-pro-add-new-page.php:3107
+#: admin/partials/afrsm-pro-add-new-page.php:3298
+#: admin/partials/afrsm-pro-add-new-page.php:3480
+#: admin/partials/afrsm-pro-add-new-page.php:3662
+#: admin/partials/afrsm-pro-add-new-page.php:3847
+#: admin/partials/afrsm-pro-add-new-page.php:4029
+#: admin/partials/afrsm-pro-add-new-page.php:4220
+#: admin/partials/afrsm-pro-add-new-page.php:4400
+#: admin/partials/afrsm-pro-add-new-page.php:4591
+#: admin/partials/afrsm-pro-add-new-page.php:4777
+#: admin/partials/afrsm-pro-add-new-page.php:4964
+#: admin/partials/afrsm-pro-add-new-page.php:5147
 msgid "View Documentation"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2373
-#: admin/partials/afrsm-pro-add-new-page.php:2555
-#: admin/partials/afrsm-pro-add-new-page.php:2739
+#: admin/partials/afrsm-pro-add-new-page.php:2386
+#: admin/partials/afrsm-pro-add-new-page.php:2568
+#: admin/partials/afrsm-pro-add-new-page.php:2752
 msgid "Product"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2374
-#: admin/partials/afrsm-pro-add-new-page.php:5142
+#: admin/partials/afrsm-pro-add-new-page.php:2387
+#: admin/partials/afrsm-pro-add-new-page.php:5155
 msgid ""
 "Select a product to apply the shipping amount to when the min/max quantity "
 "match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2377
-#: admin/partials/afrsm-pro-add-new-page.php:2922
-#: admin/partials/afrsm-pro-add-new-page.php:3478
-#: admin/partials/afrsm-pro-add-new-page.php:4027
-#: admin/partials/afrsm-pro-add-new-page.php:4589
-#: admin/partials/afrsm-pro-add-new-page.php:5145
+#: admin/partials/afrsm-pro-add-new-page.php:2390
+#: admin/partials/afrsm-pro-add-new-page.php:2935
+#: admin/partials/afrsm-pro-add-new-page.php:3491
+#: admin/partials/afrsm-pro-add-new-page.php:4040
+#: admin/partials/afrsm-pro-add-new-page.php:4602
+#: admin/partials/afrsm-pro-add-new-page.php:5158
 msgid "Min Quantity "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2378
-#: admin/partials/afrsm-pro-add-new-page.php:5146
+#: admin/partials/afrsm-pro-add-new-page.php:2391
+#: admin/partials/afrsm-pro-add-new-page.php:5159
 msgid ""
 "You can set a minimum product quantity per row before the shipping amount "
 "is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2381
-#: admin/partials/afrsm-pro-add-new-page.php:2926
-#: admin/partials/afrsm-pro-add-new-page.php:3482
-#: admin/partials/afrsm-pro-add-new-page.php:4593
-#: admin/partials/afrsm-pro-add-new-page.php:5149
+#: admin/partials/afrsm-pro-add-new-page.php:2394
+#: admin/partials/afrsm-pro-add-new-page.php:2939
+#: admin/partials/afrsm-pro-add-new-page.php:3495
+#: admin/partials/afrsm-pro-add-new-page.php:4606
+#: admin/partials/afrsm-pro-add-new-page.php:5162
 msgid "Max Quantity "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2382
-#: admin/partials/afrsm-pro-add-new-page.php:5150
+#: admin/partials/afrsm-pro-add-new-page.php:2395
+#: admin/partials/afrsm-pro-add-new-page.php:5163
 msgid ""
 "You can set a maximum product quantity per row before the shipping amount "
 "is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2385
-#: admin/partials/afrsm-pro-add-new-page.php:2568
-#: admin/partials/afrsm-pro-add-new-page.php:2751
-#: admin/partials/afrsm-pro-add-new-page.php:2930
-#: admin/partials/afrsm-pro-add-new-page.php:3114
-#: admin/partials/afrsm-pro-add-new-page.php:3304
-#: admin/partials/afrsm-pro-add-new-page.php:3486
-#: admin/partials/afrsm-pro-add-new-page.php:3668
-#: admin/partials/afrsm-pro-add-new-page.php:3853
-#: admin/partials/afrsm-pro-add-new-page.php:4035
-#: admin/partials/afrsm-pro-add-new-page.php:4226
-#: admin/partials/afrsm-pro-add-new-page.php:4407
-#: admin/partials/afrsm-pro-add-new-page.php:4597
-#: admin/partials/afrsm-pro-add-new-page.php:4783
-#: admin/partials/afrsm-pro-add-new-page.php:4970
-#: admin/partials/afrsm-pro-add-new-page.php:5153
+#: admin/partials/afrsm-pro-add-new-page.php:2398
+#: admin/partials/afrsm-pro-add-new-page.php:2581
+#: admin/partials/afrsm-pro-add-new-page.php:2764
+#: admin/partials/afrsm-pro-add-new-page.php:2943
+#: admin/partials/afrsm-pro-add-new-page.php:3127
+#: admin/partials/afrsm-pro-add-new-page.php:3317
+#: admin/partials/afrsm-pro-add-new-page.php:3499
+#: admin/partials/afrsm-pro-add-new-page.php:3681
+#: admin/partials/afrsm-pro-add-new-page.php:3866
+#: admin/partials/afrsm-pro-add-new-page.php:4048
+#: admin/partials/afrsm-pro-add-new-page.php:4239
+#: admin/partials/afrsm-pro-add-new-page.php:4420
+#: admin/partials/afrsm-pro-add-new-page.php:4610
+#: admin/partials/afrsm-pro-add-new-page.php:4796
+#: admin/partials/afrsm-pro-add-new-page.php:4983
+#: admin/partials/afrsm-pro-add-new-page.php:5166
 msgid "Shipping Amount"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2386
-#: admin/partials/afrsm-pro-add-new-page.php:5154
+#: admin/partials/afrsm-pro-add-new-page.php:2399
+#: admin/partials/afrsm-pro-add-new-page.php:5167
 msgid ""
 "A fixed amount (e.g. 5 / -5), percentage (e.g. 5% / -5%) to add as a fee. "
 "Percentage and minus amount will apply based on cart subtotal."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2459
-#: admin/partials/afrsm-pro-add-new-page.php:2644
-#: admin/partials/afrsm-pro-add-new-page.php:2821
-#: admin/partials/afrsm-pro-add-new-page.php:3005
-#: admin/partials/afrsm-pro-add-new-page.php:3191
-#: admin/partials/afrsm-pro-add-new-page.php:3376
-#: admin/partials/afrsm-pro-add-new-page.php:3561
-#: admin/partials/afrsm-pro-add-new-page.php:3743
-#: admin/partials/afrsm-pro-add-new-page.php:3925
-#: admin/partials/afrsm-pro-add-new-page.php:4102
-#: admin/partials/afrsm-pro-add-new-page.php:4291
-#: admin/partials/afrsm-pro-add-new-page.php:4477
-#: admin/partials/afrsm-pro-add-new-page.php:4672
-#: admin/partials/afrsm-pro-add-new-page.php:5045
-#: admin/partials/afrsm-pro-add-new-page.php:5227
+#: admin/partials/afrsm-pro-add-new-page.php:2472
+#: admin/partials/afrsm-pro-add-new-page.php:2657
+#: admin/partials/afrsm-pro-add-new-page.php:2834
+#: admin/partials/afrsm-pro-add-new-page.php:3018
+#: admin/partials/afrsm-pro-add-new-page.php:3204
+#: admin/partials/afrsm-pro-add-new-page.php:3389
+#: admin/partials/afrsm-pro-add-new-page.php:3574
+#: admin/partials/afrsm-pro-add-new-page.php:3756
+#: admin/partials/afrsm-pro-add-new-page.php:3938
+#: admin/partials/afrsm-pro-add-new-page.php:4115
+#: admin/partials/afrsm-pro-add-new-page.php:4304
+#: admin/partials/afrsm-pro-add-new-page.php:4490
+#: admin/partials/afrsm-pro-add-new-page.php:4685
+#: admin/partials/afrsm-pro-add-new-page.php:5058
+#: admin/partials/afrsm-pro-add-new-page.php:5240
 msgid ""
 "If entered shipping amount is less than cart subtotal it will reflect with "
 "minus sign (EX: $ -10.00) OR If entered shipping amount is more than cart "
 "subtotal then the total amount shown as zero (EX: Total: 0): "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2507
-#: admin/partials/afrsm-pro-add-new-page.php:2556
+#: admin/partials/afrsm-pro-add-new-page.php:2520
+#: admin/partials/afrsm-pro-add-new-page.php:2569
 msgid "Product Subtotal"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2559
-#: admin/partials/afrsm-pro-add-new-page.php:3105
-#: admin/partials/afrsm-pro-add-new-page.php:3660
-#: admin/partials/afrsm-pro-add-new-page.php:4398
-#: admin/partials/afrsm-pro-add-new-page.php:4962
+#: admin/partials/afrsm-pro-add-new-page.php:2572
+#: admin/partials/afrsm-pro-add-new-page.php:3118
+#: admin/partials/afrsm-pro-add-new-page.php:3673
+#: admin/partials/afrsm-pro-add-new-page.php:4411
+#: admin/partials/afrsm-pro-add-new-page.php:4975
 msgid "Min Subtotal "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2560
-#: admin/partials/afrsm-pro-add-new-page.php:3106
+#: admin/partials/afrsm-pro-add-new-page.php:2573
+#: admin/partials/afrsm-pro-add-new-page.php:3119
 msgid ""
 "You can set a minimum total cart subtotal per row before the shipping "
 "amount is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2564
-#: admin/partials/afrsm-pro-add-new-page.php:3110
+#: admin/partials/afrsm-pro-add-new-page.php:2577
+#: admin/partials/afrsm-pro-add-new-page.php:3123
 msgid ""
 "You can set a maximum total cart subtotal per row before the shipping "
 "amount is\n"
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\tapplied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2569
-#: admin/partials/afrsm-pro-add-new-page.php:2752
-#: admin/partials/afrsm-pro-add-new-page.php:2931
-#: admin/partials/afrsm-pro-add-new-page.php:3115
-#: admin/partials/afrsm-pro-add-new-page.php:3305
-#: admin/partials/afrsm-pro-add-new-page.php:3487
-#: admin/partials/afrsm-pro-add-new-page.php:3669
-#: admin/partials/afrsm-pro-add-new-page.php:3854
-#: admin/partials/afrsm-pro-add-new-page.php:4036
-#: admin/partials/afrsm-pro-add-new-page.php:4227
-#: admin/partials/afrsm-pro-add-new-page.php:4408
-#: admin/partials/afrsm-pro-add-new-page.php:4971
+#: admin/partials/afrsm-pro-add-new-page.php:2582
+#: admin/partials/afrsm-pro-add-new-page.php:2765
+#: admin/partials/afrsm-pro-add-new-page.php:2944
+#: admin/partials/afrsm-pro-add-new-page.php:3128
+#: admin/partials/afrsm-pro-add-new-page.php:3318
+#: admin/partials/afrsm-pro-add-new-page.php:3500
+#: admin/partials/afrsm-pro-add-new-page.php:3682
+#: admin/partials/afrsm-pro-add-new-page.php:3867
+#: admin/partials/afrsm-pro-add-new-page.php:4049
+#: admin/partials/afrsm-pro-add-new-page.php:4240
+#: admin/partials/afrsm-pro-add-new-page.php:4421
+#: admin/partials/afrsm-pro-add-new-page.php:4984
 msgid ""
 "A fixed amount (e.g. 5 / -5) percentage (e.g. 5% / -5%) to add as a fee. "
 "Percentage and minus amount will apply based on cart subtotal."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2740
+#: admin/partials/afrsm-pro-add-new-page.php:2753
 msgid ""
 "Select a product to apply the shipping amount to when the min/max weight "
 "match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2743
-#: admin/partials/afrsm-pro-add-new-page.php:3296
-#: admin/partials/afrsm-pro-add-new-page.php:3845
-#: admin/partials/afrsm-pro-add-new-page.php:4218
+#: admin/partials/afrsm-pro-add-new-page.php:2756
+#: admin/partials/afrsm-pro-add-new-page.php:3309
+#: admin/partials/afrsm-pro-add-new-page.php:3858
+#: admin/partials/afrsm-pro-add-new-page.php:4231
 msgid "Min Weight "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2744
+#: admin/partials/afrsm-pro-add-new-page.php:2757
 msgid ""
 "You can set a minimum product weight per row before the shipping amount is "
 "applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2747
-#: admin/partials/afrsm-pro-add-new-page.php:3300
-#: admin/partials/afrsm-pro-add-new-page.php:3849
+#: admin/partials/afrsm-pro-add-new-page.php:2760
+#: admin/partials/afrsm-pro-add-new-page.php:3313
+#: admin/partials/afrsm-pro-add-new-page.php:3862
 msgid "Max Weight "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2748
+#: admin/partials/afrsm-pro-add-new-page.php:2761
 msgid ""
 "You can set a maximum product weight per row before the shipping amount is "
 "applied. Leave empty then will set with infinte"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2918
-#: admin/partials/afrsm-pro-add-new-page.php:3101
-#: admin/partials/afrsm-pro-add-new-page.php:3292
+#: admin/partials/afrsm-pro-add-new-page.php:2931
+#: admin/partials/afrsm-pro-add-new-page.php:3114
+#: admin/partials/afrsm-pro-add-new-page.php:3305
 msgid "Category"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2919
+#: admin/partials/afrsm-pro-add-new-page.php:2932
 msgid ""
 "Select a category to apply the shipping amount to when the min/max quantity "
 "match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2923
+#: admin/partials/afrsm-pro-add-new-page.php:2936
 msgid ""
 "You can set a minimum category quantity per row before the shipping amount "
 "is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:2927
+#: admin/partials/afrsm-pro-add-new-page.php:2940
 msgid ""
 "You can set a maximum category quantity per row before the shipping amount "
 "is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3054
-#: admin/partials/afrsm-pro-add-new-page.php:3102
+#: admin/partials/afrsm-pro-add-new-page.php:3067
+#: admin/partials/afrsm-pro-add-new-page.php:3115
 msgid "Category Subtotal"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3293
+#: admin/partials/afrsm-pro-add-new-page.php:3306
 msgid ""
 "Select a category to apply the shipping amount to when the min/max weight "
 "match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3297
+#: admin/partials/afrsm-pro-add-new-page.php:3310
 msgid ""
 "You can set a minimum category weight per row before the shipping amount is "
 "applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3301
+#: admin/partials/afrsm-pro-add-new-page.php:3314
 msgid ""
 "You can set a maximum category weight per row before the shipping amount is "
 "applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3474
-#: admin/partials/afrsm-pro-add-new-page.php:3656
-#: admin/partials/afrsm-pro-add-new-page.php:3841
+#: admin/partials/afrsm-pro-add-new-page.php:3487
+#: admin/partials/afrsm-pro-add-new-page.php:3669
+#: admin/partials/afrsm-pro-add-new-page.php:3854
 msgid "Tag"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3475
-#: admin/partials/afrsm-pro-add-new-page.php:3657
+#: admin/partials/afrsm-pro-add-new-page.php:3488
+#: admin/partials/afrsm-pro-add-new-page.php:3670
 msgid ""
 "Select a tag to apply the shipping amount to when the min/max quantity "
 "match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3479
+#: admin/partials/afrsm-pro-add-new-page.php:3492
 msgid ""
 "You can set a minimum tag quantity per row before the shipping amount is "
 "applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3483
+#: admin/partials/afrsm-pro-add-new-page.php:3496
 msgid ""
 "You can set a maximum tag quantity per row before the shipping amount is "
 "applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3661
+#: admin/partials/afrsm-pro-add-new-page.php:3674
 msgid ""
 "You can set a minimum tag subtotal per row before the shipping amount is "
 "applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3664
-#: admin/partials/afrsm-pro-add-new-page.php:4966
+#: admin/partials/afrsm-pro-add-new-page.php:3677
+#: admin/partials/afrsm-pro-add-new-page.php:4979
 msgid "Max Subtotal "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3665
+#: admin/partials/afrsm-pro-add-new-page.php:3678
 msgid ""
 "You can set a maximum tag subtotal per row before the shipping amount is "
 "applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3842
+#: admin/partials/afrsm-pro-add-new-page.php:3855
 msgid "Select a tag to apply the shipping amount to when the min/max weight match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3846
+#: admin/partials/afrsm-pro-add-new-page.php:3859
 msgid ""
 "You can set a minimum tag weight per row before the shipping amount is "
 "applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3850
+#: admin/partials/afrsm-pro-add-new-page.php:3863
 msgid ""
 "You can set a maximum tag weight per row before the shipping amount is "
 "applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:3975
-#: admin/partials/afrsm-pro-add-new-page.php:4023
-#: admin/partials/afrsm-pro-add-new-page.php:4024
+#: admin/partials/afrsm-pro-add-new-page.php:3988
+#: admin/partials/afrsm-pro-add-new-page.php:4036
+#: admin/partials/afrsm-pro-add-new-page.php:4037
 msgid "Total Cart Qty"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4028
+#: admin/partials/afrsm-pro-add-new-page.php:4041
 msgid ""
 "You can set a minimum total cart quantity per row before the shipping "
 "amount is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4031
+#: admin/partials/afrsm-pro-add-new-page.php:4044
 msgid "Max Quantity"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4032
+#: admin/partials/afrsm-pro-add-new-page.php:4045
 msgid ""
 "You can set a maximum total cart quantity per row before the shipping "
 "amount is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4166
-#: admin/partials/afrsm-pro-add-new-page.php:4214
-#: admin/partials/afrsm-pro-add-new-page.php:4215
+#: admin/partials/afrsm-pro-add-new-page.php:4179
+#: admin/partials/afrsm-pro-add-new-page.php:4227
+#: admin/partials/afrsm-pro-add-new-page.php:4228
 msgid "Total Cart Weight"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4219
+#: admin/partials/afrsm-pro-add-new-page.php:4232
 msgid ""
 "You can set a minimum total cart weight per row before the shipping amount "
 "is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4223
+#: admin/partials/afrsm-pro-add-new-page.php:4236
 msgid ""
 "You can set a maximum total cart weight per row before the shipping amount "
 "is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4346
-#: admin/partials/afrsm-pro-add-new-page.php:4394
-#: admin/partials/afrsm-pro-add-new-page.php:4395
+#: admin/partials/afrsm-pro-add-new-page.php:4359
+#: admin/partials/afrsm-pro-add-new-page.php:4407
+#: admin/partials/afrsm-pro-add-new-page.php:4408
 msgid "Total Cart Subtotal"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4399
+#: admin/partials/afrsm-pro-add-new-page.php:4412
 msgid ""
 "You can set a minimum total cart subtotal per row before the shipping "
 "amount is\n"
 "\t\t\t\t\t\t\t\t\t\t\t\tapplied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4404
+#: admin/partials/afrsm-pro-add-new-page.php:4417
 msgid ""
 "You can set a maximum total cart subtotal per row before the shipping "
 "amount is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4586
+#: admin/partials/afrsm-pro-add-new-page.php:4599
 msgid ""
 "Select a shipping class to apply the shipping amount to when the min/max "
 "quantity match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4590
+#: admin/partials/afrsm-pro-add-new-page.php:4603
 msgid ""
 "You can set a minimum shipping class cart quantity per row before the "
 "shipping amount is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4594
+#: admin/partials/afrsm-pro-add-new-page.php:4607
 msgid ""
 "You can set a maximum shipping class cart quantity per row before the "
 "shipping amount is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4598
+#: admin/partials/afrsm-pro-add-new-page.php:4611
 msgid ""
 "A fixed amount (e.g. 5 / -5) percentage (e.g. 5% / -5%) to add as a fee. "
 "Percentage and minus amount will apply based on cart quantity."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4772
+#: admin/partials/afrsm-pro-add-new-page.php:4785
 msgid ""
 "Select a shipping class to apply the shipping amount to when the min/max "
 "weight match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4776
+#: admin/partials/afrsm-pro-add-new-page.php:4789
 msgid ""
 "You can set a minimum shipping class cart weight per row before the "
 "shipping amount is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4780
+#: admin/partials/afrsm-pro-add-new-page.php:4793
 msgid ""
 "You can set a maximum shipping class cart weight per row before the "
 "shipping amount is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4784
+#: admin/partials/afrsm-pro-add-new-page.php:4797
 msgid ""
 "A fixed amount (e.g. 5 / -5) percentage (e.g. 5% / -5%) to add as a fee. "
 "Percentage and minus amount will apply based on cart weight."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4858
+#: admin/partials/afrsm-pro-add-new-page.php:4871
 msgid ""
 "If entered shipping amount is less than cart weight it will reflect with "
 "minus sign (EX: $ -10.00) OR If entered shipping amount is more than cart "
 "weight then the total amount shown as zero (EX: Total: 0): "
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4959
+#: admin/partials/afrsm-pro-add-new-page.php:4972
 msgid ""
 "Select a shipping class to apply the shipping amount to when the min/max "
 "subtotal match."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4963
+#: admin/partials/afrsm-pro-add-new-page.php:4976
 msgid ""
 "You can set a minimum shipping class cart subtotal per row before the "
 "shipping amount is applied."
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:4967
+#: admin/partials/afrsm-pro-add-new-page.php:4980
 msgid ""
 "You can set a maximum shipping class cart subtotal per row before the "
 "shipping amount is applied. Leave empty then will set with infinite"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:5101
+#: admin/partials/afrsm-pro-add-new-page.php:5114
 msgid "Cost on Product Attributes"
 msgstr ""
 
-#: admin/partials/afrsm-pro-add-new-page.php:5141
+#: admin/partials/afrsm-pro-add-new-page.php:5154
 msgid "Product Attributes"
 msgstr ""
 
@@ -3695,8 +3700,8 @@ msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5540
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5548
-#: admin/partials/afrsm-init-shipping-methods.php:2395
-#: admin/partials/afrsm-init-shipping-methods.php:2403
+#: admin/partials/afrsm-init-shipping-methods.php:2415
+#: admin/partials/afrsm-init-shipping-methods.php:2423
 #. translators: %d is the column key
 #. translators: %d is the index key
 #. translators: %d: is the column key that does not exist in the array.
@@ -3706,7 +3711,7 @@ msgid "Key %d does not exist in array"
 msgstr ""
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5553
-#: admin/partials/afrsm-init-shipping-methods.php:2408
+#: admin/partials/afrsm-init-shipping-methods.php:2428
 #. translators: %d is the index key
 #. translators: %d: is the index key that does not contain scalar value.
 msgctxt "array key error"

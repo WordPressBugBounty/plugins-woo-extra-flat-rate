@@ -434,6 +434,7 @@
         // Premium option selected
         premiumSelectShowPopup( '#what_to_do_method', 'in_pro' );
         premiumSelectShowPopup( '#sm_free_shipping_based_on', 'in_pro' );
+        premiumSelectShowPopup( '#sm_extra_cost_calculation_type', 'in_pro' );
 
         /* description toggle */
         $('span.advanced_flat_rate_shipping_for_woocommerce_tab_description').click(function (event) {

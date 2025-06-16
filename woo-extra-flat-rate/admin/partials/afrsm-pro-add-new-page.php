@@ -1014,13 +1014,14 @@ if ( !empty( $all_shipping_classes ) ) {
     esc_html_e( 'Per order: Charge shipping for the most expensive shipping class', 'advanced-flat-rate-shipping-for-woocommerce' );
     ?>
                                         </option>
-                                        <option value="per_order_cheapest" <?php 
-    selected( $sm_extra_cost_calc_type, 'per_order_cheapest' );
-    ?>>
-                                            <?php 
-    esc_html_e( 'Per order: Charge shipping for the most cheapest shipping class', 'advanced-flat-rate-shipping-for-woocommerce' );
+                                        <?php 
     ?>
-                                        </option>
+                                            <option value="in_pro"><?php 
+    esc_html_e( 'Per order: Charge shipping for the most cheapest shipping class 🔒', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?></option>
+                                            <?php 
+    ?>
+                                        
                                     </select>
                                 </td>
                             </tr>

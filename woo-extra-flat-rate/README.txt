@@ -3,12 +3,12 @@ Contributors: dots, jaydeep-rami, nishitlangaliya, chiragpatel, kakshak, jariwal
 Tags: Flat rate shipping,Table rate shipping,Conditional shipping,WooCommerce shipping, shipping
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 4.4.1
+Stable tag: 4.4.2
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 WC requires at least: 3.0
-WC tested up to: 9.8.5
+WC tested up to: 9.9.3
 
 Create flexible flat rate shipping methods with custom rules i.e. for specific products or countries where the products will be shipped to.
 
@@ -463,6 +463,10 @@ With strategic flat rate shipping options that match your business needs, the pl
 Automatic updates should work great for you.  As always, though, we recommend backing up your site prior to making any updates just to be sure nothing goes wrong.
 
 == Changelog ==
+= 4.4.2 - 16-06-2025 =
+* [Bug Fix] Shipping charges based on shipping class not working
+* [Enhancement] Compatible with WooCommerce 9.9.x
+
 = 4.4.1 - 09-06-2025 =
 * [Bug Fix] Removed submenu pages still accessible for some users, causing critical errors.
 * [Bug Fix] Free shipping calculation issue with Inclusive Tax option enabled.

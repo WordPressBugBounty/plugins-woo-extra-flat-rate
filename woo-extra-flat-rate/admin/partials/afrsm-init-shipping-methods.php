@@ -206,6 +206,47 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                         );
                         $shipping_rate['cost'] = $this->afrsm_shipping_evaluate_cost( $cost, $cost_args );
                     }
+                    // Add shipping class costs
+                    $found_shipping_classes = $this->afrsm_shipping_find_shipping_classes( $package );
+                    $highest_class_cost = 0;
+                    if ( !empty( $found_shipping_classes ) ) {
+                        foreach ( $found_shipping_classes as $shipping_class => $products ) {
+                            $shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
+                            $shipping_extra_id = '';
+                            if ( false !== $shipping_class_term ) {
+                                if ( !empty( $sitepress ) ) {
+                                    $shipping_extra_id = apply_filters(
+                                        'wpml_object_id',
+                                        $shipping_class_term->term_id,
+                                        'product_shipping_class',
+                                        true,
+                                        $default_lang
+                                    );
+                                } else {
+                                    $shipping_extra_id = $shipping_class_term->term_id;
+                                }
+                            }
+                            $sm_extra_cost = get_post_meta( $shipping_method_id_val, 'sm_extra_cost', true );
+                            $class_cost_string = ( isset( $sm_extra_cost[$shipping_extra_id] ) && !empty( $sm_extra_cost[$shipping_extra_id] ) ? $sm_extra_cost[$shipping_extra_id] : '' );
+                            if ( '' === $class_cost_string ) {
+                                continue;
+                            }
+                            $has_costs = true;
+                            $class_cost = $this->afrsm_shipping_evaluate_cost( $class_cost_string, array(
+                                'qty'  => array_sum( wp_list_pluck( $products, 'quantity' ) ),
+                                'cost' => array_sum( wp_list_pluck( $products, 'line_total' ) ),
+                            ) );
+                            if ( 'per_class' === $sm_extra_cost_calculation_type ) {
+                                $shipping_rate['cost'] += $class_cost;
+                            } elseif ( 'per_order' === $sm_extra_cost_calculation_type ) {
+                                $highest_class_cost = ( $class_cost > $highest_class_cost ? $class_cost : $highest_class_cost );
+                            }
+                        }
+                        // Here if highest class cost is 0 means no shipping class cost found
+                        if ( 'per_order' === $sm_extra_cost_calculation_type && $highest_class_cost ) {
+                            $shipping_rate['cost'] += $highest_class_cost;
+                        }
+                    }
                     // apply for tax
                     if ( 'no' === $sm_taxable ) {
                         $shipping_rate['taxes'] = false;
