@@ -3,12 +3,12 @@ Contributors: dots, jaydeep-rami, nishitlangaliya, chiragpatel, kakshak, jariwal
 Tags: Flat rate shipping,Table rate shipping,Conditional shipping,WooCommerce shipping, shipping
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 4.4.2
+Stable tag: 4.4.3
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 WC requires at least: 3.0
-WC tested up to: 9.9.3
+WC tested up to: 9.9.5
 
 Create flexible flat rate shipping methods with custom rules i.e. for specific products or countries where the products will be shipped to.
 
@@ -197,6 +197,11 @@ In addition, for each flat rate shipping method, you can optionally set these ad
 
 == 📣 PREMIUM: Flat Rate Shipping Plugin —  <a href="https://bit.ly/3fTnQtI" target="_blank">Try Pro Version Today!</a>
 
+== 🎯 Supercharge Your Store Performance ==
+
+Gain access to <strong>50 expert tips</strong> covering everything from <strong>site speed</strong> and <strong>user experience</strong> to advanced sales strategies, each with impact scores to help you prioritize what truly drives results.
+
+<a href ="https://www.thedotstore.com/?popup_id=76452&utm_source=freeplugin&utm_medium=content&utm_id=ebook1_flatrate_shipping" target="_blank">Download Free eBook</a>
 
 == 🚚 Set Multiple-way Shipping Cost ==
 
@@ -463,6 +468,12 @@ With strategic flat rate shipping options that match your business needs, the pl
 Automatic updates should work great for you.  As always, though, we recommend backing up your site prior to making any updates just to be sure nothing goes wrong.
 
 == Changelog ==
+= 4.4.3 - 11-07-2025 =
+* [Bug Fix] Shipping method reset on select issue for some customer
+* [Bug Fix] Bulk delete not working
+* [Enhancement] Freemius update to 2.12.1
+* [Update] Compatible with WooCommerce 9.9.5
+
 = 4.4.2 - 16-06-2025 =
 * [Bug Fix] Shipping charges based on shipping class not working
 * [Enhancement] Compatible with WooCommerce 9.9.x

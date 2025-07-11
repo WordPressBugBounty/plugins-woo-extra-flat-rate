@@ -272,18 +272,4 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
         echo wp_kses( $tool_tip_html, Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::afrsm_pro_allowed_html_tags() );
     }
 
-    public function force_shipping_recalculation( $cart ) {
-        if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
-            return;
-        }
-        if ( !is_checkout() && !is_cart() ) {
-            return;
-        }
-        // Check if the cart is empty
-        if ( WC()->cart->is_empty() ) {
-            return;
-        }
-        $cart->calculate_shipping();
-    }
-
 }

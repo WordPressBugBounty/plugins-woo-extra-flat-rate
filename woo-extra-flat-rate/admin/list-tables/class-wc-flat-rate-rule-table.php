@@ -535,7 +535,7 @@ if ( !class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
             if ( !isset( $method_id_cb ) ) {
                 return;
             }
-            $deletenonce = wp_verify_nonce( $delete_nonce, 'bulk-shippingmethods' );
+            $deletenonce = wp_verify_nonce( $delete_nonce, 'bulk-afrsm_list' );
             if ( !$deletenonce ) {
                 return;
             }

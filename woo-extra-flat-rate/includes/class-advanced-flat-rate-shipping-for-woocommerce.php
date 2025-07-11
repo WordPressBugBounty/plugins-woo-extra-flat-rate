@@ -370,8 +370,6 @@ if ( !class_exists( 'Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro' ) ) {
                 2
             );
             $this->loader->add_action( 'woocommerce_after_shipping_rate', $plugin_public, 'afrsm_add_tooltip_and_subtitle_callback' );
-            // Shipping method changes reflecton refresh page
-            $this->loader->add_action( 'woocommerce_before_calculate_totals', $plugin_public, 'force_shipping_recalculation' );
         }
 
         /**
