@@ -5,6 +5,10 @@
  *
  * @since 1.0.0
  */
+// If this file is called directly, abort.
+if ( !defined( 'ABSPATH' ) ) {
+    exit;
+}
 if ( !defined( 'AFRSM_PRO_PLUGIN_URL' ) ) {
     define( 'AFRSM_PRO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }

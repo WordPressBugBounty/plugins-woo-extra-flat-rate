@@ -1,14 +1,14 @@
-=== Flat Rate Shipping Plugin For WooCommerce ===
+=== Flat Rate Shipping Method for WooCommerce ===
 Contributors: dots, jaydeep-rami, nishitlangaliya, chiragpatel, kakshak, jariwalasagar
 Tags: Flat rate shipping,Table rate shipping,Conditional shipping,WooCommerce shipping, shipping
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 4.4.3
+Tested up to: 6.9.1
+Stable tag: 4.5.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 WC requires at least: 3.0
-WC tested up to: 9.9.5
+WC tested up to: 10.5.0
 
 Create flexible flat rate shipping methods with custom rules i.e. for specific products or countries where the products will be shipped to.
 
@@ -105,10 +105,8 @@ Upgrade to <a href="https://bit.ly/3fTnQtI" target="_blank">Flat Rate Shipping P
 <li>Import & Export Shipping Method</li>
 <li>Enable Logging</li>
 <li>Manage Multiple shipping methods in the cart by Apply Smallest, Apply Highest</li>
-<li>Compatible with WC Vendor Marketplace plugin</li>
 </ul>
 
-[youtube https://www.youtube.com/watch?v=QYVbVa_tkAQ]
 
 = 2️⃣ Different Types of Flat Rate Shipping Conditions =
 
@@ -197,11 +195,6 @@ In addition, for each flat rate shipping method, you can optionally set these ad
 
 == 📣 PREMIUM: Flat Rate Shipping Plugin —  <a href="https://bit.ly/3fTnQtI" target="_blank">Try Pro Version Today!</a>
 
-== 🎯 Supercharge Your Store Performance ==
-
-Gain access to <strong>50 expert tips</strong> covering everything from <strong>site speed</strong> and <strong>user experience</strong> to advanced sales strategies, each with impact scores to help you prioritize what truly drives results.
-
-<a href ="https://www.thedotstore.com/?popup_id=76452&utm_source=freeplugin&utm_medium=content&utm_id=ebook1_flatrate_shipping" target="_blank">Download Free eBook</a>
 
 == 🚚 Set Multiple-way Shipping Cost ==
 
@@ -468,6 +461,19 @@ With strategic flat rate shipping options that match your business needs, the pl
 Automatic updates should work great for you.  As always, though, we recommend backing up your site prior to making any updates just to be sure nothing goes wrong.
 
 == Changelog ==
+= 4.5.0 - 10-02-2026 =
+* [New] Cart subtotal (excluding tax) condition
+* [Bug Fix] Improved PHP 8.0 compatibility for better stability
+* [Bug Fix] Fixed issues with shipping amounts using three-digit values
+* [Bug Fix] Improved compatibility with Autoship Cloud for WooCommerce
+* [Enhancement] Added a new filter to allow longer tooltip text for better clarity and explanations
+* [Enhancement] Improved compatibility with Free Shipping Label and Progress Bar for WooCommerce
+* [Enhancement] Minor design improvements in advanced pricing rules for better usability
+* [Enhancement] UI and performance improvements on the add-on list page
+* [Enhancement] Improved reliability when saving shipping rules
+* [Enhancement] Fully compatible with WooCommerce 10.5.x
+* [Enhancement] Fully compatible with WordPress 6.9.x
+
 = 4.4.3 - 11-07-2025 =
 * [Bug Fix] Shipping method reset on select issue for some customer
 * [Bug Fix] Bulk delete not working

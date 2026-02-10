@@ -107,9 +107,13 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
         }
         $cart_array = self::$admin_object->afrsm_pro_get_cart();
         // Compatibility with Autoship Cloud powered by QPilot (#45167)
-        if ( function_exists( 'autoship_cart_has_valid_autoship_items' ) ) {
-            if ( autoship_cart_has_valid_autoship_items() ) {
-                return;
+        // This filter is used to hide our plugin's flat rate shipping for autoship items in the cart
+        $hide_flat_rate_shipping = apply_filters( 'afrsm_hide_flat_rate_shipping_for_autoship_items', false );
+        if ( $hide_flat_rate_shipping ) {
+            if ( function_exists( 'autoship_cart_has_valid_autoship_items' ) ) {
+                if ( autoship_cart_has_valid_autoship_items() ) {
+                    return;
+                }
             }
         }
         /**
@@ -137,6 +141,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                         'cost'  => 0,
                     );
                     $cart_based_qty = '0';
+                    $cart_items_count = '0';
                     if ( !empty( $cart_array ) ) {
                         $cart_product_ids_arr = array();
                         foreach ( $cart_array as $value ) {
@@ -150,6 +155,7 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                             $check_virtual = self::$admin_object->afrsm_check_product_type_for_front( $_product, $value );
                             if ( true === $check_virtual ) {
                                 $cart_based_qty += $value['quantity'];
+                                $cart_items_count += 1;
                             }
                         }
                     }

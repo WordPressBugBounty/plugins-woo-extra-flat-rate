@@ -460,6 +460,14 @@
             count_product++;
             $('#total_row_' + filedTitle).val(count_product);
         });
+
+        // Add advanced rule on status active.
+        $('body').on('change', '.advance_pricing_rule_box .switch_status_div input', function () {
+            if ($(this).prop('checked')) {
+                $(this).parents('.tap').find('#ap-add-field').click();
+            }
+        });
+        
         $('ul.tabs li').click(function () {
             var tab_id = $(this).attr('data-tab');
             
@@ -468,6 +476,26 @@
             
             $(this).addClass('current');
             $('#' + tab_id).addClass('current');
+
+            // Check if .afrsm-main-table .ap_title element exists and is visible
+			var $apTitle = $('.afrsm-main-table .ap_title');
+			if ($apTitle.length > 0) {
+				// Check if element is visible in viewport
+				var elementTop = $apTitle.offset().top;
+				var elementBottom = elementTop + $apTitle.outerHeight();
+				var viewportTop = $(window).scrollTop();
+				var viewportBottom = viewportTop + $(window).height();
+				
+				// Check if element is not fully visible in viewport
+				var isVisible = (elementTop >= viewportTop && elementBottom <= viewportBottom);
+				
+				if (!isVisible) {
+					// Scroll to element with smooth animation
+					$('html, body').animate({
+						scrollTop: elementTop - 50
+					}, 500);
+				}
+			}
         });
 
         function createAdvancePricingRulesField (field_type, qty_or_weight, field_title, field_count, field_title2) {
@@ -1064,7 +1092,9 @@
                     'attributes': {'label': coditional_vars.cart_specific},
                     'options': [
                         {'name': coditional_vars.cart_subtotal_before_discount, 'attributes': {'value': 'cart_total'}},
+                        {'name': coditional_vars.cart_subtotal_ex_taxes, 'attributes': {'value': 'cart_subtotal_ex_taxes'}},
                         {'name': coditional_vars.quantity, 'attributes': {'value': 'quantity'}},
+                        {'name': coditional_vars.cart_line_items, 'attributes': {'value': 'cart_line_items'}},
                         {'name': coditional_vars.width, 'attributes': {'value': 'width'}},
                         {'name': coditional_vars.height, 'attributes': {'value': 'height'}},
                         {'name': coditional_vars.length, 'attributes': {'value': 'length'}},
@@ -1110,8 +1140,10 @@
                     jQuery('.product_fees_conditions_is_' + count).empty();
                     var column = jQuery('#column_' + count).get(0);
                     var condition_is = jQuery('.product_fees_conditions_is_' + count).get(0);
-                    if (condition === 'cart_total'
+                        if (condition === 'cart_total'
+                        || condition === 'cart_subtotal_ex_taxes'
                         || condition === 'quantity'
+                        || condition === 'cart_line_items'
                         || condition === 'width'
                         || condition === 'height'
                         || condition === 'length'
@@ -1162,7 +1194,7 @@
                         condition_values = insertOptions(condition_values, data);
                     } else {
                         var input_extra_class;
-                        if (condition === 'quantity') {
+                        if (condition === 'quantity' || condition === 'cart_line_items') {
                             input_extra_class = ' qty-class';
                         }
                         if ( condition === 'width' || condition === 'height' || condition === 'length' || condition === 'volume' ){
@@ -1171,14 +1203,14 @@
                         if (condition === 'weight') {
                             input_extra_class = ' weight-class';
                         }
-                        if (condition === 'cart_total' || condition === 'cart_totalafter' || condition === 'cart_productspecific' || condition === 'last_spent_order') {
+                        if (condition === 'cart_total' || condition === 'cart_subtotal_ex_taxes' || condition === 'cart_totalafter' || condition === 'cart_productspecific' || condition === 'last_spent_order') {
                             input_extra_class = ' price-class';
                         }
 
                         let fieldPlaceholder;
 						if ( condition === 'postcode' ) {
 							fieldPlaceholder = coditional_vars.select_postcode;
-						} else if ( condition === 'quantity' ) {
+						} else if ( condition === 'quantity' || condition === 'cart_line_items' ) {
 							fieldPlaceholder = coditional_vars.select_integer_number;
 						} else {
 							fieldPlaceholder = coditional_vars.select_float_number;
@@ -1880,6 +1912,17 @@
             }
         }).change();
         /* Shipping Zone Section */
+        
+        /* Active tab in pricing rules in which rules are added */
+        $('.adv-pricing-rules .advance_pricing_rule_box').each(function () {
+            let $this = $(this);
+            let trCount = $this.find('.advance-shipping-method-table tr').length;
+            let ruleId = $this.attr('id');
+            if( trCount > 1 ) {
+                // Find the specific li element that matches the current ruleId
+                $this.parents('.adv-pricing-rules').find('.pricing_rules_tab li[data-tab="' + ruleId + '"]').addClass('active_tab');
+            }
+        });
     });
     jQuery(window).on('load', function () {
         jQuery('.multiselect2').select2({

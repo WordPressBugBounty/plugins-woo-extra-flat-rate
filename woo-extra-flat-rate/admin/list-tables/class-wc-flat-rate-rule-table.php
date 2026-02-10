@@ -59,7 +59,7 @@ if ( !class_exists( 'WC_Advanced_Flat_Rate_Shipping_Table' ) ) {
          * @since 4.4.1
          */
         function column_drag( $item ) {
-            return '<span class="dashicons dashicons-move handle"></span>';
+            return '<span class="dashicons handle"></span>';
         }
 
         /**

@@ -26,12 +26,7 @@ if ( isset( $get_action ) && 'edit' === $get_action ) {
     $sm_status = get_post_status( $get_post_id );
     $sm_title = get_the_title( $get_post_id );
     $sm_cost = get_post_meta( $get_post_id, 'sm_product_cost', true );
-    $sm_cost = ( is_numeric( $sm_cost ) ? number_format(
-        $sm_cost,
-        get_option( 'woocommerce_price_num_decimals' ),
-        get_option( 'woocommerce_price_decimal_sep' ),
-        get_option( 'woocommerce_price_thousand_sep' )
-    ) : $sm_cost );
+    $sm_cost = ( is_numeric( $sm_cost ) ? $sm_cost + 0 : $sm_cost );
     $is_allow_free_shipping = get_post_meta( $get_post_id, 'is_allow_free_shipping', true );
     $sm_free_shipping_based_on = get_post_meta( $get_post_id, 'sm_free_shipping_based_on', true );
     $sm_free_shipping_cost = get_post_meta( $get_post_id, 'sm_free_shipping_cost', true );
@@ -809,14 +804,19 @@ echo wp_kses( wc_help_tip( esc_html__( 'Not for dropdown shipping method', 'adva
                             </label>
 						</th>
 						<td class="forminp">
-                            <textarea name="sm_tooltip_desc" rows="3" cols="70" id="sm_tooltip_desc" maxlength="100" placeholder="<?php 
-echo esc_attr( 'Enter tooltip description (Max. 100 characters)', 'advanced-flat-rate-shipping-for-woocommerce' );
+							<?php 
+$tooltip_text_length = apply_filters( 'afrsm_set_tooltip_desc_text_length', 100 );
+?>
+                            <textarea name="sm_tooltip_desc" rows="3" cols="70" id="sm_tooltip_desc" maxlength="<?php 
+echo esc_attr( $tooltip_text_length );
+?>" placeholder="<?php 
+echo esc_attr( sprintf( __( 'Enter tooltip description (Max. %d characters)', 'advanced-flat-rate-shipping-for-woocommerce' ), $tooltip_text_length ) );
 ?>"><?php 
 echo wp_kses_post( $sm_tooltip_desc );
 ?></textarea>
 							<p class="tooltip_error error_msg" style="display:none;">
 								<?php 
-esc_html_e( 'Please enter 100 characters only!', 'advanced-flat-rate-shipping-for-woocommerce' );
+echo esc_html( sprintf( __( 'Please enter %d characters only!', 'advanced-flat-rate-shipping-for-woocommerce' ), $tooltip_text_length ) );
 ?>
 							</p>
 						</td>
@@ -1180,8 +1180,12 @@ if ( isset( $sm_metabox ) && !empty( $sm_metabox ) ) {
             $html .= $afrsm_admin_object->afrsm_pro_get_user_list( $i, $condtion_value );
         } elseif ( 'cart_total' === $fees_conditions ) {
             $html .= '<input type = "text" name = "fees[product_fees_conditions_values][value_' . esc_attr( $i ) . ']" id = "product_fees_conditions_values" class = "product_fees_conditions_values price-class" value = "' . esc_attr( $condtion_value ) . '">';
+        } elseif ( 'cart_subtotal_ex_taxes' === $fees_conditions ) {
+            $html .= '<input type = "text" name = "fees[product_fees_conditions_values][value_' . esc_attr( $i ) . ']" id = "product_fees_conditions_values" class = "product_fees_conditions_values price-class" value = "' . esc_attr( $condtion_value ) . '">';
         } elseif ( 'quantity' === $fees_conditions ) {
             $html .= '<input type = "text" name = "fees[product_fees_conditions_values][value_' . esc_attr( $i ) . ']" id = "product_fees_conditions_values" class = "product_fees_conditions_values qty-class" value = "' . esc_attr( $condtion_value ) . '">';
+        } elseif ( 'cart_line_items' === $fees_conditions ) {
+            $html .= '<input type = "text" name = "fees[product_fees_conditions_values][value_' . esc_attr( $i ) . ']" id = "product_fees_conditions_values qty-class" class = "product_fees_conditions_values qty-class" value = "' . esc_attr( $condtion_value ) . '">';
         } elseif ( 'width' === $fees_conditions ) {
             $html .= '<input type = "text" name = "fees[product_fees_conditions_values][value_' . esc_attr( $i ) . ']" id = "product_fees_conditions_values" class = "product_fees_conditions_values measure-class" value = "' . esc_attr( $condtion_value ) . '">';
         } elseif ( 'height' === $fees_conditions ) {

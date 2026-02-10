@@ -33,15 +33,11 @@ if ( ! is_wp_error( $get_discounts ) && ( 200 === wp_remote_retrieve_response_co
 ?>
 <!-- Upgrade to pro plugin popup -->
 <input type="hidden" class="upgrade-to-pro-discount-code" value="<?php echo esc_attr( $discount_coupon ); ?>" >
-<div class="upgrade-to-pro-modal-main">
+<div class="upgrade-to-pro-modal-main upgrade-to-pro-modal-new">
     <div class="upgrade-to-pro-modal-outer">
         <div class="pro-modal-inner">
             <div class="pro-modal-wrapper">
                 <div class="pro-modal-header">
-                    <img src="<?php echo esc_url( AFRSM_PRO_PLUGIN_URL . 'admin/images/premium-upgrade-img/upgrade-rocket-img.png' ); ?>" alt="<?php esc_attr_e( 'Upgrade to Pro', 'advanced-flat-rate-shipping-for-woocommerce' ); ?>">
-                    <span class="dashicons dashicons-no-alt modal-close-btn"></span>
-                </div>
-                <div class="pro-modal-body">
                     <?php 
                     if ( ! empty( $discount_number ) ) {
                         ?>
@@ -56,16 +52,29 @@ if ( ! is_wp_error( $get_discounts ) && ( 200 === wp_remote_retrieve_response_co
                         <?php
                     }
                     ?>
-                    <p><?php esc_html_e( 'Unlock a world of possibilities for your WooCommerce store with our Premium Flat Rate Shipping plugin!', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></p>
-                    <ul class="pro-feature-list">
-                        <li><?php esc_html_e( 'Set advanced shipping rules by product, category, and more.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Personalize shipping costs for specific users or user groups.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Configure time-bound shipping for special days and holidays.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
-                        <li><?php esc_html_e( 'Set weight-based shipping charges for accurate and fair costs.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
-                    </ul>
                 </div>
-                <div class="pro-modal-footer">
-                    <a class="pro-feature-trial-btn upgrade-now" target="_blank" href="javascript:void(0);"><?php esc_html_e( 'Upgrade Now', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></a>
+                <div class="pro-modal-content">
+                    <div class="pro-modal-left">
+                        <div class="pro-modal-body">
+                            <p><?php esc_html_e( 'Unlock a world of possibilities for your WooCommerce store with our Premium Flat Rate Shipping plugin!', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></p>
+                            <ul class="pro-feature-list">
+                                <li><?php esc_html_e( 'Set advanced shipping rules by product, category, and more.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
+                                <li><?php esc_html_e( 'Personalize shipping costs for specific users or user groups.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
+                                <li><?php esc_html_e( 'Configure time-bound shipping for special days and holidays.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
+                                <li><?php esc_html_e( 'Set weight-based shipping charges for accurate and fair costs.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></li>
+                            </ul>
+                        </div>
+                        <div class="pro-modal-footer">
+                            <a class="pro-feature-trial-btn upgrade-now" target="_blank" href="javascript:void(0);"><?php esc_html_e( 'Upgrade Now', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></a>
+                            <span><?php esc_html_e( '14-day, no-questions-asked money-back guarantee.', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
+                        </div>
+                    </div>
+                    <div class="pro-modal-right">
+                        <img src="<?php echo esc_url( AFRSM_PRO_PLUGIN_URL . 'admin/images/premium-upgrade-img/upgrade-pro-img.png' ); ?>" alt="<?php esc_attr_e( 'Upgrade to Pro', 'advanced-flat-rate-shipping-for-woocommerce' ); ?>">
+                    </div>
+                </div>
+                <div class="pro-modal-content-footer">
+                    <span class="modal-close-btn"><?php esc_html_e( 'No thanks, I\'m not interested', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>
                 </div>
             </div>
         </div>

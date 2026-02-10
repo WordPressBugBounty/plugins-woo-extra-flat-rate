@@ -108,12 +108,22 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
          * class.
          */
         wp_enqueue_script(
+            'jquery-tiptip',
+            WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js',
+            array('jquery'),
+            WC()->version,
+            true
+        );
+        wp_enqueue_script(
             $this->plugin_name,
             plugin_dir_url( __FILE__ ) . 'js/advanced-flat-rate-shipping-for-woocommerce-public.js',
-            array('jquery'),
+            array('jquery', 'jquery-tiptip'),
             $this->version,
             false
         );
+        wp_localize_script( $this->plugin_name, 'afrsm_public_vars', array(
+            'shipping_tooltip_data' => $this->afrsm_all_shipping_tooltip_data(),
+        ) );
     }
 
     /**
@@ -270,6 +280,43 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Public {
             }
         }
         echo wp_kses( $tool_tip_html, Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro::afrsm_pro_allowed_html_tags() );
+    }
+
+    /**
+     * List all shipping methods with tooltip data (For Block Cart/Checkout Use)
+     * 
+     * @return array $shipping_tooltip_data
+     * 
+     * @since 4.4.0
+     */
+    public function afrsm_all_shipping_tooltip_data() {
+        $shipping_tooltip_data = array();
+        // Get all shipping methods
+        $args = array(
+            'post_type'      => 'wc_afrsm',
+            'post_status'    => array('publish', 'draft'),
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        );
+        $shipping_methods = get_posts( $args );
+        if ( !empty( $shipping_methods ) ) {
+            foreach ( $shipping_methods as $shipping_method ) {
+                $get_method_id = $shipping_method->ID;
+                $sm_tooltip_type = get_post_meta( $get_method_id, 'sm_tooltip_type', true );
+                $sm_tooltip_type = ( isset( $sm_tooltip_type ) && !empty( $sm_tooltip_type ) ? $sm_tooltip_type : 'tooltip' );
+                $sm_tooltip_desc = get_post_meta( $get_method_id, 'sm_tooltip_desc', true );
+                $sm_tooltip_desc = ( isset( $sm_tooltip_desc ) && !empty( $sm_tooltip_desc ) ? $sm_tooltip_desc : '' );
+                if ( !empty( $sm_tooltip_desc ) ) {
+                    $shipping_method_slug = sanitize_title( $shipping_method->post_title );
+                    $shipping_tooltip_data[$shipping_method_slug] = array(
+                        'type' => $sm_tooltip_type,
+                        'text' => esc_html( $sm_tooltip_desc ),
+                    );
+                }
+            }
+        }
+        return $shipping_tooltip_data;
     }
 
 }
