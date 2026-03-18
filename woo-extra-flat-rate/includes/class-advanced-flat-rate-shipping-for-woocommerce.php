@@ -298,8 +298,9 @@ if ( !class_exists( 'Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro' ) ) {
                 10,
                 2
             );
-            $this->loader->add_action( 'wp_ajax_afrsm_plugin_setup_wizard_submit', $plugin_admin, 'afrsm_plugin_setup_wizard_submit' );
-            $this->loader->add_action( 'admin_init', $plugin_admin, 'afrsm_send_wizard_data_after_plugin_activation' );
+            $this->loader->add_action( 'wp_ajax_afrsm_wizard_create_rule', $plugin_admin, 'afrsm_wizard_create_rule' );
+            $this->loader->add_action( 'wp_ajax_afrsm_wizard_mark_completed', $plugin_admin, 'afrsm_wizard_mark_completed' );
+            $this->loader->add_action( 'wp_ajax_afrsm_wizard_set_path', $plugin_admin, 'afrsm_wizard_set_path' );
             //From 4.2.5 WPML changes hook
             $this->loader->add_filter(
                 'wpml_link_to_translation',

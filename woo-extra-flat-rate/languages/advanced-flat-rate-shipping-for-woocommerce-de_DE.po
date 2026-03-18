@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-23 17:29+0530\n"
-"PO-Revision-Date: 2026-01-23 11:21+0000\n"
+"PO-Revision-Date: 2026-03-18 06:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -29,7 +29,7 @@ msgid "\"%s\" shipping class cost"
 msgstr "Kosten der Versandklasse \"%s\""
 
 #. translators: %s: Number of installations.
-#: admin/partials/afrsm-pro-get-started-page.php:350
+#: admin/partials/afrsm-pro-get-started-page.php:349
 msgid "%s Active Installations"
 msgstr "%s aktive Installationen"
 
@@ -182,6 +182,10 @@ msgstr "14 Tage Zufriedenheitsgarantie"
 msgid "14-day, no-questions-asked money-back guarantee."
 msgstr "14-tägige Geld-zurück-Garantie ohne Angabe von Gründen."
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:86
+msgid "3 proven templates"
+msgstr "3 bewährte Vorlagen"
+
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:747
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:851
 msgid ""
@@ -197,7 +201,7 @@ msgstr ""
 "auf Null (0) gesetzt.</p>"
 
 #. translators: %1$s is the link to the review page
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8375
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8429
 msgid ""
 "<strong>We need your support</strong> to keep updating and improving the "
 "plugin. Please <a href=\"%1$s\" target=\"_blank\">help us by leaving a good "
@@ -263,7 +267,19 @@ msgstr ""
 "Gemäß der Regel fallen bei Bestellungen mit einem Zwischenbetrag zwischen 50 "
 "und 100 US-Dollar Versandkosten in Höhe von 15 US-Dollar an."
 
-#: advanced-flat-rate-shipping-for-woocommerce.php:301
+#: admin/partials/afrsm-plugin-setup-wizard.php:31
+msgid "Activate and test"
+msgstr "Aktivieren und testen"
+
+#: admin/partials/ds-setup-wizard-config.php:139
+msgid "Activate and test shipping"
+msgstr "Versand aktivieren und testen"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:39
+msgid "Activate License"
+msgstr "Lizenz aktivieren"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:39
 msgid "Activate Plugin"
 msgstr "Plugin aktivieren"
 
@@ -271,15 +287,23 @@ msgstr "Plugin aktivieren"
 msgid "Activate premium plugin"
 msgstr "Premium-Plugin aktivieren"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:33
+msgid "Activate Rule"
+msgstr "Regel aktivieren"
+
+#: admin/partials/ds-setup-wizard-config.php:141
+msgid "Activate Shipping Rule"
+msgstr "Versandregel aktivieren"
+
 #. translators: %s: Number of millions.
-#: admin/partials/afrsm-pro-get-started-page.php:341
+#: admin/partials/afrsm-pro-get-started-page.php:340
 msgctxt "Active plugin installations"
 msgid "%s+ Million"
 msgid_plural "%s+ Millions"
 msgstr[0] "%s+ Millionen"
 msgstr[1] "%s+ Millionen"
 
-#: admin/partials/afrsm-pro-get-started-page.php:345
+#: admin/partials/afrsm-pro-get-started-page.php:344
 msgctxt "Active plugin installations"
 msgid "Less Than 10"
 msgstr "Weniger als 10"
@@ -308,7 +332,7 @@ msgstr "Neu hinzufügen 🔒"
 msgid "Add Ons for"
 msgstr "Add-Ons für"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10369
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10423
 #: admin/partials/form-add-shipping-zone.php:16
 msgid "Add Shipping Zone"
 msgstr "Versandzone hinzufügen"
@@ -322,8 +346,8 @@ msgstr "Add shipping zone"
 msgid "Add Zone"
 msgstr "Zone hinzufügen"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10197
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10214
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10251
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10268
 msgid "Add-Ons"
 msgstr "Add-Ons"
 
@@ -335,15 +359,19 @@ msgstr "Zusätzliche Versandkosten je nach Versandklasse"
 msgid "Advance settings"
 msgstr "Erweiterte Einstellungen"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1131
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1132
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1184
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1185
 msgid "Advance Shipping Method"
 msgstr "Voraus Versand Methode"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1139
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1140
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1192
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1193
 msgid "Advance Shipping Zone"
 msgstr "Voraus Versand Zone"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:99
+msgid "Advanced conditions"
+msgstr "Erweiterte Bedingungen"
 
 #: admin/partials/afrsm-init-shipping-methods.php:26
 #: admin/partials/afrsm-init-shipping-methods.php:28
@@ -517,7 +545,7 @@ msgstr "Niedrigsten Preis anwenden 🔒"
 msgid "Apply Per Additional Unit"
 msgstr "Gilt pro zusätzlicher Einheit"
 
-#: admin/partials/afrsm-pro-get-started-page.php:114
+#: admin/partials/afrsm-pro-get-started-page.php:113
 msgid "Apply rates by weight, quantity, or cart subtotal"
 msgstr ""
 "Wenden Sie die Tarife nach Gewicht, Menge oder Warenkorb-Zwischensumme an."
@@ -534,9 +562,15 @@ msgstr ""
 "Nutzen Sie die angegebene Versandart für eine reibungslose Lieferung "
 "innerhalb europäischer Länder."
 
+#: admin/partials/ds-setup-wizard-config.php:64
+msgid "Apply the dynamic shipping charges of 9% to the total order amount."
+msgstr ""
+"Wenden Sie die dynamischen Versandkosten von 9 % auf den Gesamtbestellwert "
+"an."
+
 #. translators: %d is the index key
 #. translators: %d: is the index key that does not contain scalar value.
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5878
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5932
 #: admin/partials/afrsm-init-shipping-methods.php:2437
 msgctxt "array key error"
 msgid "Key %d does not contain scalar value"
@@ -546,8 +580,8 @@ msgstr "Der Schlüssel %d enthält keinen skalaren Wert."
 #. translators: %d is the index key
 #. translators: %d: is the column key that does not exist in the array.
 #. translators: %d: is the index key that does not exist in the array.
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5865
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5873
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5919
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5927
 #: admin/partials/afrsm-init-shipping-methods.php:2424
 #: admin/partials/afrsm-init-shipping-methods.php:2432
 msgctxt "array key error"
@@ -564,10 +598,6 @@ msgstr "Asien Land"
 msgid "Asia States"
 msgstr "Asien States"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:88
-msgid "Astra"
-msgstr "Astra"
-
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:615
 msgid "Attribute Specific"
 msgstr "Spezifisches Attribut"
@@ -575,10 +605,6 @@ msgstr "Spezifisches Attribut"
 #: admin/partials/afrsm-pro-shipping-zone-page.php:287
 msgid "Back to zones."
 msgstr "Zurück zu Zonen."
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:98
-msgid "Be our friend on"
-msgstr "Sei unser Freund"
 
 #: admin/partials/afrsm-pro-add-new-page.php:1876
 #: admin/partials/afrsm-pro-add-new-page.php:2381
@@ -611,6 +637,12 @@ msgstr ""
 #: admin/partials/afrsm-upgrade-dashboard.php:249
 msgid "Best solution for complex shipping"
 msgstr "Beste Lösung für komplexen Versand"
+
+#: admin/partials/ds-setup-wizard-config.php:144
+msgid "Build additional shipping rules for different regions or conditions"
+msgstr ""
+"Erstellen Sie zusätzliche Versandregeln für verschiedene Regionen oder "
+"Bedingungen."
 
 #: admin/partials/afrsm-pro-add-new-page.php:626
 msgid "Calculate Based On"
@@ -791,6 +823,17 @@ msgstr ""
 "Testen Sie die erweiterten Funktionen, vereinfachen Sie die "
 "Produktverwaltung und reduzieren Sie Retouren durch ein Upgrade auf Premium!"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:248
+msgid "Check Preview & Activate"
+msgstr "Vorschau prüfen & aktivieren"
+
+#: admin/partials/ds-setup-wizard-config.php:146
+msgid ""
+"Check the created shipping method and start with the other shipping methods."
+msgstr ""
+"Überprüfen Sie die erstellte Versandmethode und fahren Sie mit den weiteren "
+"Versandmethoden fort."
+
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:616
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:729
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:833
@@ -801,6 +844,11 @@ msgstr "Checkout Spezifische"
 msgid "Choose"
 msgstr "Wählen"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:28
+#: admin/partials/ds-setup-wizard-config.php:136
+msgid "Choose a template"
+msgstr "Wählen Sie eine Vorlage aus."
+
 #: admin/partials/form-add-shipping-zone.php:37
 #: admin/partials/form-add-shipping-zone.php:97
 #: admin/partials/form-add-shipping-zone.php:128
@@ -810,10 +858,18 @@ msgstr "Wählen"
 msgid "Choose countries&hellip;"
 msgstr "Choose countries&hellip;"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:63
+msgid "Choose Path"
+msgstr "Pfad auswählen"
+
 #: admin/partials/form-add-shipping-zone.php:63
 #: admin/partials/form-edit-shipping-zone.php:130
 msgid "Choose states/counties&hellip;"
 msgstr "Bundesländer/Landkreise auswählen&hellip;"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:51
+msgid "Choose Template"
+msgstr "Vorlage auswählen"
 
 #: admin/partials/form-add-shipping-zone.php:112
 msgid "Cites"
@@ -901,21 +957,35 @@ msgstr ""
 "Kombinieren Sie die Standard-Versandmethoden von WooCommerce mit den "
 "Versandmethoden unseres Plugins"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:97
+msgid "Complete flexibility"
+msgstr "Vollkommene Flexibilität"
+
 #: dotstore-analytics/class-dotstore-tracking-and-analytics.php:313
 msgid "Configure plugin"
 msgstr "Plugin konfigurieren"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:53
+#: admin/partials/afrsm-plugin-setup-wizard.php:184
+msgid "Configure Settings"
+msgstr "Einstellungen konfigurieren"
 
 #: admin/partials/afrsm-upgrade-popup.php:63
 msgid "Configure time-bound shipping for special days and holidays."
 msgstr ""
 "Konfigurieren Sie zeitgebundenen Versand für besondere Tage und Feiertage."
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:25
-#: admin/partials/afrsm-plugin-setup-wizard.php:53
-#: admin/partials/afrsm-plugin-setup-wizard.php:66
-#: admin/partials/afrsm-plugin-setup-wizard.php:111
+#: admin/partials/afrsm-plugin-setup-wizard.php:279
+msgid "Congratulations!"
+msgstr "Glückwunsch!"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:170
 msgid "Continue"
 msgstr "Weitermachen"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:127
+msgid "Continue to Choose Template"
+msgstr "Weiter zur Vorlagenauswahl"
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:393
 #: admin/partials/afrsm-pro-add-new-page.php:2894
@@ -1088,6 +1158,10 @@ msgstr "Kosten auf Insgesamt Warenkorb Zwischensumme"
 msgid "Cost on Total Cart Weight"
 msgstr "Kosten auf Insgesamt Cart Gewicht"
 
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10837
+msgid "Could not create rule."
+msgstr "Regel konnte nicht erstellt werden."
+
 #: admin/partials/afrsm-pro-shipping-zone-page.php:118
 msgid "Could not save zone. Please try again."
 msgstr "Konnte nicht speichern-zone. Bitte versuchen Sie es erneut."
@@ -1126,6 +1200,16 @@ msgstr "Coupon"
 msgid "Coupon 🔒"
 msgstr "Gutschein 🔒"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:95
+msgid "Create a shipping rule from scratch for complete control."
+msgstr ""
+"Erstellen Sie eine Versandregel von Grund auf neu – für die volle Kontrolle."
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:35
+#: admin/partials/ds-setup-wizard-config.php:143
+msgid "Create Another Rule"
+msgstr "Eine weitere Regel erstellen"
+
 #: constants.php:84
 msgid ""
 "Create conditional rules based on cart total, product type, or shipping "
@@ -1134,10 +1218,18 @@ msgstr ""
 "Erstellen Sie bedingte Regeln basierend auf dem Warenkorbwert, dem "
 "Produkttyp oder dem Lieferort."
 
-#: admin/partials/afrsm-pro-get-started-page.php:112
+#: admin/partials/afrsm-plugin-setup-wizard.php:94
+msgid "Create from Scratch"
+msgstr "Von Grund auf neu erstellen"
+
+#: admin/partials/afrsm-pro-get-started-page.php:111
 msgid "Create unlimited shipping methods with advanced conditions"
 msgstr ""
 "Erstellen Sie unbegrenzt viele Versandmethoden mit erweiterten Bedingungen."
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:77
+msgid "Create your first"
+msgstr "Erstelle dein erstes"
 
 #: admin/partials/afrsm-import-export-setting.php:93
 #: admin/partials/afrsm-import-export-setting.php:118
@@ -1205,23 +1297,15 @@ msgid "Display the notice with the amount of price left to free shipping"
 msgstr ""
 "Display die Anzeige für die Höhe des Preises Links zu kostenloser Versand"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:86
-msgid "Do the Woo"
-msgstr "Machen Sie das Woo"
-
 #: admin/partials/afrsm-upgrade-dashboard.php:285
 msgid "Do you offer support for the plugin? What’s it like?"
 msgstr "Bieten Sie Support für das Plugin an? Wie sieht dieser aus?"
 
-#: includes/class-advanced-flat-rate-shipping-for-woocommerce.php:358
+#: includes/class-advanced-flat-rate-shipping-for-woocommerce.php:359
 msgid "Docs"
 msgstr "Docs"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:115
-msgid "Done"
-msgstr "Erledigt"
-
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:896
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:911
 #| msgid "DotStore Plugins"
 msgid "Dotstore Plugins"
 msgstr "Dotstore Plugins"
@@ -1229,6 +1313,10 @@ msgstr "Dotstore Plugins"
 #: admin/list-tables/class-wc-flat-rate-rule-table.php:516
 msgid "Duplicate"
 msgstr "Duplikat"
+
+#: admin/partials/ds-setup-wizard-config.php:63
+msgid "Dynamic Shipping charge (9%)"
+msgstr "Dynamische Versandkosten (9%)"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:83
 #| msgid ""
@@ -1241,6 +1329,22 @@ msgstr ""
 "Beispielsweise können wir eine Benutzerrolle aus einer Plugin-Einstellung "
 "wie \"Kunde\" auswählen. Sobald sich der Benutzer mit der Kundenrolle "
 "anmeldet, gilt dieser Versand."
+
+#: admin/partials/ds-setup-wizard-config.php:112
+msgid "e.g. 2-5 days"
+msgstr "z. B. 2–5 Tage"
+
+#: admin/partials/ds-setup-wizard-config.php:132
+msgid "e.g. 9% Shipping"
+msgstr "z. B. 9% Versandkosten"
+
+#: admin/partials/ds-setup-wizard-config.php:128
+msgid "e.g. Free over $299"
+msgstr "z. B. kostenlos ab $299"
+
+#: admin/partials/ds-setup-wizard-config.php:124
+msgid "e.g. US Flat Rate"
+msgstr "z. B. US-Pauschale"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:145
 #| msgid ""
@@ -1467,6 +1571,12 @@ msgstr "Aktivieren Sie diese zone"
 msgid "Enabled"
 msgstr "Aktiviert"
 
+#: admin/partials/ds-setup-wizard-config.php:59
+msgid "Encourage large orders with free shipping thresholds."
+msgstr ""
+"Fördern Sie Großbestellungen durch Schwellenwerte für den kostenlosen "
+"Versand."
+
 #: admin/partials/afrsm-pro-add-new-page.php:735
 #: admin/partials/afrsm-pro-add-new-page.php:868
 #: admin/partials/afrsm-pro-add-new-page.php:1005
@@ -1494,13 +1604,17 @@ msgstr "Gleich ( = )"
 msgid "Error occurred while sending data"
 msgstr "Beim Senden der Daten ist ein Fehler aufgetreten."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8338
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8392
 msgid "Error saving shipping method."
 msgstr "Fehler beim speichern der Verschiffen Methode."
 
 #: admin/partials/afrsm-pro-shipping-zone-page.php:280
 msgid "Error saving zone."
 msgstr "Fehler beim speichern der zone."
+
+#: admin/partials/ds-setup-wizard-config.php:110
+msgid "Estimated Delivery"
+msgstr "Voraussichtliche Lieferung"
 
 #: admin/partials/afrsm-pro-add-new-page.php:697
 #: admin/partials/afrsm-pro-add-new-page.php:827
@@ -1588,6 +1702,10 @@ msgstr "Exportzone"
 msgid "FAQs"
 msgstr "FAQs"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:77
+msgid "fast"
+msgstr "schnell"
+
 #. translators: %s: WooCommerce currency symbol
 #: admin/partials/afrsm-pro-add-new-page.php:649
 msgid "Fee Per Additional Unit (%s)"
@@ -1596,6 +1714,10 @@ msgstr "Gebühr pro zusätzlicher Einheit (%s)"
 #: admin/partials/html-zone-list.php:18
 msgid "Fetch Your Old Shipping Zone"
 msgstr "Holen Sie Ihren Alten Shipping Zone"
+
+#: admin/partials/ds-setup-wizard-config.php:41
+msgid "Flat %s20 for all US orders"
+msgstr "Pauschal %s20 für alle US-Bestellungen"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:64
 msgid "Flexible Tiered Shipping Solutions"
@@ -1622,7 +1744,7 @@ msgstr "Zwingen, alle Versand Methoden"
 msgid "Force all shipping methods 🔒"
 msgstr "Alle Versandarten erzwingen 🔒"
 
-#: admin/partials/afrsm-pro-get-started-page.php:115
+#: admin/partials/afrsm-pro-get-started-page.php:114
 msgid "Force users to select shipping before placing order"
 msgstr ""
 "Benutzer müssen die Versandart auswählen, bevor sie die Bestellung aufgeben"
@@ -1642,6 +1764,10 @@ msgstr "Kostenloser Versand - Label"
 #: admin/partials/afrsm-pro-add-new-page.php:1199
 msgid "Free Shipping - Product"
 msgstr "Kostenloser Versand - Produkt"
+
+#: admin/partials/ds-setup-wizard-config.php:53
+msgid "Free shipping above %s299"
+msgstr "Kostenloser Versand ab %s299"
 
 #: admin/partials/afrsm-pro-add-new-page.php:1166
 msgid "Free Shipping based on"
@@ -1668,6 +1794,10 @@ msgstr "Kostenloser Versand für Produkte 🔒"
 msgid "Free Shipping Order - Amount"
 msgstr "Kostenloser Versand Bestell - Menge"
 
+#: admin/partials/ds-setup-wizard-config.php:95
+msgid "Free Shipping Threshold"
+msgstr "Mindestbestellwert für kostenlosen Versand"
+
 #: admin/partials/afrsm-pro-add-new-page.php:777
 #: admin/partials/afrsm-pro-add-new-page.php:912
 #: admin/partials/afrsm-pro-add-new-page.php:1049
@@ -1680,18 +1810,22 @@ msgstr "Freitag"
 msgid "From:"
 msgstr "Aus:"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10359
+#: admin/partials/afrsm-plugin-setup-wizard.php:88
+msgid "Fully customizable"
+msgstr "Vollständig anpassbar"
+
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10413
 #: admin/partials/afrsm-general-setting-page.php:21
 msgid "General Settings"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/partials/afrsm-pro-get-started-page.php:107
+#: admin/partials/afrsm-pro-get-started-page.php:106
 msgid "Get Flat Rate Shipping Pro and unlock more features."
 msgstr ""
 "Holen Sie sich Flat Rate Shipping Pro und schalten Sie weitere Funktionen "
 "frei."
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:36
+#: advanced-flat-rate-shipping-for-woocommerce.php:382
 msgid ""
 "Get improved features and faster fixes by sharing non-sensitive data via "
 "usage-tracking. This will help us make the plugin more compatible with your "
@@ -1702,7 +1836,7 @@ msgstr ""
 "helfen, das Plugin besser mit Ihrer Website kompatibel zu machen. Es werden "
 "keine personenbezogenen Daten erfasst oder gespeichert."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10219
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10273
 msgid "Get Premium"
 msgstr "Premium bekommen"
 
@@ -1717,9 +1851,23 @@ msgstr ""
 "Sichern Sie sich {{offer}} Rabatt – Wechseln Sie zu Premium und verbessern "
 "Sie Ihr Erlebnis."
 
-#: admin/partials/header/plugin-header.php:92
+#: admin/partials/afrsm-plugin-setup-wizard.php:105
+#: admin/partials/header/plugin-header.php:93
 msgid "Getting Started"
 msgstr "Erste Schritte"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:37
+msgid "Go to List"
+msgstr "Zur Liste"
+
+#: admin/partials/header/plugin-header.php:105
+msgid "Go to Onboarding"
+msgstr "Zum Onboarding gehen"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:134
+#: admin/partials/ds-setup-wizard-config.php:145
+msgid "Go to Shipping Method List"
+msgstr "Zur Liste der Versandmethoden"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:232
 msgid "Great for website owners with a single WooCommerce Store"
@@ -1745,8 +1893,8 @@ msgstr "Größer als ( > )"
 msgid "Greater then ( > )"
 msgstr "Größer als ( > )"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:7087
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:7088
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:7141
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:7142
 msgid "Guest"
 msgstr "Gast"
 
@@ -1761,17 +1909,13 @@ msgstr "Guide-Dokumentation"
 msgid "Height"
 msgstr "Höhe"
 
-#: admin/partials/header/plugin-header.php:55
+#: admin/partials/header/plugin-header.php:56
 msgid "Help"
 msgstr "Hilfe"
 
 #: admin/partials/afrsm-pro-information-page.php:37
 msgid "Help & Support"
 msgstr "Hilfe & Support"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:35
-msgid "Help us build a better \"Flat Rate\" Plugin!"
-msgstr "Helfen Sie uns, ein besseres „Flatrate“-Plugin zu entwickeln!"
 
 #: admin/partials/afrsm-general-setting-page.php:118
 #: admin/partials/afrsm-general-setting-page.php:132
@@ -1780,7 +1924,7 @@ msgid "Hide other shipping method when free shipping is available"
 msgstr ""
 "Verstecken Sie andere Versand Methode, wenn freies Verschiffen ist verfügbar"
 
-#: admin/partials/afrsm-pro-get-started-page.php:81
+#: admin/partials/afrsm-pro-get-started-page.php:80
 msgid "How to Get Started"
 msgstr "Wie man anfängt"
 
@@ -1880,7 +2024,7 @@ msgstr ""
 msgid "Import"
 msgstr "Import"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10376
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10430
 msgid "Import / Export"
 msgstr "Import / Export"
 
@@ -1918,6 +2062,10 @@ msgstr "Zone importieren"
 msgid "Improves Profit Margins Today"
 msgstr "Verbessert die Gewinnmargen schon heute"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:87
+msgid "Industry best practices"
+msgstr "Bewährte Verfahren der Branche"
+
 #: admin/partials/afrsm-pro-information-page.php:24
 msgid "Installed Version"
 msgstr "Installierte Version"
@@ -1953,7 +2101,7 @@ msgstr ""
 msgid "JSON"
 msgstr "JSON"
 
-#: admin/partials/afrsm-pro-get-started-page.php:109
+#: admin/partials/afrsm-pro-get-started-page.php:108
 msgid "Key Features"
 msgstr "Hauptmerkmale"
 
@@ -1972,10 +2120,6 @@ msgstr "Letzte Bestellung ausgegeben"
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:793
 msgid "Last order spent 🔒"
 msgstr "Letzte Bestellung ausgegeben 🔒"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:83
-msgid "LearnWoo"
-msgstr "LearnWoo"
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:239
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:566
@@ -2012,7 +2156,7 @@ msgstr ""
 "Produkte zu einem einzigen, nicht optionalen Versandkostenpreis "
 "zusammenzufassen."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10192
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10246
 msgid "License"
 msgstr "Lizenz"
 
@@ -2041,9 +2185,13 @@ msgstr ""
 " dann fügen Sie bitte = (gleich), statt Raum EX: PLZ - ES2-ABS-dann können "
 "Sie ES2=*"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:978
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:1031
 msgid "List Per Page"
 msgstr "Liste pro Seite"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:283
+msgid "Live & Active"
+msgstr "Live & Aktiv"
 
 #: admin/partials/afrsm-pro-information-page.php:53
 msgid "Localization"
@@ -2060,25 +2208,25 @@ msgstr "Standort Spezifische"
 msgid "Make sure enter each city name in one line."
 msgstr "Stellen Sie sicher, geben Sie den einzelnen Stadt-name in einer Zeile."
 
-#: admin/partials/afrsm-pro-get-started-page.php:318
+#: admin/partials/afrsm-pro-get-started-page.php:317
 msgid "Manage"
 msgstr "Verwalten"
 
 #. translators: %s: Plugin name.
-#: admin/partials/afrsm-pro-get-started-page.php:317
+#: admin/partials/afrsm-pro-get-started-page.php:316
 msgid "Manage %s"
 msgstr "Verwalten Sie %s"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10182
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10204
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10236
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10258
 msgid "Manage Rules"
 msgstr "Regeln verwalten"
 
-#: admin/partials/afrsm-pro-get-started-page.php:94
+#: admin/partials/afrsm-pro-get-started-page.php:93
 msgid "Manage Shipping Rules"
 msgstr "Versandregeln verwalten"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10364
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10418
 msgid "Manage Zones"
 msgstr "Zonen verwalten"
 
@@ -2166,16 +2314,12 @@ msgstr "Maximaler Gutscheinbetrag für kostenlosen Versand"
 msgid "Maximum free shipping order amount"
 msgstr "Maximale versandkostenfrei bestellen Höhe"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:90
-msgid "Medium"
-msgstr "Mittel"
-
 #: admin/partials/afrsm-upgrade-dashboard.php:95
 #| msgid "Merge all shipping methods to one shipping method"
 msgid "Merge all shipping methods to one shipping method."
 msgstr "Alle Versandarten zu einer Versandart zusammenführen."
 
-#: admin/partials/afrsm-pro-get-started-page.php:117
+#: admin/partials/afrsm-pro-get-started-page.php:116
 msgid "Merge multiple rules into one clear shipping option"
 msgstr ""
 "Fassen Sie mehrere Regeln zu einer einzigen, übersichtlichen Versandoption "
@@ -2242,7 +2386,7 @@ msgstr "Montag"
 msgid "month"
 msgstr "month"
 
-#: admin/partials/header/plugin-header.php:63
+#: admin/partials/header/plugin-header.php:64
 msgid "My Account"
 msgstr "Mein Konto"
 
@@ -2251,10 +2395,6 @@ msgstr "Mein Konto"
 #: admin/partials/form-edit-shipping-zone.php:80
 msgid "Name"
 msgstr "Name"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:43
-msgid "Never miss an important update"
-msgstr "Verpassen Sie nie wieder ein wichtiges Update"
 
 #: admin/partials/afrsm-pro-add-new-page.php:1110
 #: admin/partials/afrsm-pro-add-new-page.php:1132
@@ -2272,7 +2412,7 @@ msgstr "nein"
 msgid "No data found for import/export."
 msgstr "Es wurden keine Daten für den Import/Export gefunden."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5948
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:6002
 msgid "No data found for sorting"
 msgstr "Es wurden keine Daten zum Sortieren gefunden"
 
@@ -2280,7 +2420,7 @@ msgstr "Es wurden keine Daten zum Sortieren gefunden"
 msgid "No file selected"
 msgstr "Keine Datei ausgewählt"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8404
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8458
 msgid "No post to duplicate has been supplied!"
 msgstr "Es wurde kein Beitrag zum Duplizieren angegeben!"
 
@@ -2392,6 +2532,10 @@ msgstr "Ozeanien"
 msgid "Oceania States"
 msgstr "Ozeanien Staaten"
 
+#: admin/partials/header/plugin-header.php:108
+msgid "Onboarding"
+msgstr "Onboarding"
+
 #: admin/partials/afrsm-pro-add-new-page.php:1122
 msgid "Only apply when user will place first order. Default: No"
 msgstr ""
@@ -2401,26 +2545,6 @@ msgstr ""
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:576
 msgid "Only Equal to ( == )"
 msgstr "Nur Gleich ( == )"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:44
-msgid ""
-"Opt-in to get email notifications for security & feature updates and to "
-"share some important WooCommerce updates. This will help us make the plugin "
-"more compatible with your version and better at doing what you need it to. "
-"No personal data is tracked or stored."
-msgstr ""
-"Melden Sie sich an, um E-Mail-Benachrichtigungen zu Sicherheits- und "
-"Funktionsupdates zu erhalten und einige wichtige WooCommerce-Updates zu "
-"teilen. Dies wird uns dabei helfen, das Plugin besser mit Ihrer Version "
-"kompatibel zu machen und es besser in der Lage zu machen, das zu tun, was "
-"Sie brauchen. Es werden keine personenbezogenen Daten erfasst oder "
-"gespeichert."
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:22
-msgid "Optimize shipping and boost revenue with strategic additional charges!"
-msgstr ""
-"Optimieren Sie den Versand und steigern Sie den Umsatz mit strategischen "
-"Zusatzgebühren!"
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:609
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:723
@@ -2433,10 +2557,6 @@ msgstr "oder mehr Zeichen"
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:831
 msgid "Order History"
 msgstr "Bestellverlauf"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:91
-msgid "Others"
-msgstr "Andere"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:68
 msgid ""
@@ -2464,7 +2584,7 @@ msgstr ""
 "Unsere Funktion berechnet die Versandkosten basierend auf dem Produktgewicht "
 "und gewährleistet so faire und zuverlässige Preise für Kunden."
 
-#: admin/partials/afrsm-pro-get-started-page.php:134
+#: admin/partials/afrsm-pro-get-started-page.php:133
 msgid "Our Other Free Plugins"
 msgstr "Unsere anderen kostenlosen Plugins"
 
@@ -2544,11 +2664,19 @@ msgstr ""
 "Pro Bestellung: Berechnen Sie die Versandkosten für den teuersten Versand-"
 "Klasse"
 
+#: admin/partials/ds-setup-wizard-config.php:102
+msgid "Percentage of cart subtotal (%)"
+msgstr "Prozentsatz der Warenkorb-Zwischensumme (%)"
+
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10813
+msgid "Permission denied."
+msgstr "Zugriff verweigert."
+
 #: admin/partials/afrsm-upgrade-dashboard.php:217
 msgid "Personal"
 msgstr "Persönlich"
 
-#: admin/partials/afrsm-pro-get-started-page.php:127
+#: admin/partials/afrsm-pro-get-started-page.php:126
 #: admin/partials/afrsm-upgrade-dashboard.php:215
 msgid "Personal Plan"
 msgstr "Persönlicher Plan"
@@ -2701,77 +2829,77 @@ msgstr ""
 "unsere Dokumentation unter"
 
 #. translators: %s is the file type
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:9537
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:9591
 msgid "Please upload a %s file to import"
 msgstr "Bitte laden Sie eine %s Datei zum Importieren hoch."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10069
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10123
 msgid "Please upload a file to import"
 msgstr "Bitte laden Sie eine Datei importieren"
 
 #. translators: %s is the file type
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:9546
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:9600
 msgid "Please upload a valid %s file"
 msgstr "Bitte laden Sie eine gültige %s Datei hoch."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10065
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10119
 msgid "Please upload a valid .json file"
 msgstr "Bitte laden Sie eine gültige .json-Datei"
 
-#: admin/partials/afrsm-pro-get-started-page.php:255
-#: admin/partials/afrsm-pro-get-started-page.php:286
+#: admin/partials/afrsm-pro-get-started-page.php:254
+#: admin/partials/afrsm-pro-get-started-page.php:285
 msgctxt "plugin"
 msgid "Activate"
 msgstr "Aktivieren"
 
 #. translators: %s: Plugin name.
-#: admin/partials/afrsm-pro-get-started-page.php:257
+#: admin/partials/afrsm-pro-get-started-page.php:256
 msgctxt "plugin"
 msgid "Activate %s"
 msgstr "%s aktivieren"
 
-#: admin/partials/afrsm-pro-get-started-page.php:251
+#: admin/partials/afrsm-pro-get-started-page.php:250
 msgctxt "plugin"
 msgid "Active"
 msgstr "Aktiv"
 
 #. translators: %s: Plugin name and version.
-#: admin/partials/afrsm-pro-get-started-page.php:213
+#: admin/partials/afrsm-pro-get-started-page.php:212
 msgctxt "plugin"
 msgid "Install %s now"
 msgstr "Installieren Sie %s jetzt"
 
-#: admin/partials/afrsm-pro-get-started-page.php:215
-#: admin/partials/afrsm-pro-get-started-page.php:220
+#: admin/partials/afrsm-pro-get-started-page.php:214
+#: admin/partials/afrsm-pro-get-started-page.php:219
 msgctxt "plugin"
 msgid "Install Free Plugin"
 msgstr "Kostenloses Plugin installieren"
 
-#: admin/partials/afrsm-pro-get-started-page.php:292
+#: admin/partials/afrsm-pro-get-started-page.php:291
 msgctxt "plugin"
 msgid "Installed"
 msgstr "Installiert"
 
-#: admin/partials/afrsm-pro-get-started-page.php:268
-#: admin/partials/afrsm-pro-get-started-page.php:286
+#: admin/partials/afrsm-pro-get-started-page.php:267
+#: admin/partials/afrsm-pro-get-started-page.php:285
 msgctxt "plugin"
 msgid "Network Activate"
 msgstr "Netzwerk aktivieren"
 
 #. translators: %s: Plugin name.
-#: admin/partials/afrsm-pro-get-started-page.php:270
+#: admin/partials/afrsm-pro-get-started-page.php:269
 msgctxt "plugin"
 msgid "Network Activate %s"
 msgstr "Netzwerk aktivieren %s"
 
 #. translators: %s: Plugin name and version.
-#: admin/partials/afrsm-pro-get-started-page.php:234
+#: admin/partials/afrsm-pro-get-started-page.php:233
 msgctxt "plugin"
 msgid "Update %s now"
 msgstr "Jetzt aktualisieren %s"
 
-#: admin/partials/afrsm-pro-get-started-page.php:236
-#: admin/partials/afrsm-pro-get-started-page.php:241
+#: admin/partials/afrsm-pro-get-started-page.php:235
+#: admin/partials/afrsm-pro-get-started-page.php:240
 msgctxt "plugin"
 msgid "Update Free Plugin"
 msgstr "Kostenloses Plugin aktualisieren"
@@ -2780,7 +2908,7 @@ msgstr "Kostenloses Plugin aktualisieren"
 msgid "Plugin ID is missing"
 msgstr "Plugin ID is missing"
 
-#: admin/partials/afrsm-pro-get-started-page.php:99
+#: admin/partials/afrsm-pro-get-started-page.php:98
 msgid "Plugin Tour"
 msgstr "Plugin-Tour"
 
@@ -2828,10 +2956,14 @@ msgstr[1] ""
 "\n"
 "Alle <span class=\"count\">(%s)</span>"
 
-#: admin/partials/afrsm-pro-get-started-page.php:107
+#: admin/partials/afrsm-pro-get-started-page.php:106
 #: dotstore-analytics/class-dotstore-tracking-and-analytics.php:303
 msgid "Premium title icon"
 msgstr "Premium-Titel-Symbol"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:55
+msgid "Preview & Activate"
+msgstr "Vorschau & Aktivieren"
 
 #: admin/partials/afrsm-pro-add-new-page.php:2401
 #: admin/partials/afrsm-pro-add-new-page.php:2583
@@ -2915,14 +3047,21 @@ msgstr "Quick-info"
 msgid "Quick Start"
 msgstr "Quick Start"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:60
-#: admin/partials/afrsm-plugin-setup-wizard.php:62
-msgid "Quick Tour"
-msgstr "Schnelle Tour"
-
-#: admin/partials/afrsm-pro-get-started-page.php:95
+#: admin/partials/afrsm-pro-get-started-page.php:94
 msgid "Read the Setup Guide"
 msgstr "Lesen Sie die Installationsanleitung"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:83
+msgid "Readymade template"
+msgstr "Vorgefertigte Vorlage"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:32
+msgid "Review before activation"
+msgstr "Überprüfung vor der Aktivierung"
+
+#: admin/partials/ds-setup-wizard-config.php:140
+msgid "Review your shipping rule before activation"
+msgstr "Überprüfen Sie Ihre Versandregel vor der Aktivierung."
 
 #: admin/partials/afrsm-upgrade-dashboard.php:60
 msgid ""
@@ -2932,6 +3071,10 @@ msgstr ""
 "Belohnen Sie treue Kunden, indem Sie Benutzern mit bestimmten Rollen "
 "kostenlosen Versand für alle Bestellungen anbieten und so ihre "
 "Einkaufszufriedenheit steigern."
+
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10868
+msgid "Rule created."
+msgstr "Regel erstellt."
 
 #: admin/partials/afrsm-pro-add-new-page.php:1884
 #: admin/partials/afrsm-pro-add-new-page.php:2389
@@ -2953,6 +3096,10 @@ msgstr ""
 msgid "rule match"
 msgstr "Regel"
 
+#: admin/partials/ds-setup-wizard-config.php:116
+msgid "Rule name"
+msgstr "Regelname"
+
 #: admin/partials/afrsm-pro-add-new-page.php:778
 #: admin/partials/afrsm-pro-add-new-page.php:913
 #: admin/partials/afrsm-pro-add-new-page.php:1050
@@ -2968,17 +3115,13 @@ msgstr "Änderungen speichern"
 msgid "Save Master Settings"
 msgstr "Speichern Sie Master-Einstellungen"
 
-#: admin/partials/afrsm-pro-get-started-page.php:116
+#: admin/partials/afrsm-pro-get-started-page.php:115
 msgid "Schedule shipping methods for specific dates or holidays"
 msgstr "Planen Sie Versandmethoden für bestimmte Termine oder Feiertage"
 
 #: admin/partials/afrsm-pro-list-page.php:291
 msgid "Search"
 msgstr "Suchen"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:82
-msgid "Search Engine"
-msgstr "Suchmaschine"
 
 #. translators: %s: is the search term
 #: admin/partials/afrsm-pro-list-page.php:289
@@ -3024,6 +3167,14 @@ msgstr "Wählen Sie einen Gutschein aus"
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:598
 msgid "Select a payment gateway"
 msgstr "Wählen Sie ein Zahlungsgateway aus"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:29
+msgid "Select a pre-configured option to get started"
+msgstr "Wählen Sie eine vorkonfigurierte Option aus, um zu beginnen."
+
+#: admin/partials/ds-setup-wizard-config.php:137
+msgid "Select a pre-configured shipping rules to getting started"
+msgstr "Wählen Sie eine vorkonfigurierte Versandregel aus, um zu beginnen."
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:587
 msgid "Select a Product"
@@ -3134,6 +3285,10 @@ msgstr "Wählen Sie eine Zone aus"
 msgid "Select Category"
 msgstr "Kategorie Wählen"
 
+#: admin/partials/ds-setup-wizard-config.php:75
+msgid "Select Country:"
+msgstr "Land auswählen:"
+
 #: admin/partials/afrsm-pro-add-new-page.php:761
 #: admin/partials/afrsm-pro-add-new-page.php:896
 #: admin/partials/afrsm-pro-add-new-page.php:1033
@@ -3182,10 +3337,6 @@ msgstr ""
 "&nbsp;&nbsp;&nbsp;<span class=\"dashicons dashicons-info-outline\"></span>\n"
 "<a href=\"https://docs.thedotstore.com/article/300-how-to-add-start-date-and-"
 "end-data\" target=\"_blank\">Dokumentation anzeigen</a><br/>"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:80
-msgid "Select One"
-msgstr "Wähle eins"
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:715
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:819
@@ -3278,6 +3429,14 @@ msgstr ""
 msgid "Set default selected shipping method on cart. Default: No"
 msgstr "Set default gewählten Versandart auf Warenkorb. Default: Nein"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:78
+msgid ""
+"Set up intelligent shipping rules in seconds and start optimizing your "
+"revenue"
+msgstr ""
+"Richten Sie in Sekundenschnelle intelligente Versandregeln ein und beginnen "
+"Sie, Ihren Umsatz zu optimieren."
+
 #: admin/partials/afrsm-upgrade-dashboard.php:77
 msgid ""
 "Set up user-based shipping costs to capitalize on demand from specific users "
@@ -3299,13 +3458,25 @@ msgstr ""
 "Festlegen, welche Art von details, die Sie wollen zeigen auf der Vorderseite."
 " Standard: Tooltip"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10187
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10209
-#: includes/class-advanced-flat-rate-shipping-for-woocommerce.php:357
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10241
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10263
+#: includes/class-advanced-flat-rate-shipping-for-woocommerce.php:358
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10474
+#: admin/partials/afrsm-plugin-setup-wizard.php:30
+msgid "Settings auto-filled from your template. Adjust as needed."
+msgstr ""
+"Die Einstellungen wurden automatisch aus Ihrer Vorlage übernommen. Passen "
+"Sie diese bei Bedarf an."
+
+#: admin/partials/ds-setup-wizard-config.php:138
+msgid "Settings auto-filled from your templates. Adjust as needed."
+msgstr ""
+"Die Einstellungen wurden automatisch aus Ihren Vorlagen übernommen. Passen "
+"Sie diese bei Bedarf an."
+
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10528
 msgid "shipping"
 msgstr "Versand"
 
@@ -3347,6 +3518,10 @@ msgstr "Shipping Class"
 msgid "Shipping Class 🔒"
 msgstr "Versandklasse 🔒"
 
+#: admin/partials/ds-setup-wizard-config.php:83
+msgid "Shipping cost (%s)"
+msgstr "Versandkosten (%s)"
+
 #: admin/partials/afrsm-general-setting-page.php:78
 msgid "Shipping Display Mode"
 msgstr "Versand-Display-Modus"
@@ -3373,7 +3548,7 @@ msgstr "Versand Methode Regeln"
 msgid "Shipping Methods"
 msgstr "Versandarten"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:5992
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:6046
 msgid "Shipping methods sorting has been updated."
 msgstr "Die Sortierung der Versandmethoden wurde aktualisiert."
 
@@ -3395,31 +3570,39 @@ msgstr ""
 "Versand-Anbieter wählen Sie für Ordnung attahch mit dieser Gebühr als "
 "Germenized plugin macht"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10626
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10822
+msgid "Shipping Rule"
+msgstr "Versandregel"
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:77
+msgid "shipping rule"
+msgstr "Versandregel"
+
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10680
 msgid "Shipping rule has been created."
 msgstr "Versandregel wurde erstellt."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10630
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10684
 msgid "Shipping rule has been deleted."
 msgstr "Versandregel wurde gelöscht."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10634
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10688
 msgid "Shipping rule has been disabled."
 msgstr "Die Versandregel wurde deaktiviert."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10632
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10686
 msgid "Shipping rule has been duplicated."
 msgstr "Versandregel wurde dupliziert."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10636
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10690
 msgid "Shipping rule has been enabled."
 msgstr "Die Versandregel wurde aktiviert."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10628
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10682
 msgid "Shipping rule has been updated."
 msgstr "Die Versandregel wurde aktualisiert."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8518
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8572
 msgid "Shipping status changed successfully."
 msgstr "Der Versandstatus erfolgreich geändert."
 
@@ -3457,13 +3640,13 @@ msgstr "Versand Zonen sind aktiviert"
 msgid "Show type of shipping method"
 msgstr "Art der Versandart anzeigen"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:81
-msgid "Social Media"
-msgstr "Sozialen Medien"
+#: admin/partials/ds-setup-wizard-config.php:47
+msgid "Simple flat-rate shipping across the United States."
+msgstr "Einfacher Pauschalversand in den gesamten Vereinigten Staaten."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8485
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8520
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8543
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8539
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8574
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:8597
 msgid "Something went wrong"
 msgstr "Etwas ging falsch"
 
@@ -3477,6 +3660,11 @@ msgstr "South America"
 #: admin/partials/afrsm-pro-add-new-page.php:981
 msgid "Start Date"
 msgstr "Startdatum"
+
+#: admin/partials/header/plugin-header.php:106
+msgid "Start your onboarding to get started with Flat Rate Shipping plugin!"
+msgstr ""
+"Starten Sie Ihr Onboarding, um mit dem Flat Rate Shipping-Plugin loszulegen!"
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:73
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:81
@@ -3507,11 +3695,15 @@ msgstr "Schritt 1 - Import & Export Versand Zone"
 msgid "Step 2 - Import &amp; Export Shipping Method"
 msgstr "Schritt 2 - Import & Export Versand Methode"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:98
+msgid "Step-by-step guidance"
+msgstr "Schritt-für-Schritt-Anleitung"
+
 #: admin/partials/afrsm-pro-add-new-page.php:1686
 msgid "Subtitle"
 msgstr "Untertitel"
 
-#: admin/partials/header/plugin-header.php:50
+#: admin/partials/header/plugin-header.php:51
 msgid "Suggest"
 msgstr "Empfehlen"
 
@@ -3521,8 +3713,8 @@ msgstr "Empfehlen"
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: admin/partials/header/plugin-header.php:45
-#: includes/class-advanced-flat-rate-shipping-for-woocommerce.php:359
+#: admin/partials/header/plugin-header.php:46
+#: includes/class-advanced-flat-rate-shipping-for-woocommerce.php:360
 msgid "Support"
 msgstr "Support"
 
@@ -3544,7 +3736,7 @@ msgstr "Synchronisierungssortierung"
 msgid "Tag"
 msgstr "Schild"
 
-#: admin/partials/afrsm-pro-get-started-page.php:113
+#: admin/partials/afrsm-pro-get-started-page.php:112
 msgid "Target shipping by product, category, location, or user role"
 msgstr "Gezielter Versand nach Produkt, Kategorie, Standort oder Benutzerrolle"
 
@@ -3554,7 +3746,7 @@ msgstr "Gezielter Versand nach Produkt, Kategorie, Standort oder Benutzerrolle"
 msgid "Taxable"
 msgstr "Steuerpflichtige"
 
-#: admin/partials/afrsm-pro-get-started-page.php:83
+#: admin/partials/afrsm-pro-get-started-page.php:82
 msgid ""
 "Thank you for choosing our top-rated WooCommerce Shipping plugin. Our user-"
 "friendly interface makes setting up flat rate shipping straightforward."
@@ -3563,11 +3755,11 @@ msgstr ""
 "Plugin entschieden haben. Unsere benutzerfreundliche Oberfläche macht das "
 "Einrichten des Pauschalversands unkompliziert."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10639
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10693
 msgid "There was an error with saving data."
 msgstr "Beim Speichern der Daten ist ein Fehler aufgetreten."
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10641
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10695
 msgid "There was an error with security check."
 msgstr "Bei der Sicherheitsüberprüfung ist ein Fehler aufgetreten."
 
@@ -3699,7 +3891,7 @@ msgid "Title"
 msgstr "Titel"
 
 #. translators: %s: YouTube channel link
-#: admin/partials/afrsm-pro-get-started-page.php:88
+#: admin/partials/afrsm-pro-get-started-page.php:87
 msgid ""
 "To help you get started, watch the quick tour video on the right. For more "
 "help, explore our help documents or visit our %s for detailed video "
@@ -3764,6 +3956,10 @@ msgstr "Dienstag"
 msgid "Type"
 msgstr "Typ"
 
+#: admin/partials/ds-setup-wizard-config.php:25
+msgid "United States"
+msgstr "United States"
+
 #: admin/partials/afrsm-upgrade-popup.php:59
 msgid ""
 "Unlock a world of possibilities for your WooCommerce store with our Premium "
@@ -3772,7 +3968,7 @@ msgstr ""
 "Erschließen Sie Ihrem WooCommerce-Shop mit unserem Plugin \"Premium Flat "
 "Rate Shipping\" eine Welt voller Möglichkeiten!"
 
-#: admin/partials/afrsm-pro-get-started-page.php:122
+#: admin/partials/afrsm-pro-get-started-page.php:121
 msgid "Unlock Powerful Features"
 msgstr "Schalten Sie leistungsstarke Funktionen frei"
 
@@ -3796,8 +3992,8 @@ msgstr ""
 "Bestellmenge, bestimmten Produkten und der Coupon-Nutzung anzubieten."
 
 #: admin/partials/afrsm-upgrade-popup.php:68
-#: admin/partials/header/plugin-header.php:70
-#: admin/partials/header/plugin-header.php:78
+#: admin/partials/header/plugin-header.php:71
+#: admin/partials/header/plugin-header.php:79
 #: dotstore-analytics/dots-marketing-popup.php:10
 msgid "Upgrade Now"
 msgstr "Jetzt upgraden"
@@ -3806,7 +4002,7 @@ msgstr "Jetzt upgraden"
 msgid "Upgrade to Pro"
 msgstr "Upgrade auf Pro"
 
-#: admin/partials/afrsm-pro-get-started-page.php:108
+#: admin/partials/afrsm-pro-get-started-page.php:107
 msgid ""
 "Upgrade to Pro and supercharge your WooCommerce shipping with flexible, rule-"
 "based flat rate options that help you handle complex scenarios with ease."
@@ -3824,13 +4020,18 @@ msgstr "Upgrade zum Freischalten von Premium-Funktionen"
 msgid "US States"
 msgstr "US-Staaten"
 
-#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:10883
+#: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:11018
 msgid ""
 "Usage limit reached: 10 shipping rules created. Upgrade to unlock unlimited "
 "access."
 msgstr ""
 "Nutzungslimit erreicht: 10 Versandregeln erstellt. Upgrade, um unbegrenzten "
 "Zugriff freizuschalten."
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:84
+msgid "Use pre-configured shipping rules for quick setup."
+msgstr ""
+"Verwenden Sie vorkonfigurierte Versandregeln für eine schnelle Einrichtung."
 
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:174
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:555
@@ -3966,13 +4167,9 @@ msgstr "Gewicht 🔒"
 msgid "Weight-Based Shipping Charges"
 msgstr "Versandkosten nach Gewicht"
 
-#: admin/partials/afrsm-pro-get-started-page.php:82
+#: admin/partials/afrsm-pro-get-started-page.php:81
 msgid "Welcome to Flat Rate Shipping Plugin"
 msgstr "Willkommen beim Flat Rate Shipping Plugin"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:20
-msgid "Welcome! 🤗"
-msgstr "Willkommen! 🤗"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:303
 msgid "What payment methods do you accept?"
@@ -4041,27 +4238,6 @@ msgstr "Innerhalb von %s:"
 msgid "WooCommerce Plugin"
 msgstr "WooCommerce Plugin"
 
-#: admin/partials/afrsm-plugin-setup-wizard.php:78
-msgid "Would you mind telling how did you hear about us?"
-msgstr ""
-"Würde es Ihnen etwas ausmachen, zu erzählen, wie Sie von uns erfahren haben?"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:87
-msgid "WP Mayor"
-msgstr "WP Mayor"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:85
-msgid "WPBeginner"
-msgstr "WPBeginner"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:89
-msgid "WPExplorer"
-msgstr "WPExplorer"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:84
-msgid "WPLift"
-msgstr "WPLift"
-
 #: admin/partials/afrsm-pro-add-new-page.php:1106
 #: admin/partials/afrsm-pro-add-new-page.php:1128
 #: admin/partials/afrsm-pro-add-new-page.php:1731
@@ -4081,15 +4257,6 @@ msgid ""
 msgstr ""
 "Ja! Sie können unsere %1$s lesen oder eine %2$s einreichen. Wir reagieren "
 "sehr schnell und bemühen uns, Ihnen bestmöglich zu helfen."
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:38
-#: admin/partials/afrsm-plugin-setup-wizard.php:46
-msgid "Yes, count me in!"
-msgstr "Ja, zähl mich mit!"
-
-#: admin/partials/afrsm-plugin-setup-wizard.php:73
-msgid "You are all set, almost!"
-msgstr "Sie sind fast fertig!"
 
 #: admin/partials/afrsm-upgrade-dashboard.php:245
 msgid ""
@@ -4417,6 +4584,20 @@ msgstr ""
 "Sie können diese Schaltfläche deaktivieren, falls Sie diesen Versandbetrag "
 "nicht anwenden möchten."
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:126
+msgid ""
+"You have already activated. Continue to choose a template and create your "
+"first shipping rule."
+msgstr ""
+"Sie haben die Aktivierung bereits abgeschlossen. Fahren Sie fort, um eine "
+"Vorlage auszuwählen und Ihre erste Versandregel zu erstellen."
+
+#: admin/partials/afrsm-plugin-setup-wizard.php:133
+msgid "You have already activated. You can go to the shipping method list."
+msgstr ""
+"Sie haben bereits aktiviert. Sie können zur Liste der Versandmethoden "
+"wechseln."
+
 #: admin/partials/afrsm-pro-shipping-zone-page.php:216
 msgid "You must choose at least 1 city to add city zone."
 msgstr ""
@@ -4440,13 +4621,21 @@ msgstr ""
 "Sie müssen wählen Sie Produkt-spezifische option in Verschiffenmethode "
 "Regeln für die Produkt-basierte option"
 
+#: admin/partials/afrsm-plugin-setup-wizard.php:34
+msgid "Your first rule has been successfully published!"
+msgstr "Ihre erste Regel wurde erfolgreich veröffentlicht!"
+
+#: admin/partials/ds-setup-wizard-config.php:142
+msgid "Your first shipping rule has been successfully published!"
+msgstr "Ihre erste Versandregel wurde erfolgreich veröffentlicht!"
+
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:622
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:746
 #: admin/class-advanced-flat-rate-shipping-for-woocommerce-admin.php:850
 msgid "Your settings successfully saved."
 msgstr "Ihre Einstellungen erfolgreich gespeichert."
 
-#: admin/partials/afrsm-pro-get-started-page.php:89
+#: admin/partials/afrsm-pro-get-started-page.php:88
 msgid "YouTube channel"
 msgstr "Youtube Kanal"
 

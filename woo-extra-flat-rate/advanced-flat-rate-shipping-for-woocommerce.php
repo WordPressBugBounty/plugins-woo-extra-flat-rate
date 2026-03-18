@@ -4,7 +4,7 @@
  * Plugin Name:         Flat Rate Shipping Method for WooCommerce
  * Plugin URI:          https://www.thedotstore.com/advanced-flat-rate-shipping-method-for-woocommerce
  * Description:         Using Advanced Flat Rate Shipping plugin, you can create multiple flat rate shipping methods. Using this plugin you can configure different parameters on which a particular Flat Rate Shipping method becomes available to the customers at the time of checkout.
- * Version:             4.5.0
+ * Version:             4.5.1
  * Author:              theDotstore
  * Author URI:          https://www.thedotstore.com/
  * License:             GPL-3.0+
@@ -15,8 +15,8 @@
  *
  *
  * WC requires at least: 3.0
- * WP tested up to:     6.9.1
- * WC tested up to:     10.5.0
+ * WP tested up to:     6.9.4
+ * WC tested up to:     10.6.1
  * Requires PHP:        7.2
  * Requires at least:   5.0
  */
@@ -40,27 +40,28 @@ if ( function_exists( 'afrsfw_fs' ) ) {
                 require_once dirname( __FILE__ ) . '/freemius/start.php';
                 // @phpstan-ignore-next-line
                 $afrsfw_fs = fs_dynamic_init( array(
-                    'id'              => '3379',
-                    'slug'            => 'advanced-flat-rate-shipping-for-woocommerce',
-                    'type'            => 'plugin',
-                    'public_key'      => 'pk_8db0d3a414717fb20558c5268291b',
-                    'is_premium'      => false,
-                    'premium_suffix'  => 'Premium',
-                    'has_addons'      => true,
-                    'has_paid_plans'  => true,
-                    'trial'           => array(
+                    'id'               => '3379',
+                    'slug'             => 'advanced-flat-rate-shipping-for-woocommerce',
+                    'type'             => 'plugin',
+                    'public_key'       => 'pk_8db0d3a414717fb20558c5268291b',
+                    'is_premium'       => false,
+                    'premium_suffix'   => 'Premium',
+                    'has_addons'       => true,
+                    'has_paid_plans'   => true,
+                    'trial'            => array(
                         'days'               => 14,
                         'is_require_payment' => true,
                     ),
-                    'has_affiliation' => 'selected',
-                    'menu'            => array(
+                    'has_affiliation'  => 'selected',
+                    'menu'             => array(
                         'slug'       => 'afrsm-pro-list',
                         'first-path' => 'admin.php?page=afrsm-pro-list',
                         'contact'    => false,
                         'support'    => false,
                         'network'    => true,
                     ),
-                    'is_live'         => true,
+                    'is_live'          => true,
+                    'is_org_compliant' => true,
                 ) );
             }
             return $afrsfw_fs;
@@ -76,13 +77,18 @@ if ( function_exists( 'afrsfw_fs' ) ) {
         }
 
         afrsfw_fs()->add_filter( 'connect_url', 'afrsfw_fs_settings_url' );
-        afrsfw_fs()->add_filter( 'after_skip_url', 'afrsfw_fs_settings_url' );
-        afrsfw_fs()->add_filter( 'after_connect_url', 'afrsfw_fs_settings_url' );
-        afrsfw_fs()->add_filter( 'after_pending_connect_url', 'afrsfw_fs_settings_url' );
+        afrsfw_fs()->add_filter( 'after_skip_url', 'afrsm_after_connect_url_by_wizard' );
+        afrsfw_fs()->add_filter(
+            'after_connect_url',
+            'afrsm_after_connect_url_by_wizard',
+            10,
+            1
+        );
+        afrsfw_fs()->add_filter( 'after_pending_connect_url', 'afrsm_after_connect_url_by_wizard' );
     }
 }
 if ( !defined( 'AFRSM_PRO_PLUGIN_VERSION' ) ) {
-    define( 'AFRSM_PRO_PLUGIN_VERSION', 'v4.5.0' );
+    define( 'AFRSM_PRO_PLUGIN_VERSION', 'v4.5.1' );
 }
 if ( !defined( 'AFRSM_PRO_PLUGIN_BASENAME' ) ) {
     define( 'AFRSM_PRO_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -262,44 +268,44 @@ if ( function_exists( 'activate_advanced_flat_rate_shipping_for_woocommerce_pro'
 
     }
     /**
-     * Start plugin setup wizard before license activation screen
+     * Wrap Freemius connect template in setup wizard so the full wizard (steps 1–6) is shown
+     * with the license activation in step 6. Uses the templates/connect.php filter which
+     * receives the full connect HTML and returns our wrapper.
      *
      * @since    4.2.0
      */
-    if ( !function_exists( 'afrsm_load_plugin_setup_wizard_connect_before' ) ) {
-        function afrsm_load_plugin_setup_wizard_connect_before() {
+    if ( !function_exists( 'afrsm_wrap_connect_template_with_wizard' ) ) {
+        function afrsm_wrap_connect_template_with_wizard(  $connect_html  ) {
+            ob_start();
+            $connect_content = $connect_html;
+            $initial_step = 1;
+            $license_activated = function_exists( 'afrsfw_fs' ) && afrsfw_fs()->can_use_premium_code();
             require_once plugin_dir_path( __FILE__ ) . 'admin/partials/afrsm-plugin-setup-wizard.php';
-            ?>
-            <div class="tab-panel" id="step5">
-                <div class="ds-wizard-wrap">
-                    <div class="ds-wizard-content">
-                        <h2 class="cta-title">
-                            <?php 
-            esc_html_e( 'Activate Plugin', 'advanced-flat-rate-shipping-for-woocommerce' );
-            ?>
-                        </h2>
-                    </div>
-            <?php 
+            return ob_get_clean();
         }
 
-        afrsfw_fs()->add_action( 'connect/before', 'afrsm_load_plugin_setup_wizard_connect_before' );
+        afrsfw_fs()->add_filter( 'templates/connect.php', 'afrsm_wrap_connect_template_with_wizard' );
     }
-    /**
-     * End plugin setup wizard after license activation screen
-     *
-     * @since    4.2.0
-     */
-    if ( !function_exists( 'afrsm_load_plugin_setup_wizard_connect_after' ) ) {
-        function afrsm_load_plugin_setup_wizard_connect_after() {
-            ?>
-            </div>
-            </div>
-            </div>
-            </div>
-            <?php 
+    if ( !function_exists( 'afrsm_after_connect_url_by_wizard' ) ) {
+        function afrsm_after_connect_url_by_wizard(  $url  ) {
+            $path = get_transient( 'afrsm_wizard_path' );
+            $path = ( in_array( $path, array('use_template', 'from_scratch'), true ) ? $path : '' );
+            $list_url = admin_url( 'admin.php?page=afrsm-pro-list' );
+            if ( 'from_scratch' === $path ) {
+                set_transient( 'afrsm_wizard_just_activated_from_scratch', true, 60 );
+                return add_query_arg( array(
+                    'wizard_path' => $path,
+                ), $list_url );
+            }
+            if ( 'use_template' === $path ) {
+                return add_query_arg( array(
+                    'wizard_step' => 3,
+                    'wizard_path' => $path,
+                ), $list_url );
+            }
+            return ( $url ? $url : $list_url );
         }
 
-        afrsfw_fs()->add_action( 'connect/after', 'afrsm_load_plugin_setup_wizard_connect_after' );
     }
     /**
      * Plugin check Plugins filter for plugin specific checks.
@@ -351,4 +357,17 @@ if ( !function_exists( 'AFRSMPA' ) ) {
     }
 
     $GLOBALS['afrsfwpa'] = AFRSMPA();
+}
+// Override the connect message on update
+if ( !function_exists( 'afrsm_connect_message_on_update' ) ) {
+    afrsfw_fs()->add_filter(
+        'connect_message_on_update',
+        'afrsm_connect_message_on_update',
+        10,
+        2
+    );
+    function afrsm_connect_message_on_update(  $message, $plugin_name  ) {
+        return __( 'Get improved features and faster fixes by sharing non-sensitive data via usage-tracking. This will help us make the plugin more compatible with your site. No personal data is tracked or stored.', 'advanced-flat-rate-shipping-for-woocommerce' );
+    }
+
 }

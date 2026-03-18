@@ -10,6 +10,7 @@ $plugin_slug = 'basic_flat_rate';
 $afrsm_admin_object = new Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin('', '');
 $current_page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 $getting_started = ( isset( $current_page ) && 'afrsm-pro-get-started' === $current_page ? 'active' : '' );
+$onboarding_completed = get_option( 'afrsm_setup_wizard_notice_closed' );
 ?>
 <div class="wrap">
     <div id="dotsstoremain" class="afrsm-section">
@@ -106,6 +107,39 @@ esc_html_e( 'Getting Started', 'advanced-flat-rate-shipping-for-woocommerce' );
                     </div>
                 </div>
             </header>
+
+            <?php 
+if ( empty( $onboarding_completed ) || 'afrsm-pro-get-started' === $current_page ) {
+    ?>
+                <div class="demo-dpd-popup dpb-popup dots-onboarding-notice">
+                    <div class="dpb-popup-meta">
+                        <span><?php 
+    esc_html_e( 'Go to Onboarding', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?></span>
+                        <p><?php 
+    esc_html_e( 'Start your onboarding to get started with Flat Rate Shipping plugin!', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?></p>
+                    </div>
+                    <a href="<?php 
+    echo esc_url( add_query_arg( array(
+        'page'         => 'afrsm-pro-list',
+        'setup_wizard' => '1',
+    ), admin_url( 'admin.php' ) ) );
+    ?>" class="onboarding-button"><?php 
+    esc_html_e( 'Onboarding', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?></a>
+                    <?php 
+    if ( 'afrsm-pro-get-started' !== $current_page ) {
+        ?>
+                        <a href="javascript:void(0);" class="onboarding-close-btn"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path id="Icon_material-close" data-name="Icon material-close" d="M17.5,8.507,16.493,7.5,12.5,11.493,8.507,7.5,7.5,8.507,11.493,12.5,7.5,16.493,8.507,17.5,12.5,13.507,16.493,17.5,17.5,16.493,13.507,12.5Z" transform="translate(-7.5 -7.5)" fill="#acacac"></path></svg></a>
+                        <?php 
+    }
+    ?>
+                </div>
+                <?php 
+}
+?>
+            
             <!-- Upgrade to pro popup -->
             <?php 
 if ( !(afrsfw_fs()->is__premium_only() && afrsfw_fs()->can_use_premium_code()) ) {

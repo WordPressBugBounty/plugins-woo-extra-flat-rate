@@ -75,7 +75,6 @@ if ( ! afrsfw_fs()->is__premium_only() && ! afrsfw_fs()->can_use_premium_code() 
 ?>
 <div class="afrsm-section-left">
     <div class="afrsm-main-table res-cl">
-
         <div class="dots-getting-started-main element-shadow">
             <div class="getting-started-content">
                 <span><?php esc_html_e( 'How to Get Started', 'advanced-flat-rate-shipping-for-woocommerce' ); ?></span>

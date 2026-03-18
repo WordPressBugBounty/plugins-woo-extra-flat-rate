@@ -574,9 +574,25 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 $this->version,
                 false
             );
+            $ds_wizard_config_path = plugin_dir_path( __FILE__ ) . 'partials/ds-setup-wizard-config.php';
+            $ds_wizard_config_php = ( file_exists( $ds_wizard_config_path ) ? require $ds_wizard_config_path : array() );
+            $ds_wizard_js = array(
+                'templates'             => ( isset( $ds_wizard_config_php['templates'] ) ? $ds_wizard_config_php['templates'] : array() ),
+                'template_fields'       => ( isset( $ds_wizard_config_php['template_fields'] ) ? $ds_wizard_config_php['template_fields'] : array() ),
+                'template_defaults'     => ( isset( $ds_wizard_config_php['template_defaults'] ) ? $ds_wizard_config_php['template_defaults'] : array() ),
+                'field_keys'            => array_keys( ( isset( $ds_wizard_config_php['fields'] ) ? $ds_wizard_config_php['fields'] : array() ) ),
+                'save_action'           => ( isset( $ds_wizard_config_php['save_action'] ) ? $ds_wizard_config_php['save_action'] : 'afrsm_wizard_create_rule' ),
+                'cookie_name'           => ( isset( $ds_wizard_config_php['cookie_name'] ) ? $ds_wizard_config_php['cookie_name'] : 'afrsm_wizard_path' ),
+                'mark_completed_action' => ( isset( $ds_wizard_config_php['mark_completed_action'] ) ? $ds_wizard_config_php['mark_completed_action'] : 'afrsm_wizard_mark_completed' ),
+            );
             wp_localize_script( $this->plugin_name . '-wizard', 'afrsfw_wizard_conditional_vars', array(
-                'ajaxurl'                 => admin_url( 'admin-ajax.php' ),
-                'setup_wizard_ajax_nonce' => wp_create_nonce( 'afrsfw_wizard_nonce' ),
+                'ajaxurl'                  => admin_url( 'admin-ajax.php' ),
+                'setup_wizard_ajax_nonce'  => wp_create_nonce( 'afrsfw_wizard_nonce' ),
+                'wizard_create_rule_nonce' => wp_create_nonce( 'afrsm_wizard_create_rule' ),
+                'list_url'                 => admin_url( 'admin.php?page=afrsm-pro-list' ),
+                'add_url'                  => admin_url( 'admin.php?page=afrsm-pro-list&action=add' ),
+                'ds_wizard_config'         => $ds_wizard_js,
+                'get_currency_symbol'      => ( empty( get_woocommerce_currency_symbol() ) ? '$' : get_woocommerce_currency_symbol() ),
             ) );
         }
     }
@@ -699,6 +715,37 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
      * @since    1.0.0
      */
     public function afrsm_pro_fee_list_page() {
+        $setup_wizard = filter_input( INPUT_GET, 'setup_wizard', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $wizard_step = filter_input( INPUT_GET, 'wizard_step', FILTER_SANITIZE_NUMBER_INT );
+        $require_license = filter_input( INPUT_GET, 'require_license', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $wizard_config_path = plugin_dir_path( __FILE__ ) . 'partials/ds-setup-wizard-config.php';
+        $wizard_config = ( file_exists( $wizard_config_path ) ? require $wizard_config_path : array() );
+        if ( get_transient( 'afrsm_wizard_just_activated_from_scratch' ) ) {
+            delete_transient( 'afrsm_wizard_just_activated_from_scratch' );
+            update_option( 'afrsm_setup_wizard_completed', 'yes' );
+        }
+        $license_activated = function_exists( 'afrsfw_fs' ) && afrsfw_fs()->can_use_premium_code();
+        $show_wizard = '1' === $setup_wizard || $wizard_step >= 2 && $wizard_step <= 6;
+        if ( 'false' === $require_license && !$show_wizard ) {
+            $show_wizard = true;
+            $wizard_path_param = filter_input( INPUT_GET, 'wizard_path', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+            $wizard_path_param = ( in_array( $wizard_path_param, array('use_template', 'from_scratch'), true ) ? $wizard_path_param : get_transient( 'afrsm_wizard_path' ) );
+            if ( 'use_template' === $wizard_path_param ) {
+                $wizard_step = 3;
+            } else {
+                $wizard_step = 2;
+            }
+        }
+        if ( $show_wizard ) {
+            $connect_content = '';
+            $initial_step = ( '1' === $setup_wizard ? 1 : (int) $wizard_step );
+            $wizard_path = filter_input( INPUT_GET, 'wizard_path', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+            $wizard_path = ( in_array( $wizard_path, array('use_template', 'from_scratch'), true ) ? $wizard_path : get_transient( 'afrsm_wizard_path' ) );
+            $list_url = admin_url( 'admin.php?page=afrsm-pro-list' );
+            $add_url = admin_url( 'admin.php?page=afrsm-pro-list&action=add' );
+            require_once plugin_dir_path( __FILE__ ) . 'partials/afrsm-plugin-setup-wizard.php';
+            return;
+        }
         require_once plugin_dir_path( __FILE__ ) . 'partials/afrsm-pro-list-page.php';
         $afrsm_rule_lising_obj = new AFRSM_Rule_Listing_Page();
         $afrsm_rule_lising_obj->afrsm_sj_output();
@@ -1360,8 +1407,10 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             $bundle_container_item = wc_pb_get_bundled_cart_item_container( $woo_cart_item );
             $bundled_item_id = $woo_cart_item['bundled_item_id'];
             $bundled_item = $bundle_container_item['data']->get_bundled_item( $bundled_item_id );
-            if ( $bundled_item->is_shipped_individually() ) {
-                $bundle_porduct_check_with_ship_individual = true;
+            if ( $bundled_item && method_exists( $bundled_item, 'is_shipped_individually' ) ) {
+                if ( $bundled_item->is_shipped_individually() ) {
+                    $bundle_porduct_check_with_ship_individual = true;
+                }
             }
         }
         //Check and process bundle products for rules
@@ -6935,18 +6984,108 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
     }
 
     /**
-     * Get and save plugin setup wizard data
-     * 
-     * @since    4.2.0
-     * 
+     * Store wizard path in a transient when user clicks "Getting Started" (avoids server-side cookie reliance for caching).
+     *
+     * @since 4.2.0
      */
-    public function afrsm_plugin_setup_wizard_submit() {
+    public function afrsm_wizard_set_path() {
         check_ajax_referer( 'afrsfw_wizard_nonce', 'nonce' );
-        $survey_list = filter_input( INPUT_GET, 'survey_list', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        if ( !empty( $survey_list ) && 'Select One' !== $survey_list ) {
-            update_option( 'afrsm_where_hear_about_us', $survey_list );
+        if ( !current_user_can( 'manage_options' ) ) {
+            wp_send_json_error();
         }
-        wp_die();
+        $path = ( isset( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '' );
+        if ( in_array( $path, array('use_template', 'from_scratch'), true ) ) {
+            set_transient( 'afrsm_wizard_path', $path, 300 );
+        }
+        wp_send_json_success();
+    }
+
+    /**
+     * Mark setup wizard as completed (called from Congratulations step actions).
+     *
+     * @since 4.2.0
+     */
+    public function afrsm_wizard_mark_completed() {
+        check_ajax_referer( 'afrsfw_wizard_nonce', 'nonce' );
+        if ( !current_user_can( 'manage_options' ) ) {
+            wp_send_json_error();
+        }
+        update_option( 'afrsm_setup_wizard_completed', 'yes' );
+        update_option( 'afrsm_setup_wizard_notice_closed', 'yes' );
+        wp_send_json_success();
+    }
+
+    /**
+     * Create a shipping rule from the setup wizard (template + settings).
+     *
+     * @since 4.2.0
+     */
+    public function afrsm_wizard_create_rule() {
+        check_ajax_referer( 'afrsm_wizard_create_rule', 'nonce' );
+        if ( !current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( array(
+                'message' => __( 'Permission denied.', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            ) );
+        }
+        $template = filter_input( INPUT_POST, 'template', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $rule_title = filter_input( INPUT_POST, 'rule_title', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $cost = filter_input( INPUT_POST, 'cost', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $free_above = filter_input( INPUT_POST, 'free_above', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $percent = filter_input( INPUT_POST, 'percent', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $country = filter_input( INPUT_POST, 'country', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $delivery = filter_input( INPUT_POST, 'delivery', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $rule_title = ( $rule_title ? $rule_title : __( 'Shipping Rule', 'advanced-flat-rate-shipping-for-woocommerce' ) );
+        $cost = ( is_numeric( $cost ) ? $cost : '20' );
+        $free_above = ( is_numeric( $free_above ) ? $free_above : '299' );
+        $percent = ( is_numeric( $percent ) ? $percent : '9' );
+        $delivery = ( !empty( $delivery ) ? sanitize_text_field( $delivery ) : '2-8 days' );
+        $country = ( $country ? strtoupper( substr( sanitize_text_field( $country ), 0, 2 ) ) : 'US' );
+        $shipping_method_count = self::afrsm_pro_sm_count_method();
+        $fee_post = array(
+            'post_title'  => $rule_title,
+            'post_status' => 'publish',
+            'menu_order'  => $shipping_method_count + 1,
+            'post_type'   => self::afrsm_shipping_post_type,
+        );
+        $method_id = wp_insert_post( $fee_post, true );
+        if ( is_wp_error( $method_id ) || !$method_id ) {
+            wp_send_json_error( array(
+                'message' => __( 'Could not create rule.', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            ) );
+        }
+        update_post_meta( $method_id, 'sm_status', 'on' );
+        $fees_array = array();
+        $country_condition = array(
+            'product_fees_conditions_condition' => 'country',
+            'product_fees_conditions_is'        => 'is_equal_to',
+            'product_fees_conditions_values'    => array($country),
+        );
+        if ( 'flat_us_20' === $template ) {
+            $fees_array[] = $country_condition;
+            update_post_meta( $method_id, 'sm_product_cost', $cost );
+        } elseif ( 'free_above_299' === $template ) {
+            $fees_array[] = $country_condition;
+            $fees_array[] = array(
+                'product_fees_conditions_condition' => 'cart_total',
+                'product_fees_conditions_is'        => 'greater_equal_to',
+                'product_fees_conditions_values'    => $free_above,
+            );
+            update_post_meta( $method_id, 'sm_product_cost', '0' );
+        } elseif ( 'dynamic_9' === $template ) {
+            $fees_array[] = $country_condition;
+            update_post_meta( $method_id, 'sm_product_cost', '[fee percent=' . $percent . ']' );
+        } else {
+            $fees_array[] = $country_condition;
+            update_post_meta( $method_id, 'sm_product_cost', $cost );
+        }
+        if ( !empty( $fees_array ) ) {
+            update_post_meta( $method_id, 'sm_metabox', $fees_array );
+        }
+        update_post_meta( $method_id, 'sm_estimation_delivery', $delivery );
+        wp_send_json_success( array(
+            'message'  => __( 'Rule created.', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'redirect' => admin_url( 'admin.php?page=afrsm-pro-list' ),
+        ) );
     }
 
     /**
@@ -7037,7 +7176,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
     }
 
     /**
-     * Get and save plugin setup wizard data
+     * Set upgrade to pro limit
      * 
      * @since 4.3.0
      * 
@@ -7091,46 +7230,6 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     ?></p>
 					</div>
 					<?php 
-                }
-            }
-        }
-    }
-
-    /**
-     * Send setup wizard data to sendinblue
-     * 
-     * @since    4.2.0
-     * 
-     */
-    public function afrsm_send_wizard_data_after_plugin_activation() {
-        $send_wizard_data = filter_input( INPUT_GET, 'send-wizard-data', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-        if ( isset( $send_wizard_data ) && !empty( $send_wizard_data ) ) {
-            if ( !get_option( 'afrsm_data_submited_in_sendiblue' ) ) {
-                $afrsm_where_hear = get_option( 'afrsm_where_hear_about_us' );
-                $get_user = afrsfw_fs()->get_user();
-                $data_insert_array = array();
-                if ( isset( $get_user ) && !empty( $get_user ) ) {
-                    $data_insert_array = array(
-                        'user_email'              => $get_user->email,
-                        'ACQUISITION_SURVEY_LIST' => $afrsm_where_hear,
-                    );
-                }
-                $feedback_api_url = AFRSM_STORE_URL . 'wp-json/dotstore-sendinblue-data/v2/dotstore-sendinblue-data?' . wp_rand();
-                $query_url = $feedback_api_url . '&' . http_build_query( $data_insert_array );
-                if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
-                    $response = vip_safe_wp_remote_get(
-                        $query_url,
-                        3,
-                        1,
-                        20
-                    );
-                } else {
-                    $response = wp_remote_get( $query_url );
-                    //phpcs:ignore
-                }
-                if ( !is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-                    update_option( 'afrsm_data_submited_in_sendiblue', '1' );
-                    delete_option( 'afrsm_where_hear_about_us' );
                 }
             }
         }
