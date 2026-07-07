@@ -8,6 +8,66 @@
         return str.replace('&#8211;', '–').replace('&gt;', '>').replace('&lt;', '<').replace('&#197;', 'Å');
     }
 
+    function isAdvancePricingRowBlank($row) {
+        var isBlank = true;
+        $row.find('input[type="text"], input[type="number"]').each(function () {
+            if ($.trim(String($(this).val())) !== '') {
+                isBlank = false;
+                return false;
+            }
+        });
+        if (!isBlank) {
+            return false;
+        }
+        $row.find('select').each(function () {
+            var val = $(this).val();
+            if (null !== val && val !== '' && (!Array.isArray(val) || val.length > 0)) {
+                isBlank = false;
+                return false;
+            }
+        });
+        return isBlank;
+    }
+
+    function updatePricingTabIndicators() {
+        $('.adv-pricing-rules .advance_pricing_rule_box').each(function () {
+            var $box = $(this);
+            var ruleId = $box.attr('id');
+            var ruleCount = 0;
+            $box.find('.advance-shipping-method-table tr:not(.heading)').each(function () {
+                if (!isAdvancePricingRowBlank($(this))) {
+                    ruleCount++;
+                }
+            });
+            var $tab = $box.closest('.adv-pricing-rules').find('.pricing_rules_tab li[data-tab="' + ruleId + '"]');
+            $tab.toggleClass('has-config', ruleCount > 0);
+        });
+    }
+
+    function ensureBlankAdvancePricingRow($tabBox) {
+        if (!$('input[name="ap_rule_status"]').prop('checked')) {
+            return;
+        }
+        if ($tabBox.find('.advance-shipping-method-table tr:not(.heading)').length === 0) {
+            $tabBox.find('#ap-add-field').first().trigger('click');
+        }
+    }
+
+    function removeBlankAdvancePricingRows() {
+        $('.adv-pricing-rules .advance-shipping-method-table tr:not(.heading)').each(function () {
+            if (isAdvancePricingRowBlank($(this))) {
+                $(this).remove();
+            }
+        });
+        $('.adv-pricing-rules .advance_pricing_rule_box').each(function () {
+            var $box = $(this);
+            if ($box.find('.advance-shipping-method-table tr:not(.heading)').length === 0) {
+                $box.find('.switch_status_div input[type="checkbox"]').prop('checked', false);
+            }
+        });
+        updatePricingTabIndicators();
+    }
+
     function productFilter() {
         jQuery('.product_fees_conditions_values_product').each(function () {
             $('.product_fees_conditions_values_product').select2({
@@ -321,6 +381,16 @@
             $('.upgrade-to-pro-modal-main .pro-feature-trial-btn').addClass('upgrade-pro-afrsm');
         }
 
+        /** Mark convert_to_pro after successful Freemius purchase */
+        function afrsmMarkConvertToPro() {
+            $.post( coditional_vars.ajaxurl, {
+                action: 'afrsm_convert_to_pro_purchase',
+                security: coditional_vars.convert_to_pro_nonce
+            } ).always( function() {
+               // window.location.reload();
+            } );
+        }
+
         /** Script for Freemius upgrade popup */
         function upgradeToProFreemius( couponCode, isTrackOption ) {
             let handler;
@@ -341,6 +411,7 @@
                 subtitle: 'Ad. Flat Rate Shipping For WooCommerce Pro',
                 licenses: jQuery('input[name="licence"]:checked').val(),
                 purchaseCompleted: function( response ) {
+                    afrsmMarkConvertToPro();
                     if ( isTrackOption ) {
                         var purchaseId = response.purchase.id.toString();
                         var emailId    = coditional_vars.admin_email;
@@ -459,6 +530,7 @@
             numberValidateForAdvanceRules();
             count_product++;
             $('#total_row_' + filedTitle).val(count_product);
+            updatePricingTabIndicators();
         });
 
         // Add advanced rule on status active.
@@ -476,6 +548,7 @@
             
             $(this).addClass('current');
             $('#' + tab_id).addClass('current');
+            ensureBlankAdvancePricingRow($('#' + tab_id));
 
             // Check if .afrsm-main-table .ap_title element exists and is visible
 			var $apTitle = $('.afrsm-main-table .ap_title');
@@ -674,6 +747,7 @@
             var div;
             
             if ($('input[name="ap_rule_status"]').prop('checked') === true) {
+                removeBlankAdvancePricingRows();
                 if ($('.pricing_rules:visible').length !== 0) {
                     //set flag default to n
                     
@@ -1023,6 +1097,7 @@
         //remove tr on delete icon click
         $('body').on('click', '.delete-row', function () {
             $(this).parent().parent().remove();
+            updatePricingTabIndicators();
         });
 
         function insertOptions(parentElement, options) {
@@ -1913,16 +1988,8 @@
         }).change();
         /* Shipping Zone Section */
         
-        /* Active tab in pricing rules in which rules are added */
-        $('.adv-pricing-rules .advance_pricing_rule_box').each(function () {
-            let $this = $(this);
-            let trCount = $this.find('.advance-shipping-method-table tr').length;
-            let ruleId = $this.attr('id');
-            if( trCount > 1 ) {
-                // Find the specific li element that matches the current ruleId
-                $this.parents('.adv-pricing-rules').find('.pricing_rules_tab li[data-tab="' + ruleId + '"]').addClass('active_tab');
-            }
-        });
+        updatePricingTabIndicators();
+        ensureBlankAdvancePricingRow($('.adv-pricing-rules .tab-content.current'));
     });
     jQuery(window).on('load', function () {
         jQuery('.multiselect2').select2({

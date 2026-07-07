@@ -31,6 +31,30 @@
      */
 
     $(document).ready(function () {
+        function afrsmUpdateFreeShippingNoticeFragments(fragments) {
+            if (!fragments || !fragments['#afrsm-free-shipping-notices']) {
+                return;
+            }
+
+            var $noticeWrapper = $('#afrsm-free-shipping-notices');
+            if ($noticeWrapper.length) {
+                $noticeWrapper.replaceWith(fragments['#afrsm-free-shipping-notices']);
+            } else {
+                var $target = $('.woocommerce-cart-form, form.checkout, .woocommerce-checkout').first();
+                if ($target.length) {
+                    $target.before(fragments['#afrsm-free-shipping-notices']);
+                } else {
+                    $('.woocommerce').first().prepend(fragments['#afrsm-free-shipping-notices']);
+                }
+            }
+        }
+
+        $(document.body).on('updated_wc_div updated_checkout', function (event, data) {
+            if (data && data.fragments) {
+                afrsmUpdateFreeShippingNoticeFragments(data.fragments);
+            }
+        });
+
         $('body').on('change', 'input[name="payment_method"]', function () {
             $('body').trigger('update_checkout');
         });

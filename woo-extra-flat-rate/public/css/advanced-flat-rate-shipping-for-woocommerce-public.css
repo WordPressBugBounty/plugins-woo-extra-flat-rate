@@ -289,3 +289,166 @@ body.theme-woodmart\/woodmart #shipping_method li label {line-height: 20px;}
     height: 0;
     width: 0;
 }
+
+/* Free shipping progress bar notice */
+.afrsm-free-shipping-notices,
+.wp-block-woocommerce-cart .afrsm-free-shipping-notices,
+.wp-block-woocommerce-checkout .afrsm-free-shipping-notices {
+    margin-bottom: 1.5em;
+}
+
+.afrsm-free-shipping-notices .afrsm-free-shipping-notice {
+    border-left: 4px solid #1e6f96;
+    padding: 1em 1.2em;
+    margin: 0 0 1em;
+    position: relative;
+    background-color: #2ea2cc;
+    color: #fff;
+    list-style: none outside;
+    width: auto;
+    word-wrap: break-word;
+}
+
+.afrsm-free-shipping-notices .afrsm-free-shipping-notice::before {
+    display: none;
+}
+
+.afrsm-free-shipping-notices .afrsm-free-shipping-notice .button.wc-forward {
+    float: right;
+    margin: 0 0 0 1em;
+    background: transparent;
+    color: #fff;
+    border: 0;
+    box-shadow: none;
+    text-decoration: none;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.afrsm-free-shipping-notices .afrsm-free-shipping-notice .button.wc-forward:hover {
+    color: #fff;
+    background: transparent;
+    text-decoration: underline;
+}
+
+.afrsm-free-shipping-notices .afrsm-free-shipping-notice .wc-info-notice {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: #fff;
+}
+
+.afrsm-free-shipping-notice-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.afrsm-free-shipping-notice-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 50%;
+    background: #fff;
+    color: #2ea2cc;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+}
+.woocommerce-info.afrsm-free-shipping-notice{
+    padding: 1em 2em 1em 1em;
+}
+
+.woocommerce-info.afrsm-free-shipping-notice:before {
+    content: none !important;
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.afrsm-free-shipping-notice-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.afrsm-free-shipping-notice-text {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.afrsm-free-shipping-notice-text strong {
+    color: #fff;
+}
+
+.afrsm-free-shipping-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 400px;
+}
+
+.afrsm-free-shipping-progress-label {
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.afrsm-free-shipping-progress-bar {
+    flex: 1;
+    height: 10px;
+    border: 1px solid #fff;
+    border-radius: 999px;
+    overflow: hidden;
+    background: transparent;
+}
+
+.afrsm-free-shipping-progress-fill {
+    display: block;
+    height: 100%;
+    background: #fff;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+@media screen and (max-width: 767px) {
+    .afrsm-free-shipping-notices .afrsm-free-shipping-notice .button.wc-forward {
+        float: none;
+        display: block;
+        margin: 0 0 10px;
+        text-align: right;
+    }
+
+    .afrsm-free-shipping-progress-wrap {
+        flex-wrap: wrap;
+        max-width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .afrsm-free-shipping-progress-bar {
+        order: 3;
+        width: 100%;
+        flex: 1 1 100%;
+    }
+    .afrsm-free-shipping-progress-min {
+        order: 1;
+        flex: 0 1 auto;
+        text-align: left;
+    }
+
+    .afrsm-free-shipping-progress-max {
+        order: 2;
+        flex: 0 1 auto;
+        text-align: right;
+    }
+
+    .afrsm-free-shipping-progress-bar {
+        order: 3;
+        flex: 0 0 100%;
+        margin-top: 10px;
+    }
+}

@@ -176,6 +176,10 @@ if ( !class_exists( 'Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro' ) ) {
             add_action( 'woocommerce_shipping_init', array($this, 'afrsm_pro_init_shipping_method') );
             // Register shipping method
             add_filter( 'woocommerce_shipping_methods', array($this, 'afrsm_pro_register_shipping_method_class') );
+            if ( afrsfw_fs()->is__premium_only() && afrsfw_fs()->can_use_premium_code() ) {
+                require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-afrsm-store-api.php';
+                AFRSM_Store_API::init();
+            }
         }
 
         /**
@@ -320,10 +324,17 @@ if ( !class_exists( 'Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro' ) ) {
                 $this->loader->add_action(
                     'admin_init',
                     $plugin_admin,
+                    'afrsm_handle_convert_to_pro_dismiss',
+                    5
+                );
+                $this->loader->add_action(
+                    'admin_init',
+                    $plugin_admin,
                     'afrsm_set_upgrade_to_pro_limit',
                     10
                 );
             }
+            $this->loader->add_action( 'wp_ajax_afrsm_convert_to_pro_purchase', $plugin_admin, 'afrsm_convert_to_pro_purchase' );
             $this->loader->add_action( 'wp_ajax_afrsm_sm_new_sort_order', $plugin_admin, 'afrsm_sm_new_sort_order_callback' );
         }
 

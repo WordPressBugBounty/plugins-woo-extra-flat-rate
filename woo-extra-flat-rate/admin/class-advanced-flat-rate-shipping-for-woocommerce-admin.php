@@ -295,6 +295,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             'tab-14' => esc_html__( 'Cost on Shipping Class Weight 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
             'tab-15' => esc_html__( 'Cost on Shipping Class Subtotal 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
             'tab-16' => esc_html__( 'Cost on Product Attribute 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
+            'tab-17' => esc_html__( 'Cost on Cart Line Items 🔒', 'advanced-flat-rate-shipping-for-woocommerce' ),
         );
         return apply_filters( 'afrsm_advanced_tab_list_ft', $tab_array );
     }
@@ -475,6 +476,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                 'genaral_setting_ajax_nonce'     => wp_create_nonce( 'genaral_setting_nonce' ),
                 'select_list_ajax_nonce'         => wp_create_nonce( 'select_list_nonce' ),
                 'afrsm_ajax_nonce'               => wp_create_nonce( 'afrsm_nonce' ),
+                'convert_to_pro_nonce'           => wp_create_nonce( 'afrsm_convert_to_pro_purchase' ),
                 'dpb_api_url'                    => AFRSM_STORE_URL,
                 'country'                        => esc_html__( 'Country', 'advanced-flat-rate-shipping-for-woocommerce' ),
                 'state'                          => esc_html__( 'State', 'advanced-flat-rate-shipping-for-woocommerce' ),
@@ -5547,6 +5549,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     $sm_free_exclude_tax_from_amount = get_post_meta( $request_post_id, 'sm_free_exclude_tax_from_amount', true );
                     $sm_free_shipping_cost_before_discount = get_post_meta( $request_post_id, 'sm_free_shipping_cost_before_discount', true );
                     $sm_free_shipping_cost_left_notice = get_post_meta( $request_post_id, 'sm_free_shipping_cost_left_notice', true );
+                    $sm_free_shipping_cost_left_progress_bar = get_post_meta( $request_post_id, 'sm_free_shipping_cost_left_progress_bar', true );
                     $sm_free_shipping_cost_left_notice_msg = get_post_meta( $request_post_id, 'sm_free_shipping_cost_left_notice_msg', true );
                     $sm_free_shipping_coupan_cost = get_post_meta( $request_post_id, 'sm_free_shipping_coupan_cost', true );
                     $sm_free_shipping_label = get_post_meta( $request_post_id, 'sm_free_shipping_label', true );
@@ -5566,8 +5569,11 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     $sm_custom_qty_base_per_each = get_post_meta( $request_post_id, 'sm_custom_qty_base_per_each', true );
                     $sm_custom_qty_base_over = get_post_meta( $request_post_id, 'sm_custom_qty_base_over', true );
                     $sm_free_shipping_based_on_product = get_post_meta( $request_post_id, 'sm_free_shipping_based_on_product', true );
+                    $sm_free_shipping_item_quantity = get_post_meta( $request_post_id, 'sm_free_shipping_item_quantity', true );
                     $sm_free_shipping_exclude_product = get_post_meta( $request_post_id, 'sm_free_shipping_exclude_product', true );
                     $is_free_shipping_exclude_prod = get_post_meta( $request_post_id, 'is_free_shipping_exclude_prod', true );
+                    $sm_free_shipping_exclude_category = get_post_meta( $request_post_id, 'sm_free_shipping_exclude_category', true );
+                    $is_free_shipping_exclude_category = get_post_meta( $request_post_id, 'is_free_shipping_exclude_category', true );
                     $sm_metabox = get_post_meta( $request_post_id, 'sm_metabox', true );
                     $sm_extra_cost = get_post_meta( $request_post_id, 'sm_extra_cost', true );
                     $sm_extra_cost_calc_type = get_post_meta( $request_post_id, 'sm_extra_cost_calculation_type', true );
@@ -5592,6 +5598,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     $cost_on_tag_subtotal_status = get_post_meta( $request_post_id, 'cost_on_tag_subtotal_status', true );
                     $cost_on_tag_weight_status = get_post_meta( $request_post_id, 'cost_on_tag_weight_status', true );
                     $cost_on_total_cart_qty_status = get_post_meta( $request_post_id, 'cost_on_total_cart_qty_status', true );
+                    $cost_on_cart_line_items_status = get_post_meta( $request_post_id, 'cost_on_cart_line_items_status', true );
                     $cost_on_total_cart_weight_status = get_post_meta( $request_post_id, 'cost_on_total_cart_weight_status', true );
                     $cost_on_total_cart_subtotal_status = get_post_meta( $request_post_id, 'cost_on_total_cart_subtotal_status', true );
                     $cost_on_shipping_class_status = get_post_meta( $request_post_id, 'cost_on_shipping_class_status', true );
@@ -5608,6 +5615,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                     $sm_metabox_ap_tag_subtotal = get_post_meta( $request_post_id, 'sm_metabox_ap_tag_subtotal', true );
                     $sm_metabox_ap_tag_weight = get_post_meta( $request_post_id, 'sm_metabox_ap_tag_weight', true );
                     $sm_metabox_ap_total_cart_qty = get_post_meta( $request_post_id, 'sm_metabox_ap_total_cart_qty', true );
+                    $sm_metabox_ap_cart_line_items = get_post_meta( $request_post_id, 'sm_metabox_ap_cart_line_items', true );
                     $sm_metabox_ap_total_cart_weight = get_post_meta( $request_post_id, 'sm_metabox_ap_total_cart_weight', true );
                     $sm_metabox_ap_total_cart_subtotal = get_post_meta( $request_post_id, 'sm_metabox_ap_total_cart_subtotal', true );
                     $sm_metabox_ap_shipping_class = get_post_meta( $request_post_id, 'sm_metabox_ap_shipping_class', true );
@@ -5761,6 +5769,18 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             );
                         }
                     }
+                    $sm_metabox_ap_cart_line_items_customize = array();
+                    if ( !empty( $sm_metabox_ap_cart_line_items ) ) {
+                        foreach ( $sm_metabox_ap_cart_line_items as $key => $val ) {
+                            $ap_fees_cart_line_items_values = $this->afrsm_pro_fetch_slug( $val['ap_fees_cart_line_items'], '' );
+                            $sm_metabox_ap_cart_line_items_customize[$key] = array(
+                                'ap_fees_cart_line_items'            => $ap_fees_cart_line_items_values,
+                                'ap_fees_ap_cart_line_items_min_qty' => $val['ap_fees_ap_cart_line_items_min_qty'],
+                                'ap_fees_ap_cart_line_items_max_qty' => $val['ap_fees_ap_cart_line_items_max_qty'],
+                                'ap_fees_ap_price_cart_line_items'   => $val['ap_fees_ap_price_cart_line_items'],
+                            );
+                        }
+                    }
                     $sm_metabox_ap_total_cart_weight_customize = array();
                     if ( !empty( $sm_metabox_ap_total_cart_weight ) ) {
                         foreach ( $sm_metabox_ap_total_cart_weight as $key => $val ) {
@@ -5834,83 +5854,89 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                         }
                     }
                     $fees_data[] = array(
-                        'sm_cost'                                => $sm_cost,
-                        'fee_settings_unique_shipping_title'     => $fee_settings_unique_shipping_title,
-                        'sm_title'                               => $sm_title,
-                        'sm_free_shipping_based_on'              => $sm_free_shipping_based_on,
-                        'is_allow_free_shipping'                 => $is_allow_free_shipping,
-                        'sm_free_shipping_cost'                  => $sm_free_shipping_cost,
-                        'sm_free_exclude_tax_from_amount'        => $sm_free_exclude_tax_from_amount,
-                        'sm_free_shipping_cost_before_discount'  => $sm_free_shipping_cost_before_discount,
-                        'sm_free_shipping_cost_left_notice'      => $sm_free_shipping_cost_left_notice,
-                        'sm_free_shipping_cost_left_notice_msg'  => $sm_free_shipping_cost_left_notice_msg,
-                        'sm_free_shipping_coupan_cost'           => $sm_free_shipping_coupan_cost,
-                        'sm_free_shipping_label'                 => $sm_free_shipping_label,
-                        'sm_tooltip_type'                        => $sm_tooltip_type,
-                        'sm_tooltip_desc'                        => $sm_tooltip_desc,
-                        'sm_select_log_in_user'                  => $sm_select_log_in_user,
-                        'sm_select_first_order_for_user'         => $sm_select_first_order_for_user,
-                        'sm_select_selected_shipping'            => $sm_select_selected_shipping,
-                        'sm_start_date'                          => $sm_start_date,
-                        'sm_end_date'                            => $sm_end_date,
-                        'sm_start_time'                          => $sm_time_from,
-                        'sm_end_time'                            => $sm_time_to,
-                        'sm_select_day_of_week'                  => $sm_select_day_of_week,
-                        'sm_estimation_delivery'                 => $sm_estimation_delivery,
-                        'sm_select_taxable'                      => $sm_is_taxable,
-                        'sm_select_shipping_provider'            => $sm_select_shipping_provider,
-                        'is_allow_custom_weight_base'            => $is_allow_custom_weight_base,
-                        'sm_custom_weight_base_cost'             => $sm_custom_weight_base_cost,
-                        'sm_custom_weight_base_per_each'         => $sm_custom_weight_base_per_each,
-                        'sm_custom_weight_base_over'             => $sm_custom_weight_base_over,
-                        'is_allow_custom_qty_base'               => $is_allow_custom_qty_base,
-                        'sm_custom_qty_base_cost'                => $sm_custom_qty_base_cost,
-                        'sm_custom_qty_base_per_each'            => $sm_custom_qty_base_per_each,
-                        'sm_custom_qty_base_over'                => $sm_custom_qty_base_over,
-                        'sm_free_shipping_based_on_product'      => $sm_free_shipping_based_on_product,
-                        'sm_free_shipping_exclude_product'       => $sm_free_shipping_exclude_product,
-                        'is_free_shipping_exclude_prod'          => $is_free_shipping_exclude_prod,
-                        'status'                                 => $sm_status,
-                        'product_fees_metabox'                   => $sm_metabox_customize,
-                        'sm_extra_cost'                          => $shipping_class,
-                        'sm_extra_cost_calc_type'                => $sm_extra_cost_calc_type,
-                        'sm_fee_chk_qty_price'                   => $getFeesPerQtyFlag,
-                        'sm_fee_per_qty'                         => $getFeesPerQty,
-                        'sm_extra_product_cost'                  => $extraProductCost,
-                        'ap_rule_status'                         => $ap_rule_status,
-                        'cost_on_product_status'                 => $cost_on_product_status,
-                        'cost_on_product_weight_status'          => $cost_on_product_weight_status,
-                        'cost_on_product_subtotal_status'        => $cost_on_product_subtotal_status,
-                        'cost_on_category_status'                => $cost_on_category_status,
-                        'cost_on_category_weight_status'         => $cost_on_category_weight_status,
-                        'cost_on_category_subtotal_status'       => $cost_on_category_subtotal_status,
-                        'cost_on_tag_status'                     => $cost_on_tag_status,
-                        'cost_on_tag_subtotal_status'            => $cost_on_tag_subtotal_status,
-                        'cost_on_tag_weight_status'              => $cost_on_tag_weight_status,
-                        'cost_on_total_cart_qty_status'          => $cost_on_total_cart_qty_status,
-                        'cost_on_total_cart_weight_status'       => $cost_on_total_cart_weight_status,
-                        'cost_on_total_cart_subtotal_status'     => $cost_on_total_cart_subtotal_status,
-                        'cost_on_shipping_class_status'          => $cost_on_shipping_class_status,
-                        'cost_on_shipping_class_weight_status'   => $cost_on_shipping_class_weight_status,
-                        'cost_on_shipping_class_subtotal_status' => $cost_on_shipping_class_subtotal_status,
-                        'cost_on_product_attribute_status'       => $cost_on_product_attribute_status,
-                        'sm_metabox_ap_product'                  => $sm_metabox_ap_product_customize,
-                        'sm_metabox_ap_product_subtotal'         => $sm_metabox_ap_product_subtotal_customize,
-                        'sm_metabox_ap_product_weight'           => $sm_metabox_ap_product_weight_customize,
-                        'sm_metabox_ap_category'                 => $sm_metabox_ap_category_customize,
-                        'sm_metabox_ap_category_subtotal'        => $sm_metabox_ap_category_subtotal_customize,
-                        'sm_metabox_ap_category_weight'          => $sm_metabox_ap_category_weight_customize,
-                        'sm_metabox_ap_tag'                      => $sm_metabox_ap_tag_customize,
-                        'sm_metabox_ap_tag_subtotal'             => $sm_metabox_ap_tag_subtotal_customize,
-                        'sm_metabox_ap_tag_weight'               => $sm_metabox_ap_tag_weight_customize,
-                        'sm_metabox_ap_total_cart_qty'           => $sm_metabox_ap_total_cart_qty_customize,
-                        'sm_metabox_ap_total_cart_weight'        => $sm_metabox_ap_total_cart_weight_customize,
-                        'sm_metabox_ap_total_cart_subtotal'      => $sm_metabox_ap_total_cart_subtotal_customize,
-                        'sm_metabox_ap_shipping_class'           => $sm_metabox_ap_shipping_class_customize,
-                        'sm_metabox_ap_shipping_class_weight'    => $sm_metabox_ap_shipping_class_weight_customize,
-                        'sm_metabox_ap_shipping_class_subtotal'  => $sm_metabox_ap_shipping_class_subtotal_customize,
-                        'sm_metabox_ap_product_attribute'        => $sm_metabox_ap_product_attribute_customize,
-                        'cost_rule_match'                        => $cost_rule_match,
+                        'sm_cost'                                 => $sm_cost,
+                        'fee_settings_unique_shipping_title'      => $fee_settings_unique_shipping_title,
+                        'sm_title'                                => $sm_title,
+                        'sm_free_shipping_based_on'               => $sm_free_shipping_based_on,
+                        'is_allow_free_shipping'                  => $is_allow_free_shipping,
+                        'sm_free_shipping_cost'                   => $sm_free_shipping_cost,
+                        'sm_free_exclude_tax_from_amount'         => $sm_free_exclude_tax_from_amount,
+                        'sm_free_shipping_cost_before_discount'   => $sm_free_shipping_cost_before_discount,
+                        'sm_free_shipping_cost_left_notice'       => $sm_free_shipping_cost_left_notice,
+                        'sm_free_shipping_cost_left_progress_bar' => $sm_free_shipping_cost_left_progress_bar,
+                        'sm_free_shipping_cost_left_notice_msg'   => $sm_free_shipping_cost_left_notice_msg,
+                        'sm_free_shipping_coupan_cost'            => $sm_free_shipping_coupan_cost,
+                        'sm_free_shipping_label'                  => $sm_free_shipping_label,
+                        'sm_tooltip_type'                         => $sm_tooltip_type,
+                        'sm_tooltip_desc'                         => $sm_tooltip_desc,
+                        'sm_select_log_in_user'                   => $sm_select_log_in_user,
+                        'sm_select_first_order_for_user'          => $sm_select_first_order_for_user,
+                        'sm_select_selected_shipping'             => $sm_select_selected_shipping,
+                        'sm_start_date'                           => $sm_start_date,
+                        'sm_end_date'                             => $sm_end_date,
+                        'sm_start_time'                           => $sm_time_from,
+                        'sm_end_time'                             => $sm_time_to,
+                        'sm_select_day_of_week'                   => $sm_select_day_of_week,
+                        'sm_estimation_delivery'                  => $sm_estimation_delivery,
+                        'sm_select_taxable'                       => $sm_is_taxable,
+                        'sm_select_shipping_provider'             => $sm_select_shipping_provider,
+                        'is_allow_custom_weight_base'             => $is_allow_custom_weight_base,
+                        'sm_custom_weight_base_cost'              => $sm_custom_weight_base_cost,
+                        'sm_custom_weight_base_per_each'          => $sm_custom_weight_base_per_each,
+                        'sm_custom_weight_base_over'              => $sm_custom_weight_base_over,
+                        'is_allow_custom_qty_base'                => $is_allow_custom_qty_base,
+                        'sm_custom_qty_base_cost'                 => $sm_custom_qty_base_cost,
+                        'sm_custom_qty_base_per_each'             => $sm_custom_qty_base_per_each,
+                        'sm_custom_qty_base_over'                 => $sm_custom_qty_base_over,
+                        'sm_free_shipping_based_on_product'       => $sm_free_shipping_based_on_product,
+                        'sm_free_shipping_item_quantity'          => $sm_free_shipping_item_quantity,
+                        'sm_free_shipping_exclude_product'        => $sm_free_shipping_exclude_product,
+                        'is_free_shipping_exclude_prod'           => $is_free_shipping_exclude_prod,
+                        'sm_free_shipping_exclude_category'       => $sm_free_shipping_exclude_category,
+                        'is_free_shipping_exclude_category'       => $is_free_shipping_exclude_category,
+                        'status'                                  => $sm_status,
+                        'product_fees_metabox'                    => $sm_metabox_customize,
+                        'sm_extra_cost'                           => $shipping_class,
+                        'sm_extra_cost_calc_type'                 => $sm_extra_cost_calc_type,
+                        'sm_fee_chk_qty_price'                    => $getFeesPerQtyFlag,
+                        'sm_fee_per_qty'                          => $getFeesPerQty,
+                        'sm_extra_product_cost'                   => $extraProductCost,
+                        'ap_rule_status'                          => $ap_rule_status,
+                        'cost_on_product_status'                  => $cost_on_product_status,
+                        'cost_on_product_weight_status'           => $cost_on_product_weight_status,
+                        'cost_on_product_subtotal_status'         => $cost_on_product_subtotal_status,
+                        'cost_on_category_status'                 => $cost_on_category_status,
+                        'cost_on_category_weight_status'          => $cost_on_category_weight_status,
+                        'cost_on_category_subtotal_status'        => $cost_on_category_subtotal_status,
+                        'cost_on_tag_status'                      => $cost_on_tag_status,
+                        'cost_on_tag_subtotal_status'             => $cost_on_tag_subtotal_status,
+                        'cost_on_tag_weight_status'               => $cost_on_tag_weight_status,
+                        'cost_on_total_cart_qty_status'           => $cost_on_total_cart_qty_status,
+                        'cost_on_cart_line_items_status'          => $cost_on_cart_line_items_status,
+                        'cost_on_total_cart_weight_status'        => $cost_on_total_cart_weight_status,
+                        'cost_on_total_cart_subtotal_status'      => $cost_on_total_cart_subtotal_status,
+                        'cost_on_shipping_class_status'           => $cost_on_shipping_class_status,
+                        'cost_on_shipping_class_weight_status'    => $cost_on_shipping_class_weight_status,
+                        'cost_on_shipping_class_subtotal_status'  => $cost_on_shipping_class_subtotal_status,
+                        'cost_on_product_attribute_status'        => $cost_on_product_attribute_status,
+                        'sm_metabox_ap_product'                   => $sm_metabox_ap_product_customize,
+                        'sm_metabox_ap_product_subtotal'          => $sm_metabox_ap_product_subtotal_customize,
+                        'sm_metabox_ap_product_weight'            => $sm_metabox_ap_product_weight_customize,
+                        'sm_metabox_ap_category'                  => $sm_metabox_ap_category_customize,
+                        'sm_metabox_ap_category_subtotal'         => $sm_metabox_ap_category_subtotal_customize,
+                        'sm_metabox_ap_category_weight'           => $sm_metabox_ap_category_weight_customize,
+                        'sm_metabox_ap_tag'                       => $sm_metabox_ap_tag_customize,
+                        'sm_metabox_ap_tag_subtotal'              => $sm_metabox_ap_tag_subtotal_customize,
+                        'sm_metabox_ap_tag_weight'                => $sm_metabox_ap_tag_weight_customize,
+                        'sm_metabox_ap_total_cart_qty'            => $sm_metabox_ap_total_cart_qty_customize,
+                        'sm_metabox_ap_cart_line_items'           => $sm_metabox_ap_cart_line_items_customize,
+                        'sm_metabox_ap_total_cart_weight'         => $sm_metabox_ap_total_cart_weight_customize,
+                        'sm_metabox_ap_total_cart_subtotal'       => $sm_metabox_ap_total_cart_subtotal_customize,
+                        'sm_metabox_ap_shipping_class'            => $sm_metabox_ap_shipping_class_customize,
+                        'sm_metabox_ap_shipping_class_weight'     => $sm_metabox_ap_shipping_class_weight_customize,
+                        'sm_metabox_ap_shipping_class_subtotal'   => $sm_metabox_ap_shipping_class_subtotal_customize,
+                        'sm_metabox_ap_product_attribute'         => $sm_metabox_ap_product_attribute_customize,
+                        'cost_rule_match'                         => $cost_rule_match,
                     );
                 }
             }
@@ -6234,6 +6260,18 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                                     );
                                 }
                             }
+                            $sm_metabox_ap_cart_line_items_customize = array();
+                            if ( !empty( $fees_val['sm_metabox_ap_cart_line_items'] ) ) {
+                                foreach ( $fees_val['sm_metabox_ap_cart_line_items'] as $key => $val ) {
+                                    $ap_fees_cart_line_items_values = $this->afrsm_pro_fetch_id( $val['ap_fees_cart_line_items'], '' );
+                                    $sm_metabox_ap_cart_line_items_customize[$key] = array(
+                                        'ap_fees_cart_line_items'            => $ap_fees_cart_line_items_values,
+                                        'ap_fees_ap_cart_line_items_min_qty' => $val['ap_fees_ap_cart_line_items_min_qty'],
+                                        'ap_fees_ap_cart_line_items_max_qty' => $val['ap_fees_ap_cart_line_items_max_qty'],
+                                        'ap_fees_ap_price_cart_line_items'   => $val['ap_fees_ap_price_cart_line_items'],
+                                    );
+                                }
+                            }
                             $sm_metabox_ap_total_cart_weight_customize = array();
                             if ( !empty( $fees_val['sm_metabox_ap_total_cart_weight'] ) ) {
                                 foreach ( $fees_val['sm_metabox_ap_total_cart_weight'] as $key => $val ) {
@@ -6314,6 +6352,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             update_post_meta( $get_post_id, 'sm_free_exclude_tax_from_amount', $fees_val['sm_free_exclude_tax_from_amount'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost_before_discount', $fees_val['sm_free_shipping_cost_before_discount'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice', $fees_val['sm_free_shipping_cost_left_notice'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_progress_bar', ( isset( $fees_val['sm_free_shipping_cost_left_progress_bar'] ) ? $fees_val['sm_free_shipping_cost_left_progress_bar'] : '' ) );
                             update_post_meta( $get_post_id, 'sm_free_shipping_cost_left_notice_msg', $fees_val['sm_free_shipping_cost_left_notice_msg'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_coupan_cost', $fees_val['sm_free_shipping_coupan_cost'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_label', $fees_val['sm_free_shipping_label'] );
@@ -6339,8 +6378,11 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             update_post_meta( $get_post_id, 'sm_custom_qty_base_per_each', $fees_val['sm_custom_qty_base_per_each'] );
                             update_post_meta( $get_post_id, 'sm_custom_qty_base_over', $fees_val['sm_custom_qty_base_over'] );
                             update_post_meta( $get_post_id, 'sm_free_shipping_based_on_product', $fees_val['sm_free_shipping_based_on_product'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_item_quantity', ( isset( $fees_val['sm_free_shipping_item_quantity'] ) ? absint( $fees_val['sm_free_shipping_item_quantity'] ) : '' ) );
                             update_post_meta( $get_post_id, 'sm_free_shipping_exclude_product', $fees_val['sm_free_shipping_exclude_product'] );
                             update_post_meta( $get_post_id, 'is_free_shipping_exclude_prod', $fees_val['is_free_shipping_exclude_prod'] );
+                            update_post_meta( $get_post_id, 'sm_free_shipping_exclude_category', $fees_val['sm_free_shipping_exclude_category'] );
+                            update_post_meta( $get_post_id, 'is_free_shipping_exclude_category', $fees_val['is_free_shipping_exclude_category'] );
                             update_post_meta( $get_post_id, 'sm_metabox', $sm_metabox_customize );
                             update_post_meta( $get_post_id, 'sm_extra_cost', $shipping_class );
                             update_post_meta( $get_post_id, 'sm_extra_cost_calculation_type', $fees_val['sm_extra_cost_calc_type'] );
@@ -6358,6 +6400,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             update_post_meta( $get_post_id, 'cost_on_tag_subtotal_status', $fees_val['cost_on_tag_subtotal_status'] );
                             update_post_meta( $get_post_id, 'cost_on_tag_weight_status', $fees_val['cost_on_tag_weight_status'] );
                             update_post_meta( $get_post_id, 'cost_on_total_cart_qty_status', $fees_val['cost_on_total_cart_qty_status'] );
+                            update_post_meta( $get_post_id, 'cost_on_cart_line_items_status', $fees_val['cost_on_cart_line_items_status'] );
                             update_post_meta( $get_post_id, 'cost_on_total_cart_weight_status', $fees_val['cost_on_total_cart_weight_status'] );
                             update_post_meta( $get_post_id, 'cost_on_shipping_class_status', $fees_val['cost_on_shipping_class_status'] );
                             update_post_meta( $get_post_id, 'cost_on_total_cart_subtotal_status', $fees_val['cost_on_total_cart_subtotal_status'] );
@@ -6374,6 +6417,7 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
                             update_post_meta( $get_post_id, 'sm_metabox_ap_tag_subtotal', $sm_metabox_ap_tag_subtotal_customize );
                             update_post_meta( $get_post_id, 'sm_metabox_ap_tag_weight', $sm_metabox_ap_tag_weight_customize );
                             update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_qty', $sm_metabox_ap_total_cart_qty_customize );
+                            update_post_meta( $get_post_id, 'sm_metabox_ap_cart_line_items', $sm_metabox_ap_cart_line_items_customize );
                             update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_weight', $sm_metabox_ap_total_cart_weight_customize );
                             update_post_meta( $get_post_id, 'sm_metabox_ap_total_cart_subtotal', $sm_metabox_ap_total_cart_subtotal_customize );
                             update_post_meta( $get_post_id, 'sm_metabox_ap_shipping_class', $sm_metabox_ap_shipping_class_customize );
@@ -7173,6 +7217,37 @@ class Advanced_Flat_Rate_Shipping_For_WooCommerce_Pro_Admin {
             }
         }
         return $link;
+    }
+
+    /**
+     * Set convert_to_pro flag after Freemius purchase.
+     *
+     * @since 4.5.2
+     */
+    public function afrsm_convert_to_pro_purchase() {
+        check_ajax_referer( 'afrsm_convert_to_pro_purchase', 'security' );
+        if ( !current_user_can( 'manage_options' ) ) {
+            wp_send_json_error();
+        }
+        update_option( 'convert_to_pro', true );
+        wp_send_json_success();
+    }
+
+    /**
+     * Dismiss convert to pro notice.
+     *
+     * @since 4.5.2
+     */
+    public function afrsm_handle_convert_to_pro_dismiss() {
+        $dismiss = filter_input( INPUT_GET, 'afrsm-dismiss-convert-to-pro', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        $nonce = filter_input( INPUT_GET, '_afrsm_convert_to_pro_nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+        if ( '1' !== sanitize_text_field( $dismiss ) ) {
+            return;
+        }
+        if ( !wp_verify_nonce( sanitize_text_field( $nonce ), 'afrsm_convert_to_pro_dismiss' ) ) {
+            return;
+        }
+        update_option( 'convert_to_pro', false );
     }
 
     /**

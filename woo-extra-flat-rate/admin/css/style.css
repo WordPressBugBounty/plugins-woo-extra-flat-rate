@@ -1473,7 +1473,7 @@ ul.tabs li.current {
     padding-top: 10px;
     padding-bottom: 10px;
     background: #fff;
-    padding: 10px 0 10px 20px;
+    padding: 13px 0 13px 20px;
 }
 #dotsstoremain .adv-pricing-rules .pricing_rules table.advance-shipping-method-table i.fa.fa-trash{
 	font-size: 20px;
@@ -1785,7 +1785,8 @@ table.table-outer.form-table.shipping-methods-listing.tablesorter tr th.th_chk .
     min-width: 110px;
 }
 .afrsm-main-table .shipping-method-table tbody tr td .sm_free_shipping_based_on_product+span,
-.afrsm-main-table .shipping-method-table tbody tr td .sm_free_shipping_exclude_product+span
+.afrsm-main-table .shipping-method-table tbody tr td .sm_free_shipping_exclude_product+span,
+.afrsm-main-table .shipping-method-table tbody tr td .sm_free_shipping_exclude_category+span
 {
 	width: 45%!important;
     min-width: 320px;
@@ -1794,7 +1795,9 @@ table.table-outer.form-table.shipping-methods-listing.tablesorter tr th.th_chk .
     display: inline-block;
 }
 .afrsm_exclude_product,
-.afrsm_exclude_product_from_free {
+.afrsm_exclude_product_from_free,
+.afrsm_exclude_category,
+.afrsm_exclude_category_from_free {
     margin-top: 10px;
 }   
 .afrsm-main-table table th#taxable, .afrsm-main-table table th#status{

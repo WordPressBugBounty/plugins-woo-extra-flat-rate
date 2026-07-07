@@ -304,6 +304,8 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                         $free_shipping_based_on_product = get_post_meta( $shipping_method_id_val, 'sm_free_shipping_based_on_product', true );
                         $sm_free_shipping_exclude_product = get_post_meta( $shipping_method_id_val, 'sm_free_shipping_exclude_product', true );
                         $is_free_shipping_exclude_prod = get_post_meta( $shipping_method_id_val, 'is_free_shipping_exclude_prod', true );
+                        $sm_free_shipping_exclude_category = get_post_meta( $shipping_method_id_val, 'sm_free_shipping_exclude_category', true );
+                        $is_free_shipping_exclude_category = get_post_meta( $shipping_method_id_val, 'is_free_shipping_exclude_category', true );
                         //This subtoal price is always comes with tax calculated (price with tax)
                         $total_cart_value = floatval( WC()->cart->subtotal );
                         $total_discount_value = $admin_object->afrsm_pro_remove_currency_symbol( WC()->cart->get_total_discount() );
@@ -319,6 +321,12 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
                                 $exlude_product_subtotal = $this->afrsm_cart_exclude_product_subtotal( $sm_free_shipping_exclude_product );
                                 if ( $exlude_product_subtotal <= $final_total_cart_value ) {
                                     $final_total_cart_value = $final_total_cart_value - $exlude_product_subtotal;
+                                }
+                            }
+                            if ( "on" === $is_free_shipping_exclude_category ) {
+                                $exclude_category_subtotal = $this->afrsm_cart_exclude_category_subtotal( $sm_free_shipping_exclude_category );
+                                if ( $exclude_category_subtotal <= $final_total_cart_value ) {
+                                    $final_total_cart_value = $final_total_cart_value - $exclude_category_subtotal;
                                 }
                             }
                             if ( "" !== $free_shipping_costs && $final_total_cart_value >= $free_shipping_costs ) {
@@ -1005,6 +1013,33 @@ class AFRSM_Shipping_Method extends WC_Shipping_Method {
             }
         }
         return $exlude_product_subtotal;
+    }
+
+    /**
+     * Exclude category subtotal from free shipping calculation
+     *
+     * @param array $exclude_categories
+     *
+     * @return float $exclude_category_subtotal
+     * @since  4.1.3
+     *
+     */
+    public function afrsm_cart_exclude_category_subtotal( $exclude_categories ) {
+        $exclude_category_subtotal = 0;
+        $exclude_categories = ( is_array( $exclude_categories ) ? array_map( 'intval', $exclude_categories ) : [] );
+        if ( !empty( $exclude_categories ) ) {
+            foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+                $cart_product_categories = wp_get_post_terms( $cart_item['product_id'], 'product_cat', array(
+                    'fields' => 'ids',
+                ) );
+                if ( !empty( $cart_product_categories ) && !empty( array_intersect( $cart_product_categories, $exclude_categories ) ) ) {
+                    if ( !empty( $cart_item['line_subtotal'] ) ) {
+                        $exclude_category_subtotal += floatval( $cart_item['quantity'] ) * floatval( wc_get_price_including_tax( $cart_item['data'] ) );
+                    }
+                }
+            }
+        }
+        return $exclude_category_subtotal;
     }
 
 }

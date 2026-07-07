@@ -24,6 +24,7 @@
     <custom-field action="copy">cost_on_product_status</custom-field>
     <custom-field action="copy">cost_on_category_status</custom-field>
     <custom-field action="copy">cost_on_total_cart_qty_status</custom-field>
+    <custom-field action="copy">cost_on_cart_line_items_status</custom-field>
     <custom-field action="copy">cost_on_product_weight_status</custom-field>
     <custom-field action="copy">cost_on_category_weight_status</custom-field>
     <custom-field action="copy">cost_on_total_cart_weight_status</custom-field>
@@ -34,6 +35,7 @@
     <custom-field action="copy">sm_metabox_ap_product</custom-field>
     <custom-field action="copy">sm_metabox_ap_category</custom-field>
     <custom-field action="copy">sm_metabox_ap_total_cart_qty</custom-field>
+    <custom-field action="copy">sm_metabox_ap_cart_line_items</custom-field>
     <custom-field action="copy">sm_metabox_ap_product_weight</custom-field>
     <custom-field action="copy">sm_metabox_ap_category_weight</custom-field>
     <custom-field action="copy">sm_metabox_ap_total_cart_weight</custom-field>

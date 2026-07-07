@@ -109,6 +109,43 @@ esc_html_e( 'Getting Started', 'advanced-flat-rate-shipping-for-woocommerce' );
             </header>
 
             <?php 
+$convert_to_pro = filter_var( get_option( 'convert_to_pro', false ), FILTER_VALIDATE_BOOLEAN );
+if ( !afrsfw_fs()->is__premium_only() && true === $convert_to_pro ) {
+    $convert_to_pro_doc_url = 'https://docs.thedotstore.com/article/62-how-to-installing-and-activating-an-thedotstore-plugin';
+    $convert_to_pro_dismiss_url = wp_nonce_url( add_query_arg( 'afrsm-dismiss-convert-to-pro', '1' ), 'afrsm_convert_to_pro_dismiss', '_afrsm_convert_to_pro_nonce' );
+    ?>
+                <div class="notice notice-warning is-dismissible afrsm-convert-to-pro-notice">
+                    <a class="notice-dismiss" href="<?php 
+    echo esc_url( $convert_to_pro_dismiss_url );
+    ?>"></a>
+                    <p><strong><?php 
+    esc_html_e( 'Thank you for purchasing the plugin!', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?></strong></p>
+                    <p><?php 
+    esc_html_e( 'You are currently using the free version of Flat Rate Shipping.', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?></p>
+                    <p>
+                        <?php 
+    echo wp_kses( __( 'To use pro features, please <strong>remove this free plugin</strong> and <strong>install and activate the premium version</strong>. Don\'t worry — this will not remove any of your shipping rules or settings. Once you activate the premium version, all your settings will be automatically restored.', 'advanced-flat-rate-shipping-for-woocommerce' ), array(
+        'strong' => array(),
+    ) );
+    ?>
+                    </p>
+                    <p>
+                        <a href="<?php 
+    echo esc_url( $convert_to_pro_doc_url );
+    ?>" class="button button-primary" target="_blank" rel="noopener noreferrer">
+                            <?php 
+    esc_html_e( 'View step-by-step guide', 'advanced-flat-rate-shipping-for-woocommerce' );
+    ?>
+                        </a>
+                    </p>
+                </div>
+                <?php 
+}
+?>
+
+            <?php 
 if ( empty( $onboarding_completed ) || 'afrsm-pro-get-started' === $current_page ) {
     ?>
                 <div class="demo-dpd-popup dpb-popup dots-onboarding-notice">

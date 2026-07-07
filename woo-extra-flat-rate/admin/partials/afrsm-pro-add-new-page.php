@@ -31,6 +31,7 @@ if ( isset( $get_action ) && 'edit' === $get_action ) {
     $sm_free_shipping_based_on = get_post_meta( $get_post_id, 'sm_free_shipping_based_on', true );
     $sm_free_shipping_cost = get_post_meta( $get_post_id, 'sm_free_shipping_cost', true );
     $is_free_shipping_exclude_prod = get_post_meta( $get_post_id, 'is_free_shipping_exclude_prod', true );
+    $is_free_shipping_exclude_category = get_post_meta( $get_post_id, 'is_free_shipping_exclude_category', true );
     $sm_free_shipping_coupan_cost = get_post_meta( $get_post_id, 'sm_free_shipping_coupan_cost', true );
     $sm_free_shipping_label = get_post_meta( $get_post_id, 'sm_free_shipping_label', true );
     $sm_tooltip_type = get_post_meta( $get_post_id, 'sm_tooltip_type', true );
@@ -105,6 +106,7 @@ if ( isset( $get_action ) && 'edit' === $get_action ) {
     $is_allow_free_shipping = '';
     $sm_free_shipping_cost = '';
     $is_free_shipping_exclude_prod = '';
+    $is_free_shipping_exclude_category = '';
     $sm_free_shipping_coupan_cost = '';
     $sm_free_shipping_label = '';
     $sm_tooltip_type = '';
@@ -645,6 +647,9 @@ esc_html_e( 'Free Shipping on Coupon', 'advanced-flat-rate-shipping-for-woocomme
 ?>
 									<option value="in_pro"><?php 
 esc_html_e( 'Free Shipping on Product 🔒', 'advanced-flat-rate-shipping-for-woocommerce' );
+?></option>
+									<option value="in_pro"><?php 
+esc_html_e( 'Free Shipping on Products Quantity 🔒', 'advanced-flat-rate-shipping-for-woocommerce' );
 ?></option>
 									<?php 
 ?>
@@ -1418,7 +1423,7 @@ esc_html_e( 'Cost on Total Cart Weight', 'advanced-flat-rate-shipping-for-woocom
 												data-relatedtype=""
 												class="button"
 												href="javascript:;"><?php 
-esc_html_e( '+ Add Rule', 'advanced-flat-rate-shipping-for-woocommerce' );
+esc_html_e( '+ Add Shipping Rates', 'advanced-flat-rate-shipping-for-woocommerce' );
 ?></a>
 											<div class="switch_status_div">
 												<label class="switch switch_in_pricing_rules">
@@ -1668,7 +1673,7 @@ esc_html_e( 'Cost on Total Cart Subtotal', 'advanced-flat-rate-shipping-for-wooc
 												data-relatedtype=""
 												class="button"
 												href="javascript:;"><?php 
-esc_html_e( '+ Add Rule', 'advanced-flat-rate-shipping-for-woocommerce' );
+esc_html_e( '+ Add Shipping Rates', 'advanced-flat-rate-shipping-for-woocommerce' );
 ?></a>
 											<div class="switch_status_div">
 												<label class="switch switch_in_pricing_rules">

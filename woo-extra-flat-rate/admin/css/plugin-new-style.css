@@ -85,7 +85,7 @@ header.dots-header{background-color:#fff;border-radius:5px;box-shadow:0 4px 10px
 .afrsm-section-left table.table-outer tr.afrsm_advanced_setting_section, .afrsm-section-left table.table-outer tr.depend_of_custom_weight_base,  .afrsm-section-left table.table-outer tr.depend_of_custom_qty_base{display: none;background-color: #f5f5f5;}
 .afrsm-section-left .afrsm-table-tooltip tr th label, .afrsm-section-left .afrsm-table-tooltip tr td label {display: block;position: relative;}
 .afrsm-section-left .afrsm-table-tooltip .woocommerce-help-tip{position:absolute;top:50%;right:-10px;transform:translateY(-50%);margin:0;}
-/* .afrsm-section-left .afrsm-table-tooltip .applyperqty-boxone label, .afrsm-section-left .afrsm-table-tooltip .afrsm_exclude_product_from_free label{vertical-align: middle;display: inline-block;min-width: 270px;} */
+/* .afrsm-section-left .afrsm-table-tooltip .applyperqty-boxone label, .afrsm-section-left .afrsm-table-tooltip .afrsm_exclude_product_from_free label, .afrsm-section-left .afrsm-table-tooltip .afrsm_exclude_category_from_free label{vertical-align: middle;display: inline-block;min-width: 270px;} */
 .afrsm-section-left .afrsm-table-tooltip .applyperqty-box .woocommerce-help-tip {right: 6px;top:40%;}
 .afrsm-section-left .afrsm-table-tooltip .applyperqty-box {display: inline-block;position: relative;padding: 10px 24px 10px 0;width: -webkit-max-content;width: -moz-max-content;width: max-content;}
 .afrsm-section-left .afrsm-table-tooltip .applyperqty-box label {vertical-align: middle;display: inline-block;min-width: 270px;}
@@ -95,7 +95,8 @@ header.dots-header{background-color:#fff;border-radius:5px;box-shadow:0 4px 10px
 .afrsm-main-table .shipping-method-table tbody tr td #sm_time_to {max-width: 20.5%;min-width: 125px;display: inline-block;}
 .afrsm-main-table tr td.afrsm-radio-section label{display:inline-block;margin-right:7px}
 .afrsm-main-table tr td.afrsm-radio-section input[type=radio]{box-shadow:none;margin-right:1px;}
-.afrsm-section-left .afrsm-table-tooltip .afrsm_exclude_product_from_free label{display: inline-block;vertical-align: inherit;}
+.afrsm-section-left .afrsm-table-tooltip .afrsm_exclude_product_from_free label,
+.afrsm-section-left .afrsm-table-tooltip .afrsm_exclude_category_from_free label{display: inline-block;vertical-align: inherit;}
 .afrsm_dynamic_rules_content {line-height: 22px;}
 .afrsm-section-left input[type="file"]::-webkit-file-upload-button{color:var(--dotstore-primary);padding:8px;border:1px solid var(--dotstore-primary);border-radius:5px;margin-right:8px;background-color:transparent;}
 .afrsm-section-left input[type="file"]::file-selector-button{color:var(--dotstore-primary);padding:8px;border:1px solid var(--dotstore-primary);border-radius:5px;margin-right:8px;background-color:transparent;}
@@ -189,7 +190,8 @@ header.dots-header{background-color:#fff;border-radius:5px;box-shadow:0 4px 10px
 .woocommerce_page_whsm-start-page .adv-pricing-rules .main_rule_condition .advance_rule_condition_match_type{border:none;background-color:#f5f5f5;}
 .adv-pricing-rules .pricing_rules{border:none;margin-bottom: -5px;}
 .adv-pricing-rules .pricing_rules .tabs .tab-link.current{border-left-color:var(--dotstore-primary);box-shadow:inset 3px 0 0 var(--dotstore-primary);color:var(--dotstore-primary);border-right:none;background: none;}
-.adv-pricing-rules .pricing_rules .tabs .tab-link.active_tab{border-left-color:var(--dotstore-primary);box-shadow: inset 3px 0 0 var(--dotstore-primary);}
+.adv-pricing-rules .pricing_rules .tabs .tab-link.has-config:not(.current){font-weight:600;}
+.adv-pricing-rules .pricing_rules .tabs .tab-link.has-config::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background-color:var(--dotstore-primary);margin-left:6px;vertical-align:middle;}
 .adv-pricing-rules .pricing_rules .tabs .afrsm-pro-tab{padding-right: 30px;}
 .woocommerce_page_whsm-start-page .adv-pricing-rules .ap_title{background-color:#f5f5f5;}
 #dotsstoremain .all-pad .dots-settings-left-side{width:100%;}
@@ -427,6 +429,14 @@ body.afrsm-modal-visible{overflow:hidden;}
 .dots-onboarding-notice .onboarding-button:hover{background-color:transparent;color: #27AE60;}
 .dots-onboarding-notice .onboarding-close-btn{margin-left: 14px;}
 .dots-onboarding-notice .onboarding-close-btn path{fill:#000;}
+
+/* Design optimisation */
+#apm_wrap .pricing_rules .pricing_rules_tab ul.tabs {max-height: 505px;overflow: scroll;}
+.advance_rule_condition_match_type select.arcmt_select {line-height: inherit;}
+#dotsstoremain .afrsm-convert-to-pro-notice .notice-dismiss{text-decoration: none;}
+
+.dots-settings-inner-main input[type=checkbox]:checked{background: #ffffff;border-color: inherit;}
+.dots-settings-inner-main input[type=radio]:checked {background: #ffffff;border-color: inherit;}
 
 /* Media CSS */
 @media screen and (max-width:1200px){
